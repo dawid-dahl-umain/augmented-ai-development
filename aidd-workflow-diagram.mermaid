@@ -15,7 +15,7 @@ graph TD
     P2 -->|No| P4["Request Feature Roadmap<br/>(@ai-roadmap-template)"]
     P3 --> P1
     P4 --> P5["📋 Review Roadmap Carefully"]
-    P5 --> P6{"Is Roadmap Aligned with Business Needs? (Specifications)"}
+    P5 --> P6{"Is Roadmap Good & Aligned with Business Needs? (Specifications)"}
     P6 -->|No| P7["Refine Roadmap with AI"]
     P7 --> P4
     P6 -->|Yes| TDDPhase
@@ -36,9 +36,10 @@ graph TD
     %% RED PHASE
     CycleStart --> Red["🔴 RED: Write Failing Test"]
     Red --> R1["1. Collaborate with AI to Write Test<br/>(@red-&-stop)"]
-    R1 --> R2["2. Run Test - Verify Failure"]
-    R2 --> R3["3. Handle Unexpected Results"]
-    R3 --> RedReview
+    R1 --> R2{"2. Did test fail<br/>as expected?"}
+    R2 -->|Yes| RedReview
+    R2 -->|No| R3["3. Handle unexpected result"]
+    R3 --> R1
     
     RedReview["⏸️  AWAIT USER REVIEW (RED)<br/><b>AI MUST STOP HERE</b>"]
     RedReview --> RedApprove{"Approve<br/>RED Phase?"}
@@ -48,9 +49,10 @@ graph TD
     %% GREEN PHASE
     Green["🟢 GREEN: Make Test Pass"]
     Green --> G1["1. Collaborate with AI to Write Code<br/>(@green-&-stop)"]
-    G1 --> G2["2. Run Tests - Verify Success"]
-    G2 --> G3["3. Handle Test Failures"]
-    G3 --> GreenReview
+    G1 --> G2{"2. Did all tests pass?"}
+    G2 -->|Yes| GreenReview
+    G2 -->|No| G3["3. Handle test failures"]
+    G3 --> G1
     
     GreenReview["⏸️  AWAIT USER REVIEW (GREEN)<br/><b>AI MUST STOP HERE</b>"]
     GreenReview --> GreenApprove{"Approve<br/>GREEN Phase?"}
@@ -60,9 +62,10 @@ graph TD
     %% REFACTOR PHASE
     Refactor["🧼 REFACTOR: Improve Code"]
     Refactor --> RF1["1. Collaborate with AI to Refactor<br/>(@refactor-&-stop)"]
-    RF1 --> RF2["2. Run Tests - Verify Stability"]
-    RF2 --> RF3["3. Handle Refactoring Errors"]
-    RF3 --> RefactorReview
+    RF1 --> RF2{"2. Do all tests still pass?"}
+    RF2 -->|Yes| RefactorReview
+    RF2 -->|No| RF3["3. Revert back to Green &<br/>try different approach"]
+    RF3 --> RF1
     
     RefactorReview["⏸️  AWAIT FINAL USER REVIEW (REFACTOR)<br/><b>AI MUST STOP HERE</b>"]
     RefactorReview --> RefactorApprove{"Approve<br/>REFACTOR Phase?"}
