@@ -1,0 +1,122 @@
+graph TD
+    Start["🚀 Development Phase Begins<br/>(After Product Design)"] 
+    
+    Start --> ContextPhase["📚 Stage 1: <br> CONTEXT PROVIDING"]
+    
+    ContextPhase --> C1["1. Add High-Level Context<br/>(@project-context)"]
+    C1 --> C2["2. Add Specification Context<br/>(Stories, BDD Scenarios)"]
+    C2 --> C3["3. Add Relevant Code Context<br/>(Dependencies, Utils, References)"]
+    
+    C3 --> PlanningPhase["🎯 Stage 2: <br> PLANNING STAGE"]
+    
+    PlanningPhase --> P1["Discuss Feature with AI Agent<br/>(Like with Human Colleague)"]
+    P1 --> P2{"Does AI Need<br/>More Context?"}
+    P2 -->|Yes| P3["Provide Additional Context"]
+    P2 -->|No| P4["Request Feature Roadmap<br/>(@ai-roadmap-template)"]
+    P3 --> P1
+    P4 --> P5["📋 Review Roadmap Carefully"]
+    P5 --> P6{"Is Roadmap Aligned with Business Needs? (Specifications)"}
+    P6 -->|No| P7["Refine Roadmap with AI"]
+    P7 --> P4
+    P6 -->|Yes| TDDPhase
+    
+    TDDPhase["✅ Stage 3: <br> TDD DEVELOPMENT START   "]
+    
+    TDDPhase --> InitChoice{"Choose TDD<br/>Approach"}
+    
+    InitChoice -->|Test List| TL1["📝 Create Complete Test List<br/>(Markdown or Skipped Tests)"]
+    InitChoice -->|Single Test| ST1["📝 Write Simplest First Test"]
+    
+    TL1 --> TL2["Review Against Specifications"]
+    ST1 --> CycleStart
+    TL2 --> CycleStart
+    
+    CycleStart["🔄 Stage 4: <br> TDD CYCLE (3 Steps Per Test)"]
+    
+    %% RED PHASE
+    CycleStart --> Red["🔴 RED: Write Failing Test"]
+    Red --> R1["1. Collaborate with AI to Write Test<br/>(@red-&-stop)"]
+    R1 --> R2["2. Run Test - Verify Failure"]
+    R2 --> R3["3. Handle Unexpected Results"]
+    R3 --> RedReview
+    
+    RedReview["⏸️  AWAIT USER REVIEW (RED)<br/><b>AI MUST STOP HERE</b>"]
+    RedReview --> RedApprove{"Approve<br/>RED Phase?"}
+    RedApprove -->|No| R1
+    RedApprove -->|Yes| Green
+    
+    %% GREEN PHASE
+    Green["🟢 GREEN: Make Test Pass"]
+    Green --> G1["1. Collaborate with AI to Write Code<br/>(@green-&-stop)"]
+    G1 --> G2["2. Run Tests - Verify Success"]
+    G2 --> G3["3. Handle Test Failures"]
+    G3 --> GreenReview
+    
+    GreenReview["⏸️  AWAIT USER REVIEW (GREEN)<br/><b>AI MUST STOP HERE</b>"]
+    GreenReview --> GreenApprove{"Approve<br/>GREEN Phase?"}
+    GreenApprove -->|No| G1
+    GreenApprove -->|Yes| Refactor
+    
+    %% REFACTOR PHASE
+    Refactor["🧼 REFACTOR: Improve Code"]
+    Refactor --> RF1["1. Collaborate with AI to Refactor<br/>(@refactor-&-stop)"]
+    RF1 --> RF2["2. Run Tests - Verify Stability"]
+    RF2 --> RF3["3. Handle Refactoring Errors"]
+    RF3 --> RefactorReview
+    
+    RefactorReview["⏸️  AWAIT FINAL USER REVIEW (REFACTOR)<br/><b>AI MUST STOP HERE</b>"]
+    RefactorReview --> RefactorApprove{"Approve<br/>REFACTOR Phase?"}
+    RefactorApprove -->|No| RF1
+    RefactorApprove -->|Yes| NextTest
+    
+    %% ITERATION OR COMPLETION
+    NextTest{"More Tests<br/>Needed?"}
+    NextTest -->|Yes, Test List| PickNext["📌 Select Next Test from List<br/><i>→ Return to RED phase<br/>with next test</i>"]
+    NextTest -->|Yes, Single| CreateNext["📝 Design Next Test Case<br/><i>→ Return to RED phase<br/>with new test</i>"]
+    NextTest -->|No| Complete
+    
+    Complete["✨ Feature Complete<br/>(All Tests Green)"] --> Deploy["📦 Ready for Deployment Pipeline"]
+    
+    %% STYLES - NO CHANGES
+    style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
+    style ContextPhase fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
+    style C1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C3 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style PlanningPhase fill:#f57c00,stroke:#e65100,stroke-width:3px,color:#fff
+    style P1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P4 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P5 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P6 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P7 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style TDDPhase fill:#388e3c,stroke:#1b5e20,stroke-width:3px,color:#fff
+    style InitChoice fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style TL1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style TL2 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style ST1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
+    style CycleStart fill:#7b1fa2,stroke:#4a148c,stroke-width:3px,color:#fff
+    style Red fill:#ffebee,stroke:#d32f2f,stroke-width:3px,color:#000
+    style R1 fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+    style R2 fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+    style R3 fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
+    style RedReview fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
+    style RedApprove fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
+    style Green fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#000
+    style G1 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
+    style G2 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
+    style G3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
+    style GreenReview fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
+    style GreenApprove fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
+    style Refactor fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
+    style RF1 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style RF2 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style RF3 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style RefactorReview fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
+    style RefactorApprove fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
+    style NextTest fill:#f5f5f5,stroke:#666,stroke-width:2px,color:#000
+    style PickNext fill:#fef9e7,stroke:#f9a825,stroke-width:2px,color:#000
+    style CreateNext fill:#fef9e7,stroke:#f9a825,stroke-width:2px,color:#000
+    style Complete fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
+    style Deploy fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
