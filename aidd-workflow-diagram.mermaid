@@ -3,9 +3,9 @@ graph TD
     
     Start --> ContextPhase["📚 Stage 1: <br> CONTEXT PROVIDING"]
     
-    ContextPhase --> C1["1. Add High-Level Context<br/>(README, architecture docs, code style guide)<br/>@project-context"]
-    C1 --> C2["2. Add Specification Context<br/>(User Stories, BDD Scenarios)"]
-    C2 --> C3["3. Add Relevant Code Context<br/>(Dependencies, Tests, Utils, Similar Features)"]
+    ContextPhase --> C1["Add High-Level Context<br/>(README, architecture docs, code style guide)<br/>@project-context"]
+    C1 --> C2["Add Specification Context<br/>(User Stories, BDD Scenarios)"]
+    C2 --> C3["Add Relevant Code Context<br/>(Dependencies, Tests, Utils, Similar Features)"]
     
     C3 --> PlanningPhase["🎯 Stage 2: <br> PLANNING"]
     
@@ -31,14 +31,14 @@ graph TD
     ST1 --> CycleStart
     TL2 --> CycleStart
     
-    CycleStart["🔄 Stage 4: <br> THE TDD CYCLE<br/>(RED → GREEN → REFACTOR Per Test)"]
+    CycleStart["🔄 Stage 4: <br> THE TDD CYCLE<br/>(RED GREEN REFACTOR Per Test)"]
     
     %% RED PHASE
     CycleStart --> Red["🔴 RED PHASE: Write Failing Test"]
-    Red --> R1["1. Collaborate with AI to Write Test<br/>(@red-&-stop)"]
-    R1 --> R2{"2. Did test fail<br/>as expected?"}
+    Red --> R1["Collaborate with AI to Write Test<br/>(@red-&-stop)"]
+    R1 --> R2{"Did test fail<br/>as expected?"}
     R2 -->|Yes| RedReview
-    R2 -->|No| R3["3. Debug/Fix test until it fails correctly"]
+    R2 -->|No| R3["Debug/Fix test until it fails correctly<br/>"]
     R3 --> R1
     
     RedReview["⏸️  AWAIT USER REVIEW (RED PHASE)<br/><b>AI MUST STOP HERE</b>"]
@@ -48,10 +48,10 @@ graph TD
     
     %% GREEN PHASE
     Green["🟢 GREEN PHASE: Make Test Pass"]
-    Green --> G1["1. Collaborate with AI to Write Code<br/>(@green-&-stop)"]
-    G1 --> G2{"2. Did all tests pass?"}
+    Green --> G1["Collaborate with AI to Write Code<br/>(@green-&-stop)"]
+    G1 --> G2{"Did all tests pass?"}
     G2 -->|Yes| GreenReview
-    G2 -->|No| G3["3. Debug/Fix code until test passes"]
+    G2 -->|No| G3["Debug/Fix code until test passes<br/>"]
     G3 --> G1
     
     GreenReview["⏸️  AWAIT USER REVIEW (GREEN PHASE)<br/><b>AI MUST STOP HERE</b>"]
@@ -61,10 +61,10 @@ graph TD
     
     %% REFACTOR PHASE
     Refactor["🧼 REFACTOR PHASE: Improve Code"]
-    Refactor --> RF1["1. Collaborate with AI to Refactor<br/>(@refactor-&-stop)"]
-    RF1 --> RF2{"2. Do all tests still pass?"}
+    Refactor --> RF1["Collaborate with AI to Refactor<br/>(@refactor-&-stop)"]
+    RF1 --> RF2{"Do all tests still pass?"}
     RF2 -->|Yes| RefactorReview
-    RF2 -->|No| RF3["3. AI stops. User chooses:<br/>Fix issue or revert to green"]
+    RF2 -->|No| RF3["AI stops. User chooses:<br/>Fix issue or revert to green<br/>"]
     RF3 --> RF1
     
     RefactorReview["⏸️  AWAIT FINAL USER REVIEW (REFACTOR PHASE)<br/><b>AI MUST STOP HERE</b>"]
@@ -74,8 +74,8 @@ graph TD
     
     %% ITERATION OR COMPLETION
     NextTest{"More Tests<br/>Needed?"}
-    NextTest -->|Yes, Test List| PickNext["📌 Select Next Test from List<br/><i>→ Return to RED Phase<br/>with next test</i>"]
-    NextTest -->|Yes, Single| CreateNext["📝 Design Next Test Case<br/><i>→ Return to RED Phase<br/>with new test</i>"]
+    NextTest -->|Yes, Test List| PickNext["📌 Select Next Test from List<br/><i>Return to RED Phase<br/>with next test</i>"]
+    NextTest -->|Yes, Single| CreateNext["📝 Design Next Test Case<br/><i>Return to RED Phase<br/>with new test</i>"]
     NextTest -->|No| Complete
     
     Complete["✨ Feature Complete<br/>(All Tests Green for This Feature)"] --> Deploy["📦 Ready for Deployment Pipeline"]
