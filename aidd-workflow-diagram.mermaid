@@ -64,7 +64,7 @@ graph TD
     Refactor --> RF1["1. Collaborate with AI to Refactor<br/>(@refactor-&-stop)"]
     RF1 --> RF2{"2. Do all tests still pass?"}
     RF2 -->|Yes| RefactorReview
-    RF2 -->|No| RF3["3. Revert back to Green &<br/>try different approach"]
+    RF2 -->|No| RF3["3. AI stops. User chooses:<br/>Fix issue or revert to green"]
     RF3 --> RF1
     
     RefactorReview["⏸️  AWAIT FINAL USER REVIEW (REFACTOR PHASE)<br/><b>AI MUST STOP HERE</b>"]
