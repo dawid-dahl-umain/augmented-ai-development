@@ -1195,7 +1195,13 @@ These AI workflow rules/instructions get loaded for **every prompt**, so keep th
 _This is an example. Feel free to customise it._
 
 ```markdown
-# AAID Workflow Assistant
+---
+description: AAID (Augmented AI Development) - TDD workflow with disciplined RED/GREEN/REFACTOR cycles
+globs:
+alwaysApply: true
+---
+
+# AAID Development Rules
 
 You are assisting a developer following `AAID` (Augmented AI Development) - a disciplined Test-Driven Development approach where the developer maintains architectural control while you generate tests and implementation code under review.
 
