@@ -1,5 +1,3 @@
-# AAID: Augmented AI Development
-
 _Professional TDD for AI-Augmented Software Development_
 
 ## Table of Contents
@@ -361,9 +359,9 @@ For each test, follow this disciplined 3-phase cycle:
 >   - Use `@analyze-&-stop` or other [investigation & problem solving commands](#investigation-commands) as needed
 > - **`AWAIT USER REVIEW`**
 
-> ¹ 🦾 **Proficiency Note**: As you master `AAID`, the initial "collaborate" step often becomes autonomous AI generation using your established commands and context. This speeds up the workflow considerably. You might simply invoke `@red-&-stop` and let the AI generate appropriate code, then focus your attention on the `AWAIT USER REVIEW` checkpoints. This dual-review structure (light collaboration + formal review) is what enables both speed and control.
-
 Let's walk through a full TDD cycle using this consistent structure.
+
+> ¹ 🦾 **Proficiency Note**: As you master `AAID`, the initial "collaborate" step often becomes autonomous AI generation using your established commands and context. This speeds up the workflow considerably. You might simply invoke `@red-&-stop` and let the AI generate appropriate code, then focus your attention on the `AWAIT USER REVIEW` checkpoints. This dual-review structure (light collaboration + formal review) is what enables both speed and control.
 
 ---
 
@@ -982,7 +980,7 @@ Regenerate if requirements change, test order needs adjustment, or system bounda
 
 _Used in Stage 4: The TDD Cycle_
 
-These commands embed the Three Laws of TDD:
+These `AAID` commands embed the Three Laws of TDD:
 
 1. **No behavioral production code without a failing test**
 2. **Write only enough test code to fail**
@@ -1104,11 +1102,12 @@ _Used in Stage 4: The TDD Cycle, during the "Handle potential issues" step of ea
 
 ```
 Analyze the issue, scan relevant files, optionally consult docs, summarize next steps. Stop.
+
 I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 1. Analyze issue or task at hand
 2. Research any relevant files for context
-	a. Optional: use the web tool for documentation
+   a. Optional: use the web tool for documentation
 3. Analyze how to solve it or how to move forward
 4. Report back with your findings
 5. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
@@ -1116,12 +1115,13 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 ### `@analyze-command-&-stop`
 
-| ☝️                                                                                                     |
-| ------------------------------------------------------------------------------------------------------ |
-| The user discusses or simply types out the command, for example: "`@analyze-command-and-stop` test:db" |
+| ☝️                                                                                                   |
+| ---------------------------------------------------------------------------------------------------- |
+| The user discusses or simply types out the command, for example: "`@analyze-command-&-stop` test:db" |
 
 ```
 Run the command, but if it fails, analyze, report back then STOP.
+
 I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 1. Run command
@@ -1134,11 +1134,12 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 ```
 Debug and research any relevant files for context, report back then STOP.
+
 I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 1. Add debug logs
 2. Research any relevant files for context
-	a. Optional: use the web tool for documentation
+   a. Optional: use the web tool for documentation
 3. Run the command necessary to analyze the logs
 4. Report back with your findings
 5. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
@@ -1155,8 +1156,8 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 2. Implement the cleanest and simplest fix
 3. Verify success or failure of the fix by running tests and/or code
 4. Analyze result
-3. Report back with your findings
-4. **STOP**. DON'T CHANGE, ADD, OR DELETE ANYTHING.
+5. Report back with your findings
+6. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
 ```
 
 ### Git Commands
@@ -1166,10 +1167,10 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 ```
 @docs/git-commit-message-guidelines.md
 
-- Do "git add ." to add all changes
-- Follow our git commit message guidelines and construct a good and clean commit message
-- Commit with that message
-- Do not push. The user will do that manually
+1. Do "git add ." to add all changes
+2. Follow our git commit message guidelines and construct a good and clean commit message
+3. Commit with that message
+4. Do not push. The user will do that manually
 ```
 
 These are just some examples of AI Commands. Feel free to change them, create new ones, or not use them at all. But do use reusable prompts, as it can greatly speed up your work.
