@@ -3,6 +3,7 @@ _Professional TDD for AI-Augmented Software Development_
 ## Table of Contents
 
 - [What Is AAID and Why It Matters](#what-is-aaid)
+- [The Business Case: What Performance Research Shows](#the-business-case)
 - [Who This Guide Is For](#who-this-guide-is-for)
 - [Built on Proven Foundations](#built-on-proven-foundations)
 - [Works with Any AI Tool](#works-with-any-ai-tool)
@@ -26,13 +27,25 @@ _Professional TDD for AI-Augmented Software Development_
 
 <a id="what-is-aaid"></a>
 
-## **What Is AAID and Why It Matters**
+## What Is AAID and Why It Matters
 
 **AUGMENTED AI DEVELOPMENT `AAID`** (**/eɪd/** - pronounced like "aid") is a disciplined approach where developers augment their capabilities by integrating with AI, while maintaining full architectural control. You direct the agent to generate tests and implementation code, reviewing every line and ensuring alignment with business requirements.
 
 **You're not being replaced. You're being augmented.**
 
 This separates professional software development from "vibe coding." While vibe coders blindly accept AI output and ship buggy, untested code they can't understand, `AAID` practitioners use TDD (Test-Driven Development) to ensure reliable agentic assistance.
+
+<a id="the-business-case"></a>
+
+## The Business Case: What Performance Research Shows
+
+[DORA](https://dora.dev/) (Google Cloud's **DevOps Research and Assessment**) highlights the proven TDD principle `AAID` relies on: developer-owned testing drives performance [[1]](https://dora.dev/capabilities/test-automation/). At the same time, a 25% increase in AI adoption is **associated** with a 7.2% drop in delivery stability and a 1.5% decrease in throughput, and 39% of developers report little to no trust in AI-generated code [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
+
+`AAID` solves this. The TDD discipline forces every AI-generated line to pass through failing tests and mandatory reviews, capturing AI's productivity gains without the stability loss. DORA's research proves speed and stability aren't tradeoffs [[3]](https://dora.dev/guides/dora-metrics-four-keys/). With `AAID`, speed comes from AI augmentation supported by the safety net of tests, and stability comes from disciplined testing. You get both together, not one at the expense of the other.
+
+[1] [DORA Capabilities: Test automation](https://dora.dev/capabilities/test-automation/)
+[2] [Announcing the 2024 DORA report | Google Cloud Blog](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
+[3] [DORA's software delivery metrics: the four keys](https://dora.dev/guides/dora-metrics-four-keys/)
 
 <a id="who-this-guide-is-for"></a>
 
@@ -62,7 +75,7 @@ It's also an incredibly fun way to work!
 
 <a id="built-on-proven-foundations"></a>
 
-## **Built on Proven Foundations**
+## Built on Proven Foundations
 
 Unlike most other AI-driven workflows, `AAID` doesn't try to reinvent product discovery or software development. Instead it stands on the shoulders of giants, applying well-established methodologies:
 
@@ -113,7 +126,7 @@ Before development begins, professional teams complete a product specification p
 
 Using techniques like Impact Mapping, Event Storming, and Story Mapping, teams establish specifications that represent the fundamental business needs that must be satisfied. The resulting specifications can include:
 
-- User stories with BDD examples
+- User stories with BDD examples, organized into epics
   - Or a [Story Map](https://jpattonassociates.com/wp-content/uploads/2015/03/story_mapping.pdf) containing the user stories + BDD examples
   - User stories with technical (non-behavioral) requirements such as caching, infra, monitoring, etc
 - PRD (Product Requirements Document)
@@ -215,7 +228,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 3. **Add Relevant Code Context**
 
-   - Direct dependencies of the feature; code, tests, documentation, utility functions, etc
+   - Direct dependencies of the feature you want to build; code, tests, documentation, utility functions, etc
    - Similar existing features as reference
    - Test examples from other parts of the codebase
 
@@ -229,7 +242,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 ![Stage 2 - Planning](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p6e7p5fqz66bxejm3cv4.jpg)
 
-With the AI agent now informed of the feature's context, collaborate to understand the feature at a **high level** before diving into TDD. This is _not_ about prescribing implementation details, those will emerge through TDD. Instead, it's about making sure you and the AI are on the same page before testing and coding starts.
+With the AI agent now informed of the feature you want to build's context, collaborate to understand the feature at a **high level** before diving into TDD. This is _not_ about prescribing implementation details, those will emerge through TDD. Instead, it's about making sure you and the AI are on the same page before testing and coding starts.
 
 #### Planning vs TDD Discovery
 
@@ -277,6 +290,7 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
    - Focus on test scenarios and their logical sequence
    - Keep at "mermaid diagram" level of abstraction
    - An actual mermaid diagram can be generated if applicable
+   - Save roadmap in repo, e.g. in an `ai-roadmaps` directory
 
 4. **Review and Refine**
    - Carefully review the roadmap to ensure alignment with business needs
@@ -711,11 +725,13 @@ This article on `AAID` focuses on TDD (Test-Driven Development) for **Unit Testi
 
 **Acceptance Testing**, on the other hand, verifies that your software aligns with business goals and is actually _done_. It serves as an executable definition-of-done.
 
+> AI can help when writing Acceptance Tests, but you do not necessarily use `AAID` for this purpose.
+
 Understanding how these two testing strategies complement each other is crucial for professional developers, as both are invaluable parts of writing production-grade software.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acceptance Testing is similar to E2E testing; both test through the system boundaries.<br><br>The key difference: AT mocks external dependencies you don't control (third-party APIs, etc) while keeping internal dependencies you do control (your database, etc) real. E2E mocks nothing and runs everything together.<br><br>Problem with E2E: Tests fail due to external factors (third-party outages, network issues) rather than your code. Acceptance Testing isolates your system so failures indicate real business logic problems. |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acceptance Testing is similar to E2E testing; both test through the system boundaries.<br><br>The key difference: AT mocks external dependencies you don't control (third-party APIs, etc) while keeping internal dependencies you do control (your database, etc) real. E2E usually mocks nothing and runs everything together.<br><br>Problem with E2E: Tests fail due to external factors (third-party outages, network issues) rather than your code. Acceptance Testing isolates your system so failures indicate real business logic problems. |
 
 The two kinds of tests answer different questions:
 
@@ -752,9 +768,6 @@ describe("TodoService", () => {
       completedTodo
     );
     expect(mockTodoRepository.removeFromActive).toHaveBeenCalledWith("todo-1");
-    expect(mockEventBus.publish).toHaveBeenCalledWith(
-      expect.objectContaining({ todoId: "todo-1" })
-    );
   });
 });
 ```
@@ -827,6 +840,7 @@ _Used in Stage 1: Context Providing_
 
 ```
 # Project Context
+
 ## General
 @README.md @package.json @tsconfig.json @db.schema
 
@@ -856,6 +870,8 @@ _Used in Stage 2: Planning_
 # AI Roadmap Template
 
 Create a high-level feature roadmap that aligns developer and AI understanding before TDD begins. This roadmap guides test sequence without prescribing implementation details: those should be designed by the TDD process itself.
+
+When done, ask user if the roadmap file should be saved to /ai-roadmaps directory in root. Create directory if not exists.
 
 **First, if anything is unclear about the requirements or scope, ask for clarification rather than making assumptions.**
 
@@ -1016,11 +1032,9 @@ Instructions:
 
 3. Run the test and verify it fails as expected
 
-4. **If test passes unexpectedly:** STOP and report this to user
-   - Do NOT attempt to fix or investigate
-   - User will decide next action
+4. If test passes unexpectedly: STOP and report this to user for direction
 
-5. Present the correctly failing test and its result, then STOP.
+5. Present the test and its result, then STOP.
 
 **AWAIT USER REVIEW** before proceeding to GREEN phase.
 ```
@@ -1047,11 +1061,9 @@ Instructions:
 
 3. Verify ALL tests pass (current + existing)
 
-4. **If any test fails:** STOP and report which tests failed
-   - Do NOT attempt to fix
-   - User will decide whether to debug or adjust approach
+4. If any test fails: STOP and report which tests failed for user direction
 
-5. Present the passing code, then STOP.
+5. Present the implementation, then STOP.
 
 **AWAIT USER REVIEW** before proceeding to REFACTOR phase.
 
@@ -1071,7 +1083,7 @@ Instructions:
    - Remove duplication (DRY principle)
    - Improve naming for clarity
    - Simplify complex logic where beneficial
-   - If already clean, state "No refactoring needed" with reasoning
+   - If already clean, indicate no refactoring is needed with reasoning
 
 2. Add supporting code that doesn't change tested behavior (only if needed):
    - Logging statements for debugging
@@ -1082,10 +1094,9 @@ Instructions:
 
 3. Keep all tests passing throughout refactoring
    - Run tests after each change
-   - If any test fails: STOP immediately and report what broke
-   - Do NOT attempt to fix - present failure and await instruction
+   - If any test fails: STOP immediately and report what broke for user instruction
 
-4. Present outcome to user, then STOP.
+4. Present the outcome, then STOP.
 
 **AWAIT USER REVIEW** before writing the next test.
 
@@ -1188,11 +1199,11 @@ Configure your AI environment to understand the AAID workflow. These are simple 
 These AI workflow rules/instructions get loaded for **every prompt**, so keep them minimal:
 
 - **What belongs here:** The `AAID` workflow rules, and other general custom instructions for the AI such as tonality
-- **What doesn't:** Project-specific code (load those once in Stage 1: Context Providing instead for every new agent session)
+- **What doesn’t:** Project-specific code (load those once in Stage 1: Context Providing instead for every new agent session)
 
 ### AAID AI Workflow Rules/Instructions
 
-_This is an example. Feel free to customise it._
+_This is the official AAID workflow rules. But feel free to customise it._
 
 ```markdown
 ---
@@ -1203,73 +1214,84 @@ alwaysApply: true
 
 # AAID Development Rules
 
-You are assisting a developer following `AAID` (Augmented AI Development) - a disciplined Test-Driven Development approach where the developer maintains architectural control while you generate tests and implementation code under review.
+You are assisting a developer who may use `AAID` (Augmented AI Development) - a workflow where:
 
-## Current Stage Recognition
+- The developer maintains architectural control and reviews all code
+- You (the AI) generate tests and implementation following TDD discipline
+- The AAID version of the TDD workflow proceeds through strict RED → AWAIT USER REVIEW → GREEN → AWAIT USER REVIEW → REFACTOR → AWAIT USER REVIEW cycles
+- Every phase requires developer review before proceeding
 
-**Priority for determining stage:**
+Your role: Generate code when requested, follow TDD rules strictly when in TDD mode, and always AWAIT USER REVIEW between phases.
+
+## Recognizing AAID TDD Mode
+
+**AAID TDD mode is ACTIVE when:**
+
+- User explicitly says "start TDD", "begin AAID", “use test list", or similar
+- User references TDD phases: "RED phase", "GREEN phase", "REFACTOR phase"
+- User asks to write a failing test, make a test pass, or refactor with tests green
+- Currently in an active TDD cycle that hasn't been completed
+
+**AAID TDD mode is NOT active when:**
+
+- User is simply sharing context, files, or documentation
+- User is discussing planning, architecture, or features
+- User asks general programming questions
+- User explicitly indicates working on something else
+
+## Phase Recognition (When in TDD Mode)
+
+**Priority for determining phase:**
 
 1. Explicit declaration ("we're in RED phase") overrides all
-2. Continue previous stage unless changed
-3. If unclear, ask: "Which AAID phase are we in?"
+2. Continue previous phase unless changed
+3. If unclear, ask: "Which TDD phase are we in?"
 
-### 📚 Stage 1: CONTEXT PROVIDING
+## TDD Cycle Phases
 
-**Indicators:** Sharing files, docs, architecture, specifications
-**Action:** Read, understand, summarize
-**End:** "Context absorbed. Ready for PLANNING."
+### 🔴 RED Phase - Write Failing Test
 
-### 🎯 Stage 2: PLANNING
+**Triggers:** "write test", "test for", "red", "next test", "red phase"
+**Actions:**
 
-**Indicators:** "roadmap", "plan", "approach", "discuss feature"
-**Action:** Plan test sequence (simple → complex), no implementation yet
-**End:** "Plan complete. Ready for RED phase with [first test]."
-
-### ✅ Stage 3: TDD STARTS
-
-**Indicators:** "start TDD", "test list", "begin testing"
-**Action:** Create test list with `.skip` or empty first test
-**Note:** Never implement multiple tests upfront
-**End:** "Test structure ready. Starting RED phase."
-
-### 🔄 Stage 4: TDD CYCLE (RED → GREEN → REFACTOR)
-
-#### 🔴 RED Phase - Write Failing Test
-
-**Indicators:** "write test", "test for", "red", "next test"
-**Rules:**
-
-- ONE test for ONE behavior
+- Write ONE test for ONE behavior
 - Focus on API design - how will code be used?
 - Test WHAT not HOW (behavior, not implementation)
 - Must fail (compilation errors count)
-- Align with business specifications
-  **Error:** If test passes unexpectedly → STOP and report - await user decision
-  **End:** "Test written. Run it to verify failure. **AWAIT USER REVIEW**"
+  **Completion:** Report test status and AWAIT USER REVIEW
+  **On Error:** If test passes unexpectedly, STOP and report for user direction
 
-#### 🟢 GREEN Phase - Make Test Pass
+### 🟢 GREEN Phase - Make Test Pass
 
-**Indicators:** "make pass", "implement", "green"
-**Rules:**
+**Triggers:** "make pass", "implement", "green", "green phase"
+**Actions:**
 
-- ONLY enough code to pass current test
+- Write ONLY enough code to pass current test
 - Maintain all previous passing tests
 - No logic for untested scenarios
-- Mock all external dependencies
 - Hardcode values if test doesn't demand more
-  **Error:** If any test fails → STOP and report - await user decision
-  **End:** "Implementation done. Run tests to verify all pass. **AWAIT USER REVIEW**"
+  **Completion:** Report implementation status and AWAIT USER REVIEW
+  **On Error:** If tests fail, STOP and report which ones for user direction
 
-#### 🧼 REFACTOR Phase - Improve Code
+### 🧼 REFACTOR Phase - Improve Code
 
-**Indicators:** "refactor", "improve", "clean up"
-**Rules:**
+**Triggers:** "refactor", "improve", "clean up", "refactor phase"
+**Actions:**
 
-- Only with ALL tests green
-- Apply: modularity, abstraction, cohesion, SoC
-- Add non-behavioral improvements (logging, performance) here only
-  **Error:** If any test fails → STOP and report - await user decision
-  **End:** "Refactoring done. Verify tests still pass. **AWAIT USER REVIEW**"
+- Only refactor with ALL tests green
+- Apply improvements: modularity, abstraction, cohesion, readability, separation of concerns
+- Only refactor if actually needed
+- Add non-behavioral improvements (logging, performance) here only (but only if needed)
+  **Completion:** Report refactoring status (or if none needed) and AWAIT USER REVIEW
+  **On Error:** If tests break, STOP and report for user direction
+
+## Starting TDD
+
+When user initiates TDD mode:
+
+- User will decide to create a test list with skipped tests, or an empty first test (just name, no implementation)
+- Never implement one or multiple tests upfront: RED phase implements
+- Indicate test structure is ready and which phase to begin with
 
 ## Test Structure Requirements
 
@@ -1282,7 +1304,7 @@ You are assisting a developer following `AAID` (Augmented AI Development) - a di
 
 - NO other test structure comments beyond Given/When/Then
 - No conditionals/loops in tests
-- Test names describe business behavior
+- Test names describe business behavior in BDD style (system behaviour not implementation)
 - Each test builds incrementally on previous ones
 
 ## The Three Laws of TDD
@@ -1296,17 +1318,27 @@ You are assisting a developer following `AAID` (Augmented AI Development) - a di
 - Run tests after EVERY code change
 - Tests run in milliseconds (mock externals)
 - Let tests drive design - no premature optimization
-- Test passes in RED? Stop, investigate why
-- Refactor breaks tests? Stop and report
 - State persists - remember current phase
-- User instructions override workflow rules
+- Explicit user instructions override AAID workflow rules
+- Always AWAIT USER REVIEW between phases
+
+## Note on the Full AAID Workflow
+
+While these rules focus on the TDD cycle enforcement, developers following AAID will typically:
+
+1. First provide context (Stage 1) - handled as normal conversation
+1. Then plan the approach (Stage 2) - handled as normal discussion
+1. Explicitly start TDD (Stage 3) - this activates the rules above
+1. Follow the TDD cycle (Stage 4) - strictly enforced by these rules
+
+The AI assists naturally with context and planning without special rules, then enforces discipline when TDD begins.
 ```
 
 ### Usage Guide
 
 **For Cursor:**
 
-- Project‑specific: commit a rule file in `.cursor/rules/` so it’s version controlled and scoped to the repo.
+- Project‑specific: commit a rule file in `.cursor/rules/` so it's version controlled and scoped to the repo.
 - Global: Add to User Rules in Cursor Settings
 - Simple alternative: Place in `AGENTS.md` in project root
 
