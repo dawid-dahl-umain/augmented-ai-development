@@ -747,6 +747,7 @@ The two kinds of tests answer different questions:
 - Mock all external dependencies
 - Test suite should run in seconds to tens-of-seconds
 - Apply design pressure through testability
+- Can but doesn’t necessarily map 1:1 to user stories/acceptance criteria
 - Guide code quality and modularity
 - Part of the fast feedback loop in CI/CD
 
@@ -780,7 +781,7 @@ describe("TodoService", () => {
 - Mock unmanaged external dependencies (like third-party APIs)
   - Don't mock managed external dependencies (like app's database)
 - Test suite will run in minutes (slower than unit tests)
-- Map directly to user stories/acceptance criteria
+- Maps 1:1 to user stories/acceptance criteria
 - Verify the system is ready for release
 - Stakeholder-focused (though developers implement)
 
@@ -912,9 +913,15 @@ Otherwise, write "No diagram needed - [brief reason]"]
 - Sequence diagram for complex flows
 - Or describe the system view in text -->
 
+## Spec references
+
+- Reference the authoritative specifications for this feature (e.g., user story + BDD scenarios, PRD sections, RFCs/design docs, Jira tickets, Story Maps, Ubiquitous Language docs). Keep concise.
+- Include stable identifiers or links/paths (doc path, epic/story IDs, section headings).
+
 ## Test Scenario Sequence
 
 > Focus on behavior (what), not implementation (how)
+> Unit-level plan for technical correctness/edge cases; multiple tests may derive from one BDD scenario.
 
 1. [Simplest scenario - usually happy path]
 2. [Next complexity - validation/business rules]
@@ -961,14 +968,22 @@ Service --> Events[Event Bus]
 Repo --> DB[(Database)]
 \`\`\`
 
+## Spec references
+
+- User Story + BDD scenarios: specs/todos.feature
+  - Scenario: Archive completed
+  - Scenario: Prevent archiving incomplete
+  - Scenario: Restore
+- PRD: docs/product/todos.md#archiving
+- Jira: TODO-456
+
 ## Test Scenario Sequence
 
-1. Archive a single completed todo
-2. Prevent archiving incomplete todos
-3. Verify todo moves between active/archived lists
-4. Restore archived todo to active
-5. Emit events for downstream systems
-6. Handle repository failures gracefully
+1. Archive a completed todo moves it from active to archived
+2. Archive is idempotent when the todo is already archived
+3. Prevent archiving an incomplete todo returns a domain error and leaves state unchanged
+4. Restore an archived todo moves it back to active
+5. Restore is idempotent when the todo is already active
 
 ## Boundaries & Dependencies
 
