@@ -5,15 +5,15 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 ## Table of Contents
 
 - [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
+  - [A Note on Adapters and Architecture Patterns](#a-note-on-adapters-and-architecture-patterns)
 - [Quick Reference Table](#quick-reference-table)
 - [Examples in Practice](#examples-in-practice)
-- [Why All Adapters Are Non-Observable Technical](#why-all-adapters-are-non-observable-technical)
 - [Specifications for Technical Details](#specifications-for-technical-details)
   - [What Goes Where](#what-goes-where)
   - [Example Story with Linked Technical Tasks](#example-story-with-linked-technical-tasks)
   - [How Non-Functional Requirements (NFRs) Fit In](#how-non-functional-requirements-nfrs-fit-in)
 - [Practical Workflow Integration](#practical-workflow-integration)
-- [AI Roadmap for Technical Implementation](#ai-roadmap-for-technical-implementation) _(includes all examples below)_
+- [AI Roadmap for Technical Implementation](#ai-roadmap-for-technical-implementation)
   - [Example: REST Input Adapter](#ai-technical-roadmap-template)
   - [Example: Email Output Adapter](#ai-technical-roadmap-template)
   - [Example: CLI Renderer](#ai-technical-roadmap-template)
@@ -36,13 +36,32 @@ Technical work (the latter two categories) is tracked **separately** from BDD sc
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it looks. Mixing them pollutes your specifications and couples behavior to implementation. |
 
+### A Note on Adapters and Architecture Patterns
+
+Whether you're using Hexagonal Architecture (Ports & Adapters), MVC, Clean Architecture, or another pattern, you'll have components that connect your core business logic to the outside world. These adapters/controllers/gateways translate between your domain and external systems.
+
+**All adapters are Non-Observable Technical**, regardless of their output. This might seem counterintuitive for adapters with visual effects (like CLI renderers), but the distinction is important:
+
+- We **test the adapter's logic** (Non-Observable Technical)
+- We **validate pure visual styling** (Observable Technical)
+- The fact that adapter logic might produce visible output doesn't change what we're testing
+
+Examples of adapters (all Non-Observable Technical):
+
+- **Input adapters**: REST endpoints, GraphQL resolvers, CLI parsers, message queue consumers
+- **Output adapters**: Database repositories, email senders, CLI renderers, external API clients
+
+| ☝️                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
+
 ## Quick Reference Table
 
-| Category                                                       | Visible to user? | Typical Items                                                                  | Hexagonal Architecture Examples                                                                                                                                           | Goes in BDD scenarios?                              |
-| -------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| **Observable Behavioral** (Functional requirements)            | Yes              | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                   | Yes                                                 |
-| **Observable Technical** (Pure Presentation / UI)              | Yes              | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | Presentation layer (outside the hexagon): Pure visual elements that style adapter output but don't contain adapter logic                                                  | No – presentation is technical, even though visible |
-| **Non-Observable Technical** (Infrastructure & implementation) | No               | Caching, infra, monitoring, all adapters                                       | All adapter implementations: REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | No                                                  |
+| Category                                                       | What We Test/Validate          | Typical Items                                                                  | Architecture Examples                                                                                                                                                     | Goes in BDD scenarios? |
+| -------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **Observable Behavioral** (Functional requirements)            | Business behavior              | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                   | Yes                    |
+| **Observable Technical** (Pure Presentation / UI)              | Visual presentation            | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | Presentation layer: Pure visual elements that style output but don't contain transformation logic                                                                         | No                     |
+| **Non-Observable Technical** (Infrastructure & implementation) | Implementation & adapter logic | Caching, infra, monitoring, all adapters                                       | All adapter implementations: REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | No                     |
 
 ## Examples in Practice
 
@@ -57,23 +76,6 @@ Technical work (the latter two categories) is tracked **separately** from BDD sc
 - **Behavior (BDD)**: "User archives completed todos"
 - **Observable Technical**: Archive button styling, success toast visual design
 - **Non-Observable Technical**: REST controller (input adapter), email sender (output adapter), database repository (persistence adapter), Redis cache
-
-## Why All Adapters Are Non-Observable Technical
-
-In Hexagonal Architecture (also called Ports & Adapters), adapters connect your core business logic to the outside world; they translate between your domain and external systems. All adapters are in the **Non-Observable Technical** category.
-
-**Why are adapters Non-Observable Technical?**
-
-The adapter logic itself isn't directly visible to users - only its effects are. A CLI renderer contains formatting logic that must be tested, even though its output (the rendered board) is visible. The adapter is Non-Observable Technical because we're testing the translation logic, not the visual result.
-
-| ☝️                                                                                                                                                                                                                                                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
-
-Types of adapters:
-
-- **Input adapters**: REST endpoints, GraphQL resolvers, CLI parsers, message queue consumers
-- **Output adapters**: Database repositories, email senders, CLI renderers, external API clients
 
 ## Specifications for Technical Details
 
