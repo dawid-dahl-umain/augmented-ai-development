@@ -1,3 +1,5 @@
+# AAID: Augmented AI Development
+
 _Professional TDD for AI-Augmented Software Development_
 
 ## Table of Contents
@@ -20,7 +22,12 @@ _Professional TDD for AI-Augmented Software Development_
 - [Appendices (Optional)](#appendices)
   - [Appendix A: Unit Testing and Acceptance Testing](#appendix-a)
   - [Appendix B: Helpful Commands (Reusable Prompts)](#appendix-b)
-  - [Appendix C: AI Environment Configuration](#appendix-c)
+    - [Setup & Planning Commands](#appendix-b-setup-commands)
+    - [TDD Development Commands](#appendix-b-tdd-commands)
+    - [Investigation & Problem Solving Commands](#appendix-b-investigation-commands)
+    - [Misc Commands](#appendix-b-misc-commands)
+  - [Appendix C: AAID AI Workflow Rules](#appendix-c)
+  - [Appendix D: Handling Technical Implementation Details](#appendix-d)
 - [About the Author](#about-author)
 
 ---
@@ -39,9 +46,11 @@ This separates professional software development from "vibe coding." While vibe 
 
 ## The Business Case: What Performance Research Shows
 
-[DORA](https://dora.dev/) (Google Cloud's **DevOps Research and Assessment**) highlights the proven TDD principle `AAID` relies on: developer-owned testing drives performance [[1]](https://dora.dev/capabilities/test-automation/). At the same time, a 25% increase in AI adoption is **associated** with a 7.2% drop in delivery stability and a 1.5% decrease in throughput, and 39% of developers report little to no trust in AI-generated code [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
+[DORA](https://dora.dev/) (Google Cloud's **DevOps Research and Assessment**) highlights the proven TDD principle `AAID` relies on: developer-owned testing drives performance [[1]](https://dora.dev/capabilities/test-automation/). At the same time, a 25% increase in AI adoption correlates with a 7.2% drop in delivery stability and 1.5% decrease in throughput, while 39% of developers report little to no trust in AI-generated code [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report).
 
-`AAID` solves this. The TDD discipline forces every AI-generated line to pass through failing tests and mandatory reviews, capturing AI's productivity gains without the stability loss. DORA's research proves speed and stability aren't tradeoffs [[3]](https://dora.dev/guides/dora-metrics-four-keys/). With `AAID`, speed comes from AI augmentation supported by the safety net of tests, and stability comes from disciplined testing. You get both together, not one at the expense of the other.
+`AAID` solves this. The TDD discipline forces every AI-generated line through comprehensive testing and mandatory reviews, capturing AI's productivity gains (increased **documentation quality**, **code quality**, **review and generation speed** [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)) without the stability loss.
+
+DORA proves speed and stability aren't tradeoffs [[3]](https://dora.dev/guides/dora-metrics-four-keys/). With `AAID`, speed comes from AI augmentation supported by the safety net of tests, stability from disciplined testing. You get both together, not one at the expense of the other.
 
 [1] [DORA Capabilities: Test automation](https://dora.dev/capabilities/test-automation/)
 [2] [Announcing the 2024 DORA report | Google Cloud Blog](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
@@ -82,8 +91,9 @@ Unlike most other AI-driven workflows, `AAID` doesn't try to reinvent product di
 - **Kent Beck**'s TDD cycles
 - **Dave Farley**'s Continuous Delivery and four-layer acceptance testing model
 - **Robert C. Martin**'s Three Laws of TDD
-- **Dan North**'s BDD approach
+- **Daniel Terhorst-North**'s Behaviour-Driven Development (BDD) methodology
 - **Aslak Hellesøy**'s BDD and Gherkin syntax for executable specifications
+- **Martin Fowler**'s work on refactoring and evolutionary design
 - And more.
 
 These battle-tested practices become your foundation that guides AI-assisted development.
@@ -102,19 +112,23 @@ E.g. the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b
 
 Success with `AAID` requires a specific mindset:
 
-1. **🧠 Don't check your brain at the door**
+1: **🧠 Don't check your brain at the door**
 
 You need to comprehend every line of code, every test, every refactoring. The AI generates the code, but you decide what stays, what changes, what is removed, and why.
 
 Without this understanding, you're just _hoping_ things will work, which is sure to spell disaster in any real-world project.
 
-2. **🪜 Incremental steps**
+2: **🪜 Incremental steps**
 
 This mentality is what really sets this AI workflow apart from others. Here, instead of letting the AI go off and produce a lot of dangerous garbage code, you make sure to remain in control by iterating in small, focused steps.
 
 One test at a time. One feature at a time. One refactor at a time.
 
 This is why the TDD cycle in `AAID` adds multiple review checkpoints—**⏸️ AWAIT USER REVIEW**—after each phase (🔴 **RED**, 🟢 **GREEN**, and 🧼 **REFACTOR**).
+
+| ☝️                                                                                                                                                                                                                                  |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| These incremental steps mirror [DORA](https://dora.dev/)'s research on working in small batches: tiny, independent changes give you faster feedback and reduce risk [[1]](https://dora.dev/capabilities/working-in-small-batches/). |
 
 <a id="prerequisite"></a>
 
@@ -211,6 +225,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    - Project README, architecture docs, package.json, etc
    - Overall system design and patterns
    - `AAID` Testing strategy documentation
+   - Technical patterns and adapter implementations (if applicable)
 
    | 🤖                                                                                                                                                     |
    | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -311,6 +326,10 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 
 If the roadmap looks good, now is when disciplined development actually starts!
 
+| ☝️                                                                                                                                                                |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Technical implementation details are planned separately, with another Roadmap template. See [Appendix D: Handling Technical Implementation Details](#appendix-d). |
+
 <a id="stage-3-tdd-starts"></a>
 
 ### ✅ Stage 3: TDD Development Starts
@@ -353,9 +372,9 @@ describe("User archives completed todos", () => {
 
 ![Stage 4 - TDD Cycle](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fh7jmwwb59z02lqqxt3u.jpg)
 
-| 🤖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TDD Commands Enforce the Three Laws**: The reusable TDD commands (`@red-&-stop`, `@green-&-stop`, `@refactor-&-stop`) enforce Robert C. Martin's Three Laws of TDD by putting the AI into a disciplined _mode_.<br><br>• **RED mode**: Write a minimal failing test.<br>• **GREEN mode**: Write the simplest code to pass.<br>• **REFACTOR mode**: Improve code while keeping tests green.<br><br>Re-issue the command with your feedback to lock the AI into the rules of the current phase. |
+| 🤖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **TDD Commands Enforce the Three Laws**: The reusable TDD commands (`@red-&-stop`, `@green-&-stop`, `@refactor-&-stop`) enforce Robert C. Martin's Three Laws of TDD by putting the AI into a disciplined _mode_.<br><br>• **RED mode**: Write a minimal failing test.<br>• **GREEN mode**: Write the simplest code to pass.<br>• **REFACTOR mode**: Improve code while keeping tests green.<br><br>The AAID [rules file](#appendix-c) often handles phase discipline automatically, but these commands provide explicit control when needed. Re-issue them with your own feedback to guide the AI within each phase. |
 
 For each test, follow this disciplined 3-phase cycle:
 
@@ -370,7 +389,7 @@ For each test, follow this disciplined 3-phase cycle:
 > - **Collaborate and generate with AI** ¹
 > - **Run tests**
 > - **Handle potential issues** _(if any arise)_
->   - Use `@analyze-&-stop` or other [investigation & problem solving commands](#investigation-commands) as needed
+>   - Use `@analyze-&-stop` or other [investigation & problem solving commands](#appendix-b-investigation-commands) as needed
 > - **`AWAIT USER REVIEW`**
 
 Let's walk through a full TDD cycle using this consistent structure.
@@ -400,9 +419,9 @@ Scenario: Add a new active todo
   And the todo should not be completed
 ```
 
-| ☝️                                                                                                                                                                                                                                                            |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Unit tests build incrementally**, testing one behavior at a time. They don't need to map 1:1 with acceptance criteria, that's the acceptance test's job.<br><br>More on this distinction in [Appendix A: Unit Testing and Acceptance Testing](#appendix-a). |
+| ☝️                                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Unit tests build incrementally**, testing one behavior at a time. As they plan for fine-grained technical correctness/edge cases, unit tests don't always need to map 1:1 with acceptance criteria; that's the acceptance test's job.<br><br>More on this distinction in [Appendix A: Unit Testing and Acceptance Testing](#appendix-a). |
 
 ---
 
@@ -420,7 +439,7 @@ Scenario: Add a new active todo
 **→ Handle potential issues** _(if any arise)_
 
 - If test passes unexpectedly: AI stops and reports the issue
-- Choose investigation approach (often using [investigation & problem solving commands](#investigation-commands) like `@analyze-&-stop`)
+- Choose investigation approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `@analyze-&-stop`)
 - AI implements your chosen fix, then stops for review
 
 **Example RED phase prompt:**
@@ -513,7 +532,7 @@ describe("TodoService", () => {
 **→ Handle potential issues** _(if any arise)_
 
 - If tests fail: AI stops and reports which ones failed
-- Choose debugging approach (often using [investigation & problem solving commands](#investigation-commands) like `@debug-&-stop`)
+- Choose debugging approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `@debug-&-stop`)
 - AI implements your chosen solution, then stops for review
 
 **Example GREEN phase prompt:**
@@ -570,7 +589,7 @@ export class TodoService {
 
 - If refactoring breaks tests: AI stops and reports what failed
 - Review failure and choose: fix the issue or revert to green state
-- Use [investigation & problem solving commands](#investigation-commands) like `@minimal-fix-&-analyze-&-stop` for fixes
+- Use [investigation & problem solving commands](#appendix-b-investigation-commands) like `@minimal-fix-&-analyze-&-stop` for fixes
 - Revert when the refactoring approach itself is flawed
 
 **Example REFACTOR phase prompt:**
@@ -833,6 +852,8 @@ In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing th
 
 Here are examples of some helpful reusable prompt commands—e.g. Cursor notepads or whatever your AI IDE or CLI offers—to help you speed up your prompting. Use or change them as you wish.
 
+<a id="appendix-b-setup-commands"></a>
+
 ### **Setup & Planning Commands**
 
 ### `@project-context`
@@ -920,8 +941,8 @@ Otherwise, write "No diagram needed - [brief reason]"]
 
 ## Test Scenario Sequence
 
-> Focus on behavior (what), not implementation (how)
-> Unit-level plan for technical correctness/edge cases; multiple tests may derive from one BDD scenario.
+<!-- Focus on behavior (what), not implementation (how) -->
+<!-- Unit-level plan for technical correctness/edge cases; multiple tests may derive from one BDD scenario. -->
 
 1. [Simplest scenario - usually happy path]
 2. [Next complexity - validation/business rules]
@@ -1007,6 +1028,8 @@ Repo --> DB[(Database)]
 Regenerate if requirements change, test order needs adjustment, or system boundaries shift. Don't add implementation details discovered through TDD.
 ```
 
+<a id="appendix-b-tdd-commands"></a>
+
 ### TDD Development Commands
 
 _Used in Stage 4: The TDD Cycle_
@@ -1017,7 +1040,9 @@ These `AAID` commands embed the Three Laws of TDD:
 2. **Write only enough test code to fail**
 3. **Write only enough production code to pass**
 
-Each command enforces these laws at the appropriate phase. Commands are self-contained - each works independently without requiring context from the others.
+Each command enforces these laws at the appropriate phase. The commands serve as simple triggers that reference the detailed instructions in the [AAID rules file](#appendix-c), which is the single source of truth for the workflow.
+
+**In practice:** Since the rules file is automatically loaded by your IDE/CLI, you often won't need these commands; the AI will follow the workflow from the rules alone. The commands remain useful as explicit phase triggers when needed.
 
 | ☝️                                                                                                                   |
 | -------------------------------------------------------------------------------------------------------------------- |
@@ -1026,99 +1051,40 @@ Each command enforces these laws at the appropriate phase. Commands are self-con
 ### **`@red-&-stop`**
 
 ```
-RED Phase: Write ONE minimal failing test, then STOP.
+Enter RED phase as defined in the AAID rules file:
 
-**Core Principle:** Write only enough test code to fail - no production code without a failing test first.
+<!-- Rules file should have been automatically injected by IDE/CLI -->
 
-Instructions:
-1. Write the SMALLEST test that will fail for the next requirement
-   - Start with the simplest case if beginning a feature
-   - Add the next logical test if continuing development
-   - Compilation/import errors are valid failures (e.g., missing function/class)
-   - Do not write more test code than is needed to fail
-
-2. Test structure requirements:
-   - Test WHAT the system does (behavior), not HOW (implementation details)
-   - Test names describe the expected behavior
-   - Use Given/When/Then comments for clarity
-   - Mock all external dependencies
-   - One assertion per test, or tightly related assertions for one behavior
-   - Avoid brittle tests
-
-3. Run the test and verify it fails as expected
-
-4. If test passes unexpectedly: STOP and report this to user for direction
-
-5. Present the test and its result, then STOP.
-
-**AWAIT USER REVIEW** before proceeding to GREEN phase.
+- Enforce RED phase rules and execute phase instructions
+- STOP and AWAIT USER REVIEW
+- If rules file missing, STOP and request it
 ```
 
 ### **`@green-&-stop`**
 
 ```
-GREEN Phase: Write MINIMAL code to pass the test, then STOP.
+Enter GREEN phase as defined in the AAID rules file:
 
-**Core Principle:** Write only enough production code to make the failing test pass - nothing more.
+<!-- Rules file should have been automatically injected by IDE/CLI -->
 
-Instructions:
-1. Write the ABSOLUTE MINIMUM code to make the current failing test pass
-   - Hardcoded return values are acceptable if the test doesn't require more
-   - Do NOT handle edge cases the test doesn't check
-   - Do NOT add validation the test doesn't verify
-   - Do NOT implement features for future tests
-
-2. Focus only on passing the current test:
-   - If test expects "Hello", return "Hello" (not a variable)
-   - If test expects one specific calculation, do only that calculation
-   - Future tests will force you to generalize
-   - When multiple tests exist, the "minimum" is code that passes ALL tests
-
-3. Verify ALL tests pass (current + existing)
-
-4. If any test fails: STOP and report which tests failed for user direction
-
-5. Present the implementation, then STOP.
-
-**AWAIT USER REVIEW** before proceeding to REFACTOR phase.
-
-Remember: Premature generalization is over-engineering.
+- Enforce GREEN phase rules and execute phase instructions
+- STOP and AWAIT USER REVIEW
+- If rules file missing, STOP and request it
 ```
 
 ### **`@refactor-&-stop`**
 
 ```
-REFACTOR Phase: Improve code quality while tests stay green, then STOP.
+Enter REFACTOR phase as defined in the AAID rules file:
 
-**Core Principle:** With passing tests as a safety net, improve code structure and add supporting code.
+<!-- Rules file should have been automatically injected by IDE/CLI -->
 
-Instructions:
-1. Evaluate code that now has passing tests for improvements:
-   - Improve code quality: modularity, abstraction, cohesion, separation of concerns, coupling management, readability, testability
-   - Remove duplication (DRY principle)
-   - Improve naming for clarity
-   - Simplify complex logic where beneficial
-   - If already clean, indicate no refactoring is needed with reasoning
-
-2. Add supporting code that doesn't change tested behavior (only if needed):
-   - Logging statements for debugging
-   - Performance optimizations
-   - Error messages for user experience
-   - Code comments for complex algorithms
-   - Type definitions for clarity
-
-3. Keep all tests passing throughout refactoring
-   - Run tests after each change
-   - If any test fails: STOP immediately and report what broke for user instruction
-
-4. Present the outcome, then STOP.
-
-**AWAIT USER REVIEW** before writing the next test.
-
-Note: This is the ONLY phase where you can add code beyond what behavioral tests require (logging, comments, optimization, etc.)
+- Enforce REFACTOR phase rules and execute phase instructions
+- STOP and AWAIT USER REVIEW
+- If rules file missing, STOP and request it
 ```
 
-<a id="investigation-commands"></a>
+<a id="appendix-b-investigation-commands"></a>
 
 ### Investigation & Problem Solving Commands
 
@@ -1186,7 +1152,9 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 6. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
 ```
 
-### Git Commands
+<a id="appendix-b-misc-commands"></a>
+
+### Misc Commands
 
 ### `@git-commit`
 
@@ -1201,11 +1169,120 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 These are just some examples of AI Commands. Feel free to change them, create new ones, or not use them at all. But do use reusable prompts, as it can greatly speed up your work.
 
+### `@gherkin-guard`
+
+```
+# Gherkin Guard Command
+
+Enforce consistent Gherkin-style Given/When/Then comments in test(s) you're currently working with. Use this command when writing new tests or reviewing specific existing tests.
+
+## Goal
+
+Enforce our Gherkin-style Given/When/Then comments in tests without changing behavior.
+
+## Supported Structures
+
+Choose one per test:
+- **A) Standard:** `// Given` → `// When` → `// Then`
+- **B) Minimal:** `// When` → `// Then` (only when no setup is needed)
+
+## Notes (Spec vs. Team Style)
+
+- Gherkin allows multiple Then steps; our team style restricts to one `// Then`. Use `// And` or `// But` for additional expectations.
+
+## Team Rules — Structure
+
+- Exactly one `// Then`. Extra expectations go under the same `// Then` as `// And` (or `// But`). No second `// Then`.
+- If additional expectations aren't tightly related to the same behavior, prefer a **separate test case**.
+- `// When` is one triggering event. If more seem needed, move prep to `// Given` or split; use `// And` after `// When` only if inseparable.
+- No assertions in `// Given` or `// When`.
+- No loops/conditionals inside tests.
+- Do **not** include an empty `// Given`. If there's no setup, use structure B.
+
+## Team Rules — Formatting
+
+- Comments must be exactly: `// Given`, `// When`, `// Then`, `// And`, `// But` (capitalized; one space after `//`; no extra text).
+- The code for a section starts on the next line (no blank line between the comment and its code).
+- No empty section comments.
+- Exactly 1 blank line between sections.
+
+## Action
+
+- **Scope:** Apply only to the test(s) being discussed or referenced in the current context
+- **New tests:** Generate following these rules
+- **Existing tests:** Rewrite to comply, preserving intent and outcome
+- **Output:** Final test code only (no explanations unless requested)
+
+## Self-Check (Internal Use)
+
+Verify all are true before outputting:
+
+- [ ] Uses A (`Given`/`When`/`Then`) or B (`When`/`Then`)
+- [ ] `When` is one triggering event (`And` only if inseparable)
+- [ ] Extra expectations use `And`/`But` (no extra `Then`)
+- [ ] If expectations aren't tightly related, split into another test
+- [ ] No assertions in `Given`/`When`; no loops/conditionals
+- [ ] Comment casing/spacing exact; no extra text
+- [ ] No empty sections; no blank line between comment and its code
+- [ ] Exactly 1 blank line between sections
+
+## Examples (Valid Per Our Team Style)
+
+### 1: Standard
+
+\`\`\`ts
+it('adds a new item to the list', () => {
+  // Given
+  const list = createList()
+
+  // When
+  list.add('Milk')
+
+  // Then
+  expect(list.items).toContain('Milk')
+})
+\`\`\`
+
+### 2: Minimal (No Setup)
+
+\`\`\`ts
+it('returns empty results for an unknown query', () => {
+  // When
+  const results = search('unknown')
+
+  // Then
+  expect(results).toHaveLength(0)
+})
+\`\`\`
+
+### 3: Multiple Expectations via And/But
+
+\`\`\`ts
+it('authenticates a user but locks on too many attempts', () => {
+  // Given
+  const auth = createAuth()
+  auth.failLogin('alice'); auth.failLogin('alice')
+
+  // When
+  auth.failLogin('alice')
+
+  // Then
+  expect(auth.isAuthenticated()).toBe(false)
+
+  // And
+  expect(auth.attempts('alice')).toBe(3)
+
+  // But
+  expect(auth.isLocked('alice')).toBe(true)
+})
+\`\`\`
+```
+
 ---
 
 <a id="appendix-c"></a>
 
-## Appendix C: AI Environment Configuration
+## Appendix C: AAID AI Workflow Rules
 
 Configure your AI environment to understand the AAID workflow. These are simple text instructions - no special AAID app or tool is required. The workflow rules get loaded by your AI tool (via `.cursor/rules`, `CLAUDE.md`, or similar instruction files), focusing on workflow state management rather than project specifics.
 
@@ -1215,6 +1292,10 @@ These AI workflow rules/instructions get loaded for **every prompt**, so keep th
 
 - **What belongs here:** The `AAID` workflow rules, and other general custom instructions for the AI such as tonality
 - **What doesn’t:** Project-specific code (load those once in Stage 1: Context Providing instead for every new agent session)
+
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on AI instruction following accuracy**: At the time of writing, current AIs are good, but not perfect, at following instructions and rules such as the **AAID AI Workflow Rules**. Sometimes you may need to remind the AI if it for example forgets a TDD phase, or moves to Green without stopping for user review at Red.<br><br>As LLMs improve over time, you'll need to worry less about this. |
 
 ### AAID AI Workflow Rules/Instructions
 
@@ -1233,16 +1314,37 @@ You are assisting a developer who may use `AAID` (Augmented AI Development) - a 
 
 - The developer maintains architectural control and reviews all code
 - You (the AI) generate tests and implementation following TDD discipline
-- The AAID version of the TDD workflow proceeds through strict RED → AWAIT USER REVIEW → GREEN → AWAIT USER REVIEW → REFACTOR → AWAIT USER REVIEW cycles
+- The workflow proceeds through strict RED → AWAIT USER REVIEW → GREEN → AWAIT USER REVIEW → REFACTOR → AWAIT USER REVIEW cycles
 - Every phase requires developer review before proceeding
+- Tests guide development based on provided specifications
 
-Your role: Generate code when requested, follow TDD rules strictly when in TDD mode, and always AWAIT USER REVIEW between phases.
+Your role: Generate code when requested, follow TDD rules strictly when in TDD mode, and always STOP between phases.
+
+## The Full AAID Workflow Sequence
+
+The complete AAID workflow follows this order:
+
+1. **Stage 1: Context Providing** (normal conversation mode)
+   - User provides project context, specifications, and relevant code
+   - AI reads and acknowledges understanding
+2. **Stage 2: Planning** (normal conversation mode, optional)
+   - Discuss feature approach and create roadmap with test scenarios
+   - AI helps plan but doesn't write code yet
+3. **Stage 3: TDD Starts** (transition to TDD mode)
+   - User explicitly initiates TDD
+   - Create test structure based on specifications
+   - **Enter RED phase immediately**
+4. **Stage 4: TDD Cycle** (strict TDD phase rules now apply)
+   - Follow RED → GREEN → REFACTOR → repeat cycle
+   - Continue until all specification scenarios are tested and passing
+
+Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as defined below.
 
 ## Recognizing AAID TDD Mode
 
 **AAID TDD mode is ACTIVE when:**
 
-- User explicitly says "start TDD", "begin AAID", “use test list", or similar
+- User explicitly says "start TDD", "begin AAID", "use test list", or similar
 - User references TDD phases: "RED phase", "GREEN phase", "REFACTOR phase"
 - User asks to write a failing test, make a test pass, or refactor with tests green
 - Currently in an active TDD cycle that hasn't been completed
@@ -1258,95 +1360,131 @@ Your role: Generate code when requested, follow TDD rules strictly when in TDD m
 
 **Priority for determining phase:**
 
-1. Explicit declaration ("we're in RED phase") overrides all
-2. Continue previous phase unless changed
-3. If unclear, ask: "Which TDD phase are we in?"
+1. Explicit user declaration ("we're in RED phase") overrides all
+2. Follow strict sequence: RED → GREEN → REFACTOR → RED (no skipping phases)
+3. If unclear which phase, ask: "Which TDD phase are we in?"
 
 ## TDD Cycle Phases
+
+**IMPORTANT:** These phases only apply when TDD mode is active. Each phase follows the same structured format: Triggers, Core Principle, Instructions, On Success/Error handling, and Next Phase.
 
 ### 🔴 RED Phase - Write Failing Test
 
 **Triggers:** "write test", "test for", "red", "next test", "red phase"
-**Actions:**
 
-- Write ONE test for ONE behavior
-- Focus on API design - how will code be used?
-- Test WHAT not HOW (behavior, not implementation)
-- Must fail (compilation errors count)
-  **Completion:** Report test status and AWAIT USER REVIEW
-  **On Error:** If test passes unexpectedly, STOP and report for user direction
+**Core Principle:** Write only enough test code to fail - no production code without a failing test first. Let tests drive design.
+
+**Instructions:**
+
+1. Write the SMALLEST test that will fail for the next requirement
+   - If test list exists: Un-skip the next test and implement its body
+   - If single test approach: Write a new test for the next scenario
+   - Follow test sequence from roadmap/specs if provided
+   - Start with simplest scenario (usually happy path) for new features
+   - Compilation/import errors are valid failures
+2. Test structure requirements:
+   - Use Given/When/Then structure (Gherkin format):
+     \`\`\`javascript
+     // Given
+     [setup code]
+
+     // When
+     [action code]
+
+     // Then
+     [assertion code]
+     \`\`\`
+
+   - Comments exactly as shown: `// Given`, `// When`, `// Then` (optional: `// And`, `// But`)
+   - No other test structure comments allowed
+   - Test behavior (WHAT), not implementation (HOW)
+   - Mock ALL external dependencies (databases, APIs, file systems, network calls)
+   - One assertion per test, or tightly related assertions for one behavior
+   - No conditionals/loops in tests
+   - Test names describe business behavior
+   - Tests must run in milliseconds
+3. Run test and verify failure
+4. Run tests after EVERY code change
+
+**On Success:** Present test and result, then **STOP AND AWAIT USER REVIEW**
+**On Error:** If test passes unexpectedly, **STOP** and report (violates TDD, risks false positives)
+**Next Phase:** GREEN (mandatory after approval)
 
 ### 🟢 GREEN Phase - Make Test Pass
 
 **Triggers:** "make pass", "implement", "green", "green phase"
-**Actions:**
 
-- Write ONLY enough code to pass current test
-- Maintain all previous passing tests
-- No logic for untested scenarios
-- Hardcode values if test doesn't demand more
-  **Completion:** Report implementation status and AWAIT USER REVIEW
-  **On Error:** If tests fail, STOP and report which ones for user direction
+**Core Principle:** Write only enough production code to make the failing test pass - nothing more. Let tests drive design, avoid premature optimization.
 
-### 🧼 REFACTOR Phase - Improve Code
+**Instructions:**
+
+1. Write ABSOLUTE MINIMUM code to pass current test
+   - Hardcode values if test doesn't require more
+   - NO untested edge cases, validation, or future features
+   - If test expects "Hello", return "Hello" (not a variable)
+   - If test expects specific calculation, do only that calculation
+   - Premature generalization is over-engineering
+2. When multiple tests exist, "minimum" means code that passes ALL tests
+3. Verify ALL tests pass (current + existing)
+4. Run tests after EVERY code change
+
+**On Success:** Present implementation, then **STOP AND AWAIT USER REVIEW**
+**On Error:** If any test fails, **STOP** and report which ones
+**Next Phase:** REFACTOR (mandatory after approval - NEVER skip to next test)
+
+### 🧼 REFACTOR Phase - Improve Code Quality
 
 **Triggers:** "refactor", "improve", "clean up", "refactor phase"
-**Actions:**
 
-- Only refactor with ALL tests green
-- Apply improvements: modularity, abstraction, cohesion, readability, separation of concerns
-- Only refactor if actually needed
-- Add non-behavioral improvements (logging, performance) here only (but only if needed)
-  **Completion:** Report refactoring status (or if none needed) and AWAIT USER REVIEW
-  **On Error:** If tests break, STOP and report for user direction
+**Core Principle:** With passing tests as safety net, improve code structure and update tests if design changes. No premature optimization.
+
+**Instructions:**
+
+1. Evaluate for improvements (always complete evaluation):
+   - Code quality: modularity, abstraction, cohesion, separation of concerns, readability
+   - Remove duplication (DRY), improve naming, simplify logic
+   - If no improvements needed, state "No refactoring needed" explicitly
+2. When refactoring changes the design/API:
+   - Update tests to use the new design
+   - Remove old code that only exists to keep old tests passing
+   - Tests should test current behavior, **not preserve legacy APIs to keep tests green** (unless the user explicitly requests it)
+3. Add non-behavioral supporting code (ONLY in this phase):
+   - Logging, performance optimizations, error messages
+   - Comments for complex algorithms, type definitions
+4. Keep all tests passing throughout
+   - Run tests after EVERY code change
+
+**On Success:** Present outcome (even if "no refactoring needed"), then **STOP AND AWAIT USER REVIEW**
+**On Error:** If any test breaks, **STOP** and report what broke
+**Next Phase:** After approval, automatically continue to RED for next test if more specs/scenarios remain. If all covered, feature complete.
 
 ## Starting TDD
 
 When user initiates TDD mode:
 
-- User will decide to create a test list with skipped tests, or an empty first test (just name, no implementation)
-- Never implement one or multiple tests upfront: RED phase implements
-- Indicate test structure is ready and which phase to begin with
+User chooses approach (ask which they prefer if not clear):
 
-## Test Structure Requirements
+1. **Test List**: Create list of unimplemented tests (skipped - e.g. `it.skip`) based on Roadmap plan file (if available)
+2. **Single Test**: Start with one single unimplemented empty/skipped test for simplest scenario based on Roadmap plan file (if available)
 
-**MANDATORY in all tests:**
-\`\`\`markdown
-// Given
-// When  
-// Then
-\`\`\`
+In all cases:
 
-- NO other test structure comments beyond Given/When/Then
-- No conditionals/loops in tests
-- Test names describe business behavior in BDD style (system behaviour not implementation)
-- Each test builds incrementally on previous ones
-
-## The Three Laws of TDD
-
-1. No production code without failing test
-2. Only enough test to fail
-3. Only enough code to pass
+- Only create test structure in Stage 3 - RED phase implements
+- Each test gets complete RED→GREEN→REFACTOR cycle
+- Never implement multiple tests at once
 
 ## Critical Rules
 
-- Run tests after EVERY code change
-- Tests run in milliseconds (mock externals)
-- Let tests drive design - no premature optimization
-- State persists - remember current phase
+- **NEVER skip REFACTOR phase** - even if no changes needed, must explicitly complete it
+- **ALWAYS STOP AND AWAIT USER REVIEW between phases** - this is mandatory
+- State persists between messages - remember current phase and test progress
 - Explicit user instructions override AAID workflow rules
-- Always AWAIT USER REVIEW between phases
 
-## Note on the Full AAID Workflow
+### The Three Laws of TDD
 
-While these rules focus on the TDD cycle enforcement, developers following AAID will typically:
-
-1. First provide context (Stage 1) - handled as normal conversation
-1. Then plan the approach (Stage 2) - handled as normal discussion
-1. Explicitly start TDD (Stage 3) - this activates the rules above
-1. Follow the TDD cycle (Stage 4) - strictly enforced by these rules
-
-The AI assists naturally with context and planning without special rules, then enforces discipline when TDD begins.
+1. Write no production code without a failing test
+2. Write only enough test code to fail
+3. Write only enough production code to pass
 ```
 
 ### Usage Guide
@@ -1362,6 +1500,12 @@ Place in `CLAUDE.md` file in your project root (or `~/.claude/CLAUDE.md` for glo
 
 **For other AI tools:**
 Look for "custom instructions", "custom rules", or "system prompt" settings
+
+<a id="appendix-d"></a>
+
+## Appendix D: Handling Technical Implementation Details
+
+Available here: [link](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
 
 ---
 
