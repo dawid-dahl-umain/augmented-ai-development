@@ -63,7 +63,7 @@ Examples of adapters (all Non-Observable Technical):
 | **Observable Technical** (Pure Presentation / UI)              | Visual presentation            | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | Presentation layer: Pure visual elements that style output but don't contain transformation logic                                                                         | No                     |
 | **Non-Observable Technical** (Infrastructure & implementation) | Implementation & adapter logic | Caching, infra, monitoring, all adapters                                       | All adapter implementations: REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | No                     |
 
-The key distinction: **Observable** categories involve what users directly experience (behavior or pure visuals), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces visible output.
+> The key distinction: **Observable** categories involve what users directly experience (behavior or pure visuals), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces visible output.
 
 ## Examples in Practice
 
