@@ -18,7 +18,6 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
   - [Example: Observable Technical - Visual Styling](#ai-technical-roadmap-template)
 - [TDD Workflow for Technical Implementation](#tdd-workflow-for-technical-implementation)
 - [Key Integration Patterns](#key-integration-patterns)
-- [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
 - [Practical Guidelines](#practical-guidelines)
 
 ## Understanding Technical Implementation Categories
@@ -37,11 +36,11 @@ Technical work (the latter two categories) is tracked **separately** from BDD sc
 
 ## Quick Reference Table
 
-| Category                                                       | Outcome visible to user? | Typical Items                                                                  | Hexagonal Architecture Examples                                                                                                                                           | Goes in BDD scenarios?                              |
-| -------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| **Observable Behavioral** (Functional requirements)            | Yes                      | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                   | Yes                                                 |
-| **Observable Technical** (Pure Presentation / UI)              | Yes                      | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | Presentation layer (outside the hexagon): Pure visual elements that style adapter output but don't contain adapter logic                                                  | No – presentation is technical, even though visible |
-| **Non-Observable Technical** (Infrastructure & implementation) | No                       | Caching, infra, monitoring, all adapters                                       | All adapter implementations: REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | No                                                  |
+| Category                                                       | Visible to user? | Typical Items                                                                  | Hexagonal Architecture Examples                                                                                                                                           | Goes in BDD scenarios?                              |
+| -------------------------------------------------------------- | ---------------- | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| **Observable Behavioral** (Functional requirements)            | Yes              | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                   | Yes                                                 |
+| **Observable Technical** (Pure Presentation / UI)              | Yes              | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | Presentation layer (outside the hexagon): Pure visual elements that style adapter output but don't contain adapter logic                                                  | No – presentation is technical, even though visible |
+| **Non-Observable Technical** (Infrastructure & implementation) | No               | Caching, infra, monitoring, all adapters                                       | All adapter implementations: REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | No                                                  |
 
 ## Examples in Practice
 
@@ -113,6 +112,56 @@ Linked Technical Tasks:
 - TECH-106: Add performance monitoring for archive operation
 - TECH-107: Implement email notification sender for archive confirmations
 ```
+
+### How Non-Functional Requirements (NFRs) Fit In
+
+NFRs (performance, security, accessibility, etc) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story:
+
+- NFRs like accessibility or responsiveness are detailed within **Linked Presentation / UI Tasks**.
+- NFRs like performance or security are detailed within **Linked Technical Tasks**.
+
+This keeps NFRs out of BDD scenarios entirely, while ensuring they're properly tracked and validated.
+
+Here's how the linked tasks from the story example above could look when expanded with their NFRs:
+
+**Example Linked Technical Task with Performance NFRs:**
+
+```markdown
+Title: Implement REST PUT /todos/{id}/archive endpoint
+
+Acceptance Criteria:
+
+- Accepts JSON payload with todo ID and user authentication
+- Returns 200 with archived todo on success
+- Returns 404 when todo doesn't exist
+- Returns 401 for unauthenticated requests
+- Must respond under 200ms for 95th percentile
+- Supports 1000 concurrent requests
+- Includes integration tests covering all response codes
+
+Security Requirements:
+
+- JWT authentication required
+- Rate limiting: 100 requests per minute per user
+```
+
+**Example Linked Presentation Task with Accessibility NFRs:**
+
+```markdown
+Title: Style archived todo visual state
+
+Acceptance Criteria:
+
+- Matches Figma design specifications
+- Archived todos visually distinct from active todos
+- Supports dark mode color scheme
+- Mobile responsive (320px to 1920px)
+- WCAG 2.1 AA contrast requirements (4.5:1 minimum)
+- Screen reader announces archived state
+- Keyboard navigation maintains focus visibility
+```
+
+The key principle is to keep NFRs **out** of BDD scenarios while ensuring they're **visible** and **testable** in the linked technical tasks. How you structure the technical task tickets themselves is flexible. Teams can organize NFRs within acceptance criteria, dedicated NFR sections, checklists, or any format that fits their workflow and tooling.
 
 ## Practical Workflow Integration
 
@@ -408,7 +457,7 @@ Output Adapter
 - ASCII art design should be clear and readable
   \`\`\`
 
-## Example (Observable Technical - Visual Styling)
+## Example (Visual Styling)
 
 \`\`\`markdown
 
@@ -590,42 +639,6 @@ Dependencies flow inward. Domain never knows about technical elements. Technical
 - **Integration tests**: Test connection layers with real managed dependencies, mock unmanaged ones
 - **Contract tests**: Test with toggleable mocking - real connections for deploy validation, mocked for development
 - **Unit tests**: Test domain in isolation
-
-## Common Pitfalls to Avoid
-
-**❌ Using implementation-focused test names:**
-
-```tsx
-// WRONG - test name reveals implementation
-it("should call database.insert()", async () => {
-  // Test implementation
-});
-```
-
-**✅ Use behavior-focused test names:**
-
-```tux
-// RIGHT - test name describes behavior
-it("should persist todo and return it with generated ID", async () => {
-  // Test implementation
-  // The name stays valid even if implementation changes
-});
-```
-
-**❌ Not mocking unmanaged dependencies:**
-
-```tsx
-// WRONG - calls real external API in tests
-const response = await stripeClient.createCharge(...)
-```
-
-**✅ Mock unmanaged, use real managed:**
-
-```tsx
-// RIGHT - mock external, real database
-const mockStripeClient = createStripeMock();
-const realDatabase = getTestDatabase();
-```
 
 ## Practical Guidelines
 
