@@ -1,6 +1,6 @@
 # Appendix D: Handling Technical Implementation Details
 
-While the main `AAID` guide focuses on BDD/TDD for business logic, real applications need adapters, infrastructure, and presentation layers. This appendix shows how to apply `AAID` principles to these technical implementation details.
+While the main `AAID` guide focuses on BDD/TDD for business logic, real applications need adapters, infrastructure, and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
 
 ## Table of Contents
 
@@ -117,10 +117,31 @@ Linked Technical Tasks:
 
 ### How Non-Functional Requirements (NFRs) Fit In
 
-NFRs (performance, security, accessibility, etc) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story:
+NFRs (performance, security, accessibility, etc) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story, never in BDD scenarios.
 
-- NFRs like accessibility or responsiveness are detailed within **Linked Presentation / UI Tasks**.
-- NFRs like performance or security are detailed within **Linked Technical Tasks**.
+**Counter-example: What NOT to do**
+
+```gherkin
+❌ Wrong: BDD Scenario polluted with NFRs
+Scenario: Archive todo with performance requirements
+  Given the system has 1000 concurrent users
+  When they all archive todos simultaneously
+  Then each request completes in under 200ms
+  And the database uses less than 100MB of memory
+  And the response includes proper CORS headers
+
+✅ Right: BDD Scenario focused on behavior
+Scenario: User archives completed todo
+  Given I have a completed todo "Buy milk"
+  When I archive the todo
+  Then the todo appears in my archived list
+  And it no longer appears in my active list
+```
+
+The performance, security, and technical constraints belong in the linked technical tasks, not in the BDD scenarios. Specifically:
+
+- NFRs like accessibility or responsiveness are detailed within **Linked Presentation / UI Tasks**
+- NFRs like performance or security are detailed within **Linked Technical Tasks**
 
 This keeps NFRs out of BDD scenarios entirely, while ensuring they're properly tracked and validated.
 
