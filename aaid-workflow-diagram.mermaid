@@ -80,6 +80,10 @@ graph TD
     
     Complete["✨ Feature Complete<br/>(All Tests Green for This Feature)"] --> Deploy["📦 Ready for Deployment Pipeline"]
     
+    %% TECHNICAL IMPLEMENTATION NOTE
+    TechNote["📑 Technical Implementation<br/>(adapters, infrastructure, styling)<br/>tracked separately<br/>→ See Appendix D"]
+    PlanningPhase -.->|"Planned separately"| TechNote
+    
     %% STYLES - NO CHANGES
     style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
     style ContextPhase fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
@@ -123,3 +127,4 @@ graph TD
     style CreateNext fill:#fef9e7,stroke:#f9a825,stroke-width:2px,color:#000
     style Complete fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
     style Deploy fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
+    style TechNote fill:#e8eaf6,stroke:#5e35b1,stroke-width:2px,stroke-dasharray: 5 5,color:#000
