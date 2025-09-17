@@ -46,10 +46,32 @@ Whether you're using Hexagonal Architecture (Ports & Adapters), MVC, Clean Archi
 - We **validate pure visual styling** (Observable Technical)
 - The fact that adapter logic might produce visible output doesn't change what we're testing
 
-Examples of adapters (all Non-Observable Technical):
+Examples of adapters (all **Non-Observable Technical**):
 
-- **Input adapters**: REST endpoints, GraphQL resolvers, CLI parsers, message queue consumers
-- **Output adapters**: Database repositories, email senders, CLI renderers, external API clients
+### Driving Adapters (Inputs)
+
+These bring requests _into_ the domain:
+
+- REST/HTTP controllers
+- GraphQL resolvers (queries, mutations)
+- CLI parsers
+- Message-queue **consumers**
+- Webhook handlers
+- Schedulers / cron jobs
+- File/FS watchers
+
+### Driven Adapters (Outputs)
+
+These are called _by_ the domain to interact with the outside:
+
+- Database repositories
+- External API clients
+- Email/SMS/Push senders
+- Message-queue **publishers**
+- Caches (Redis, Memcached)
+- Filesystem writers
+- Renderers / presenters (CLI renderer, templating engine)
+- Loggers / metrics collectors
 
 | ☝️                                                                                                                                                                                                                                                 |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
