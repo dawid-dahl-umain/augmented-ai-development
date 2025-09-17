@@ -7,7 +7,7 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 - [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
 - [Quick Reference Table](#quick-reference-table)
 - [Examples in Practice](#examples-in-practice)
-- [Understanding Adapters in Hexagonal Architecture](#understanding-adapters-in-hexagonal-architecture)
+- [Why All Adapters Are Non-Observable Technical](#why-all-adapters-are-non-observable-technical)
 - [Specifications for Technical Details](#specifications-for-technical-details)
   - [What Goes Where](#what-goes-where)
   - [Example Story with Linked Technical Tasks](#example-story-with-linked-technical-tasks)
@@ -58,7 +58,7 @@ Technical work (the latter two categories) is tracked **separately** from BDD sc
 - **Observable Technical**: Archive button styling, success toast visual design
 - **Non-Observable Technical**: REST controller (input adapter), email sender (output adapter), database repository (persistence adapter), Redis cache
 
-## Understanding Adapters in Hexagonal Architecture
+## Why All Adapters Are Non-Observable Technical
 
 In Hexagonal Architecture (also called Ports & Adapters), adapters connect your core business logic to the outside world; they translate between your domain and external systems. All adapters are in the **Non-Observable Technical** category.
 
@@ -123,6 +123,7 @@ NFRs (performance, security, accessibility, etc) are handled as technical requir
 
 ```gherkin
 ❌ Wrong: BDD Scenario polluted with NFRs
+
 Scenario: Archive todo with performance requirements
   Given the system has 1000 concurrent users
   When they all archive todos simultaneously
@@ -131,6 +132,7 @@ Scenario: Archive todo with performance requirements
   And the response includes proper CORS headers
 
 ✅ Right: BDD Scenario focused on behavior
+
 Scenario: User archives completed todo
   Given I have a completed todo "Buy milk"
   When I archive the todo
