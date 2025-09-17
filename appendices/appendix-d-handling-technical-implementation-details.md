@@ -28,7 +28,7 @@ The `AAID` framework divides all development work into three categories to maint
 - **Observable Technical**: Pure visual/presentation elements that users see but aren't behavior (styling, layouts, templates without logic)
 - **Non-Observable Technical**: Internal implementation including all adapters (input/output), persistence, caching, infrastructure
 
-Technical work (the latter two categories) is tracked **separately** from BDD scenarios:
+Technical work (the latter two categories) is tracked **separately** from BDD scenarios.
 
 | ☝️                                                                                                                                                                                                       |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -50,7 +50,7 @@ Technical work (the latter two categories) is tracked **separately** from BDD sc
 
 ### Understanding Adapters in Hexagonal Architecture
 
-In Hexagonal Architecture (also called Ports & Adapters), adapters connect your core business logic to the outside world—they translate between your domain and external systems. All adapters are **Non-Observable Technical**:
+In Hexagonal Architecture (also called Ports & Adapters), adapters connect your core business logic to the outside world; they translate between your domain and external systems. All adapters are in the **Non-Observable Technical** category:
 
 - **Input adapters**: REST endpoints, GraphQL resolvers, CLI parsers, message queue consumers
 - **Output adapters**: Database repositories, email senders, CLI renderers, external API clients
@@ -65,7 +65,7 @@ Even when output adapters produce visible effects (like a CLI renderer displayin
 
 ### What Goes Where
 
-The specification phase should explicitly separate behavioral and technical concerns:
+The Product Discovery & Specification phase should explicitly separate behavioral and technical concerns:
 
 ```markdown
 Specifications include:
