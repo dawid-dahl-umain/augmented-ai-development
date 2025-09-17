@@ -5,6 +5,7 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 ## Table of Contents
 
 - [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
+- [Quick Reference Table](#quick-reference-table)
 - [Examples in Practice](#examples-in-practice)
 - [Understanding Adapters in Hexagonal Architecture](#understanding-adapters-in-hexagonal-architecture)
 - [Specifications for Technical Details](#specifications-for-technical-details)
@@ -14,7 +15,7 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
   - [Example: REST Input Adapter](#ai-technical-roadmap-template)
   - [Example: Email Output Adapter](#ai-technical-roadmap-template)
   - [Example: CLI Renderer](#ai-technical-roadmap-template)
-  - [Example: Observable Technical — Visual Styling](#example-observable-technical-visual-styling)
+  - [Example: Observable Technical - Visual Styling](#ai-technical-roadmap-template)
 - [TDD Workflow for Technical Implementation](#tdd-workflow-for-technical-implementation)
 - [Key Integration Patterns](#key-integration-patterns)
 - [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
@@ -34,32 +35,44 @@ Technical work (the latter two categories) is tracked **separately** from BDD sc
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it looks. Mixing them pollutes your specifications and couples behavior to implementation. |
 
-### Examples in Practice
+## Quick Reference Table
 
-**TicTacToe Game:**
+| Category                                                       | Outcome visible to user? | Typical Items                                                                  | Hexagonal Architecture Examples                                                                                                                                           | Goes in BDD scenarios?                              |
+| -------------------------------------------------------------- | ------------------------ | ------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| **Observable Behavioral** (Functional requirements)            | Yes                      | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                   | Yes                                                 |
+| **Observable Technical** (Pure Presentation / UI)              | Yes                      | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | Presentation layer (outside the hexagon): Pure visual elements that style adapter output but don't contain adapter logic                                                  | No – presentation is technical, even though visible |
+| **Non-Observable Technical** (Infrastructure & implementation) | No                       | Caching, infra, monitoring, all adapters                                       | All adapter implementations: REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | No                                                  |
+
+## Examples in Practice
+
+**TicTacToe Game Example:**
 
 - **Behavior (BDD)**: "Player wins with three in a row"
 - **Observable Technical**: CSS styling, color schemes, fonts, layout grid
 - **Non-Observable Technical**: CLI renderer (output adapter), CLI input parser (input adapter), board state repository (persistence adapter)
 
-**Todo Application:**
+**Todo Application Example:**
 
 - **Behavior (BDD)**: "User archives completed todos"
 - **Observable Technical**: Archive button styling, success toast visual design
 - **Non-Observable Technical**: REST controller (input adapter), email sender (output adapter), database repository (persistence adapter), Redis cache
 
-### Understanding Adapters in Hexagonal Architecture
+## Understanding Adapters in Hexagonal Architecture
 
-In Hexagonal Architecture (also called Ports & Adapters), adapters connect your core business logic to the outside world; they translate between your domain and external systems. All adapters are in the **Non-Observable Technical** category:
+In Hexagonal Architecture (also called Ports & Adapters), adapters connect your core business logic to the outside world; they translate between your domain and external systems. All adapters are in the **Non-Observable Technical** category.
 
-- **Input adapters**: REST endpoints, GraphQL resolvers, CLI parsers, message queue consumers
-- **Output adapters**: Database repositories, email senders, CLI renderers, external API clients
+**Why are adapters Non-Observable Technical?**
 
-Even when output adapters produce visible effects (like a CLI renderer displaying a game board or an email adapter sending formatted messages), the adapters themselves are Non-Observable Technical: they contain logic that requires testing through TDD.
+The adapter logic itself isn't directly visible to users - only its effects are. A CLI renderer contains formatting logic that must be tested, even though its output (the rendered board) is visible. The adapter is Non-Observable Technical because we're testing the translation logic, not the visual result.
 
 | ☝️                                                                                                                                                                                                                                                 |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
+
+Types of adapters:
+
+- **Input adapters**: REST endpoints, GraphQL resolvers, CLI parsers, message queue consumers
+- **Output adapters**: Database repositories, email senders, CLI renderers, external API clients
 
 ## Specifications for Technical Details
 
@@ -77,9 +90,9 @@ Specifications include:
 - PRD, ubiquitous language glossary, etc.
 ```
 
-| ☝️                                                                                                                                                                                                                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **During Three Amigos**: Technical constraints are raised and discussed but kept OUT of scenarios. They become separate technical tasks linked to the story. This keeps BDD scenarios focused on behavior while ensuring technical work is visible and tracked. |
+| ☝️                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **During team collaboration**: When discussing requirements, technical constraints are raised and discussed but kept OUT of BDD scenarios. They become separate technical tasks linked to the story. This keeps BDD scenarios focused on behavior while ensuring technical work is visible and tracked. |
 
 ### Example Story with Technical Tasks
 
@@ -103,25 +116,25 @@ Linked Technical Tasks:
 
 ## Practical Workflow Integration
 
-This section shows how technical implementation fits into the complete `AAID` workflow—from behavioral specifications through technical elements.
+This section shows how to apply the standard `AAID` stages when working with technical implementation details. You use the same familiar 4-stage workflow from the main article, adapting it for technical elements.
 
-### Stage 1: Context Providing (Enhanced)
+### Stage 1: Context Providing
 
-Add technical context to your `@project-context`:
+When working on technical elements, add technical context to your `@project-context`, or make a new context command `@project-context-technical-implementation-details`, for:
 
 - Architecture documentation (layer boundaries, patterns)
-- Technical patterns already in use
+- Technical patterns already in use (whether using hexagonal, MVC, or other architectures)
 - Infrastructure constraints
 - Design system/style guide
 
-### Stage 2: Planning (Parallel Tracks)
+### Stage 2: Planning
 
 Create roadmaps for each aspect of your feature:
 
 1. **Behavioral Roadmap**: Test scenarios for business logic (from main guide)
-2. **Technical Roadmaps**: One per technical element (adapter, infrastructure piece)
+2. **Technical Roadmaps**: One per technical element (connection layer/adapters, infrastructure piece)
 
-### Stage 3: TDD Starts (Development Sequence)
+### Stage 3: TDD Starts
 
 **Recommended approach: Domain-first**
 Build pure business logic first, then add technical elements. This ensures your core domain remains decoupled from technical concerns and follows the natural flow of dependencies.
@@ -131,7 +144,7 @@ Alternative approaches for specific situations:
 - **Walking skeleton**: For early end-to-end validation, build a minimal end-to-end feature through all layers, then expand
 - **Parallel tracks**: When team size allows, develop domain and technical elements simultaneously
 
-### Stage 4: TDD Cycle (Context-Aware)
+### Stage 4: TDD Cycle
 
 The commands adapt based on what you're building:
 
@@ -141,14 +154,16 @@ The commands adapt based on what you're building:
 
 ## AI Roadmap for Technical Implementation
 
-Create focused roadmaps for individual technical elements that complement your behavioral roadmap:
+Create focused roadmaps for individual technical implementation elements, that complement your behavioral roadmap.
+
+The template is general enough to create both **Observable Technical** and **Non-Observable Technical** roadmaps.
 
 ### `@ai-technical-roadmap-template`
 
 ```markdown
 # AI Technical Implementation Roadmap Template
 
-Create a roadmap for a single technical element (adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
+Create a roadmap for a single technical element (connection layer/adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
 
 When done, ask user if the roadmap file should be saved to /ai-roadmaps/technical directory. Create directory if not exists.
 
@@ -166,7 +181,7 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Element Type
 
-[Identify as: Input Adapter | Output Adapter | Infrastructure | Other]
+[Identify as: Input Adapter | Output Adapter | Infrastructure | Presentation Layer | Other]
 
 ## Integration Points
 
@@ -461,9 +476,9 @@ Observable Technical (Pure Presentation)
 - **Toast Notification Styling**: Focus on animation timing and positioning
 ```
 
-| ☝️                                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Keep roadmaps linked but separate**: Your behavioral roadmap defines WHAT to build. Technical roadmaps define HOW to connect it to the world. Reference the behavioral roadmap but don't merge them. |
+| ☝️                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Keep roadmaps linked but separate**: Your behavioral roadmap defines WHAT to build. Technical roadmaps define HOW to connect it to the world. |
 
 ## TDD Workflow for Technical Implementation
 
@@ -477,17 +492,28 @@ Even when testing technical elements, focus test names on **behavior from the us
 - A system consuming your adapter's output
 - An internal module depending on your infrastructure
 
-**Example test names:**
+**The key rule: Test names should describe observable behavior, not implementation details.**
 
-- ✅ `'should return archived todo when successful'` (behavior)
-- ❌ `'should call repository.save() method'` (implementation)
+Examples:
 
-### For Adapters and Infrastructure (Non-Observable Technical)
+- ✅ Good name: `'should persist todo and return it with generated ID'`
+- ❌ Bad name: `'should call database.insert()'`
+
+Even if your test implementation checks `mockDb.insert.toHaveBeenCalled()`, the test NAME should describe the behavior. This way, if/when you switch database technologies, the test name remains valid even if the implementation needs updating.
+
+### For Connection Layers and Infrastructure (Non-Observable Technical)
 
 **Test Types by Dependency:**
 
 - **Managed dependencies** (your database, cache, queues) → Integration tests with real resources
-- **Unmanaged dependencies** (Stripe, SendGrid, external APIs) → Contract tests with stubs/mocks
+- **Unmanaged dependencies** (Stripe, SendGrid, external APIs) → Contract tests with toggleable mocking
+
+**Contract Testing Approach:**
+Contract tests can toggle between mocked and real connections to unmanaged dependencies. This enables:
+
+- **Development**: Mocked connections for deterministic, fast testing
+- **Pre-deploy validation**: Real connections to verify external services still work
+- **CI/CD flexibility**: Choose when to run with real vs mocked dependencies
 
 **Modified TDD Cycle for Integration Tests:**
 
@@ -495,6 +521,7 @@ Even when testing technical elements, focus test names on **behavior from the us
 
 ```tsx
 // Example: Testing a REST controller with real database
+
 describe("POST /todos", () => {
   it("should persist todo and return it with an ID", async () => {
     // Given
@@ -515,9 +542,9 @@ describe("POST /todos", () => {
 
 🟢 **GREEN Phase**
 
-- Implement the actual adapter with real dependencies
+- Implement the actual connection layer/adapter with real dependencies
 - For managed dependencies: use real instances in tests
-- For unmanaged dependencies: use mocks/stubs in tests
+- For unmanaged dependencies: use configurable mocks/stubs in tests
 
 🧼 **REFACTOR Phase**
 
@@ -539,9 +566,9 @@ Pure visual elements that don't contain logic are validated differently:
    - Create design tokens
    - Improve responsive behavior
 
-| ☝️                                                                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual review remains essential. |
+| ☝️                                                                                                                                                                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual "vibe check" reviews remains important. |
 
 ## Key Integration Patterns
 
@@ -553,7 +580,6 @@ Presentation → Technical Elements → Domain
 Observable      Non-Observable      Pure
 Technical        Technical        Business
                                     Logic
-
 ```
 
 Dependencies flow inward. Domain never knows about technical elements. Technical elements never know about presentation.
@@ -561,52 +587,28 @@ Dependencies flow inward. Domain never knows about technical elements. Technical
 ### Testing Through Layers
 
 - **BDD/Acceptance tests**: Test through all layers with DSL
-- **Integration tests**: Test adapters with real managed dependencies, mock unmanaged ones
-- **Contract tests**: Test adapter contracts with stubbed unmanaged dependencies
+- **Integration tests**: Test connection layers with real managed dependencies, mock unmanaged ones
+- **Contract tests**: Test with toggleable mocking - real connections for deploy validation, mocked for development
 - **Unit tests**: Test domain in isolation
-
-### Example: Building a Complete Feature
-
-1. **Start with behavioral TDD** (main guide)
-   - Create domain logic with unit tests
-   - Archive todo business rules
-2. **Add input adapter with integration TDD**
-   - RED: Integration test for endpoint behavior
-   - GREEN: Implement the REST controller
-   - REFACTOR: Improve code structure
-3. **Add persistence adapter with integration TDD**
-   - RED: Integration test for data storage behavior
-   - GREEN: Implement the repository
-   - REFACTOR: Optimize for readability and performance
-4. **Add output adapter with TDD** (if needed)
-   - RED: Test for email sending behavior
-   - GREEN: Implement the email sender
-   - REFACTOR: Improve error handling
-5. **Add presentation** (if needed)
-   - Implement visual styles based on design specs
-   - Validate with stakeholders
-   - Create visual regression tests
 
 ## Common Pitfalls to Avoid
 
-**❌ Testing implementation instead of behavior:**
+**❌ Using implementation-focused test names:**
 
 ```tsx
-// WRONG - tests internal implementation
+// WRONG - test name reveals implementation
 it("should call database.insert()", async () => {
-  await repository.save(todo);
-  expect(mockDb.insert).toHaveBeenCalled();
+  // Test implementation
 });
 ```
 
-**✅ Test observable behavior:**
+**✅ Use behavior-focused test names:**
 
-```tsx
-// RIGHT - tests behavior
+```tux
+// RIGHT - test name describes behavior
 it("should persist todo and return it with generated ID", async () => {
-  const saved = await repository.save(todo);
-  expect(saved.id).toBeDefined();
-  expect(await repository.findById(saved.id)).toEqual(saved);
+  // Test implementation
+  // The name stays valid even if implementation changes
 });
 ```
 
@@ -615,7 +617,6 @@ it("should persist todo and return it with generated ID", async () => {
 ```tsx
 // WRONG - calls real external API in tests
 const response = await stripeClient.createCharge(...)
-
 ```
 
 **✅ Mock unmanaged, use real managed:**
@@ -630,11 +631,11 @@ const realDatabase = getTestDatabase();
 
 1. **Track technical tasks separately** in your project management tool:
    - "Linked Presentation / UI Tasks" for Observable Technical (pure styling/layout)
-   - "Linked Technical Tasks" for Non-Observable Technical (all adapters, infrastructure)
-2. **Create one roadmap per technical element** rather than bundling multiple adapters
+   - "Linked Technical Tasks" for Non-Observable Technical (all connection layers, infrastructure)
+2. **Create one roadmap per technical element** rather than bundling multiple components
 3. **Test at the appropriate level** based on dependency type (managed vs unmanaged)
-4. **Name tests based on behavior** even for technical elements
-5. **Let tests drive adapter design** just like they drive domain design
-6. **Document adapter interfaces** as contracts between layers
+4. **Name tests based on behavior** even for technical elements - the test name should remain valid even if underlying technology changes
+5. **Let tests drive design** of your connection layers just like they drive domain design
+6. **Document interfaces** as contracts between layers, regardless of your architecture pattern
 
 The disciplined approach of `AAID` applies equally to technical implementation. Adjust the test types and tracking methods to match the element you're building, while maintaining the same RED → GREEN → REFACTOR discipline that ensures quality.
