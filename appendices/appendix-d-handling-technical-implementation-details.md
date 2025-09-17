@@ -9,13 +9,15 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 - [Examples in Practice](#examples-in-practice)
 - [Understanding Adapters in Hexagonal Architecture](#understanding-adapters-in-hexagonal-architecture)
 - [Specifications for Technical Details](#specifications-for-technical-details)
+  - [What Goes Where](#what-goes-where)
+  - [Example Story with Linked Technical Tasks](#example-story-with-linked-technical-tasks)
+  - [How Non-Functional Requirements (NFRs) Fit In](#how-non-functional-requirements-nfrs-fit-in)
 - [Practical Workflow Integration](#practical-workflow-integration)
-- [AI Roadmap for Technical Implementation](#ai-roadmap-for-technical-implementation)
-  - [@ai-technical-roadmap-template](#ai-technical-roadmap-template)
+- [AI Roadmap for Technical Implementation](#ai-roadmap-for-technical-implementation) _(includes all examples below)_
   - [Example: REST Input Adapter](#ai-technical-roadmap-template)
   - [Example: Email Output Adapter](#ai-technical-roadmap-template)
   - [Example: CLI Renderer](#ai-technical-roadmap-template)
-  - [Example: Observable Technical - Visual Styling](#ai-technical-roadmap-template)
+  - [Example: Visual Styling](#ai-technical-roadmap-template)
 - [TDD Workflow for Technical Implementation](#tdd-workflow-for-technical-implementation)
 - [Key Integration Patterns](#key-integration-patterns)
 - [Practical Guidelines](#practical-guidelines)
@@ -93,7 +95,7 @@ Specifications include:
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **During team collaboration**: When discussing requirements, technical constraints are raised and discussed but kept OUT of BDD scenarios. They become separate technical tasks linked to the story. This keeps BDD scenarios focused on behavior while ensuring technical work is visible and tracked. |
 
-### Example Story with Technical Tasks
+### Example Story with Linked Technical Tasks
 
 ```markdown
 Story: User archives completed todos
