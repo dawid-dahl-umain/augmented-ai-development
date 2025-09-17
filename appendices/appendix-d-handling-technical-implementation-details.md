@@ -250,11 +250,11 @@ Alternative approaches for specific situations:
 
 ### Stage 4: TDD Cycle
 
-The commands adapt based on what you're building:
+The framework will adapt based on what you're building:
 
 - **Building domain logic?** → Unit tests with mocks (as described in main guide)
 - **Building adapters/infrastructure?** → Integration/contract tests based on dependency type
-- **Building pure presentation?** → Visual validation or regression tests
+- **Building pure presentation?** → Visual validation or regression tests (without AI, or with the aid of AI tools like `Playwright MCP`)
 
 ## AI Roadmap for Technical Implementation
 
@@ -429,9 +429,9 @@ Output Adapter
 
 ## Test Strategy
 
-- **Primary approach**: Contract Tests (for SendGrid integration)
-  - Contract tests verify API interaction without calling real service
-  - Use SendGrid mock/stub in tests
+- **Primary approach**: Contract Tests
+  - Mocked mode: run against a stub to verify request structure and error handling
+  - Live mode: run against SendGrid test/sandbox API before deploy to confirm contract holds
 
 ## Technical Constraints
 
@@ -670,9 +670,9 @@ Pure visual elements that don't contain logic are validated differently:
    - Create design tokens
    - Improve responsive behavior
 
-| ☝️                                                                                                                                                                                                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual "vibe check" reviews remains important. |
+| ☝️                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual reviews remains important. |
 
 ## Key Integration Patterns
 
@@ -691,8 +691,8 @@ Dependencies flow inward. Domain never knows about technical elements. Technical
 ### Testing Through Layers
 
 - **BDD/Acceptance tests**: Test through all layers with DSL
-- **Integration tests**: Test connection layers with real managed dependencies, mock unmanaged ones
 - **Contract tests**: Test with toggleable mocking - real connections for deploy validation, mocked for development
+- **Integration tests**: Test connection layers with real managed dependencies, mock unmanaged ones
 - **Unit tests**: Test domain in isolation
 
 ## Practical Guidelines
