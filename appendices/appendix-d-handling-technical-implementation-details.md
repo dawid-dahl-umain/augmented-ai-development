@@ -12,15 +12,9 @@ The `AAID` framework divides all development work into three categories to maint
 
 Technical work (the latter two categories) is tracked **separately** from BDD scenarios:
 
-☝️
-
----
-
-**Why separate?**
-
-BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it looks. Mixing them pollutes your specifications and couples behavior to implementation.
-
----
+| ☝️                                                                                                                                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it looks. Mixing them pollutes your specifications and couples behavior to implementation. |
 
 ### Examples in Practice
 
@@ -45,15 +39,9 @@ In Hexagonal Architecture (also called Ports & Adapters), adapters connect your 
 
 Even when output adapters produce visible effects (like a CLI renderer displaying a game board or an email adapter sending formatted messages), the adapters themselves are Non-Observable Technical: they contain logic that requires testing through TDD.
 
-☝️
-
----
-
-**Adapter effects vs. adapter logic**
-
-: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical.
-
----
+| ☝️                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
 
 ## Specifications for Technical Details
 
@@ -71,15 +59,9 @@ Specifications include:
 - PRD, ubiquitous language glossary, etc.
 ```
 
-☝️
-
----
-
-**During Three Amigos**
-
-: Technical constraints are raised and discussed but kept OUT of scenarios. They become separate technical tasks linked to the story. This keeps BDD scenarios focused on behavior while ensuring technical work is visible and tracked.
-
----
+| ☝️                                                                                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **During Three Amigos**: Technical constraints are raised and discussed but kept OUT of scenarios. They become separate technical tasks linked to the story. This keeps BDD scenarios focused on behavior while ensuring technical work is visible and tracked. |
 
 ### Example Story with Technical Tasks
 
@@ -156,7 +138,7 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Format
 
-\\`\\`\\`markdown
+\`\`\`markdown
 
 # Technical Roadmap: [Specific Element Name]
 
@@ -220,11 +202,11 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 ## Notes
 
 [Important constraints, clarifications, or open questions]
-\\`\\`\\`
+\`\`\`
 
 ## Example (REST Input Adapter)
 
-\\`\\`\\`markdown
+\`\`\`markdown
 
 # Technical Roadmap: Archive Todo REST Endpoint
 
@@ -278,11 +260,11 @@ Input Adapter
 
 - Follow existing REST conventions from other endpoints
 - Include OpenAPI documentation
-  \\`\\`\\`
+  \`\`\`
 
 ## Example (Email Output Adapter)
 
-\\`\\`\\`markdown
+\`\`\`markdown
 
 # Technical Roadmap: Archive Confirmation Email Sender
 
@@ -335,11 +317,11 @@ Output Adapter
 
 - Follow company email design system
 - Template styling handled separately as Observable Technical task
-  \\`\\`\\`
+  \`\`\`
 
 ## Example (CLI Renderer)
 
-\\`\\`\\`markdown
+\`\`\`markdown
 
 # Technical Roadmap: TicTacToe CLI Board Renderer
 
@@ -391,11 +373,11 @@ Output Adapter
 
 - Consider color support detection in future iteration
 - ASCII art design should be clear and readable
-  \\`\\`\\`
+  \`\`\`
 
 ## Example (Observable Technical - Visual Styling)
 
-\\`\\`\\`markdown
+\`\`\`markdown
 
 # Technical Roadmap: Archived Todo Visual Styling
 
@@ -450,7 +432,7 @@ Observable Technical (Pure Presentation)
 
 - Use existing design system opacity tokens
 - Ensure visual state doesn't imply disabled/non-interactive
-  \\`\\`\\`
+  \`\`\`
 
 ## Alternative Examples
 
@@ -461,15 +443,9 @@ Observable Technical (Pure Presentation)
 - **Toast Notification Styling**: Focus on animation timing and positioning
 ```
 
-☝️
-
----
-
-**Keep roadmaps linked but separate**
-
-: Your behavioral roadmap defines WHAT to build. Technical roadmaps define HOW to connect it to the world. Reference the behavioral roadmap but don't merge them.
-
----
+| ☝️                                                                                                                                                                                                     |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Keep roadmaps linked but separate**: Your behavioral roadmap defines WHAT to build. Technical roadmaps define HOW to connect it to the world. Reference the behavioral roadmap but don't merge them. |
 
 ## TDD Workflow for Technical Implementation
 
@@ -545,15 +521,9 @@ Pure visual elements that don't contain logic are validated differently:
    - Create design tokens
    - Improve responsive behavior
 
-☝️
-
----
-
-**The "feel" test**
-
-: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual review remains essential.
-
----
+| ☝️                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual review remains essential. |
 
 ## Key Integration Patterns
 
