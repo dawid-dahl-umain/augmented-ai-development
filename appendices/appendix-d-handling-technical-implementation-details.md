@@ -178,6 +178,8 @@ Here's how the linked tasks from the story example above could look when expande
 **Example Linked Technical Task with Performance NFRs:**
 
 ```markdown
+Tag: [Technical Task]
+
 Title: Implement REST PUT /todos/{id}/archive endpoint
 
 Acceptance Criteria:
@@ -199,6 +201,8 @@ Security Requirements:
 **Example Linked Presentation Task with Accessibility NFRs:**
 
 ```markdown
+Tag: [Presentation Task]
+
 Title: Style archived todo visual state
 
 Acceptance Criteria:
