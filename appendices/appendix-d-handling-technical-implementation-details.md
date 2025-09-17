@@ -1,6 +1,24 @@
 # Appendix D: Handling Technical Implementation Details
 
-While the main `AAID` guide focuses on TDD for business logic, real applications need adapters, infrastructure, and presentation layers. This appendix shows how to apply `AAID` principles to these technical implementation details.
+While the main `AAID` guide focuses on BDD/TDD for business logic, real applications need adapters, infrastructure, and presentation layers. This appendix shows how to apply `AAID` principles to these technical implementation details.
+
+## Table of Contents
+
+- [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
+- [Examples in Practice](#examples-in-practice)
+- [Understanding Adapters in Hexagonal Architecture](#understanding-adapters-in-hexagonal-architecture)
+- [Specifications for Technical Details](#specifications-for-technical-details)
+- [Practical Workflow Integration](#practical-workflow-integration)
+- [AI Roadmap for Technical Implementation](#ai-roadmap-for-technical-implementation)
+  - [@ai-technical-roadmap-template](#ai-technical-roadmap-template)
+  - [Example: REST Input Adapter](#ai-technical-roadmap-template)
+  - [Example: Email Output Adapter](#ai-technical-roadmap-template)
+  - [Example: CLI Renderer](#ai-technical-roadmap-template)
+  - [Example: Observable Technical — Visual Styling](#example-observable-technical-visual-styling)
+- [TDD Workflow for Technical Implementation](#tdd-workflow-for-technical-implementation)
+- [Key Integration Patterns](#key-integration-patterns)
+- [Common Pitfalls to Avoid](#common-pitfalls-to-avoid)
+- [Practical Guidelines](#practical-guidelines)
 
 ## Understanding Technical Implementation Categories
 
@@ -125,10 +143,10 @@ The commands adapt based on what you're building:
 
 Create focused roadmaps for individual technical elements that complement your behavioral roadmap:
 
-### `@technical-roadmap-template`
+### `@ai-technical-roadmap-template`
 
 ```markdown
-# Technical Implementation Roadmap Template
+# AI Technical Implementation Roadmap Template
 
 Create a roadmap for a single technical element (adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
 
