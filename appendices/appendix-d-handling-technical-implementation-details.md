@@ -179,41 +179,55 @@ Here's how the linked tasks from the story example above could look when expande
 
 ```markdown
 Tag: [Technical Task]
+Linked Story: [STORY-123 “User archives completed todos”]
 
 Title: Implement REST PUT /todos/{id}/archive endpoint
 
+Objective: Provide HTTP interface to archive a todo.
+
 Acceptance Criteria:
 
-- Accepts JSON payload with todo ID and user authentication
-- Returns 200 with archived todo on success
-- Returns 404 when todo doesn't exist
-- Returns 401 for unauthenticated requests
-- Must respond under 200ms for 95th percentile
-- Supports 1000 concurrent requests
-- Includes integration tests covering all response codes
+- Accepts JSON with todo id and user auth
+- 200 with archived todo on success
+- 404 if todo not found
+- 401 if unauthenticated
+- Integration tests cover all codes
 
-Security Requirements:
+Non-Functional Requirements (NFRs):
 
-- JWT authentication required
-- Rate limiting: 100 requests per minute per user
+- Performance: p95 ≤ 200 ms; supports 1000 concurrent
+- Security: JWT required; rate limit 100 req/min/user
+
+References
+
+- OpenAPI spec v2
 ```
 
 **Example Linked Presentation Task with Accessibility NFRs:**
 
 ```markdown
 Tag: [Presentation Task]
+Linked Story: [STORY-123 “User archives completed todos”]
 
 Title: Style archived todo visual state
 
+Objective: Make archived items visually distinct.
+
 Acceptance Criteria:
 
-- Matches Figma design specifications
-- Archived todos visually distinct from active todos
-- Supports dark mode color scheme
-- Mobile responsive (320px to 1920px)
-- WCAG 2.1 AA contrast requirements (4.5:1 minimum)
-- Screen reader announces archived state
-- Keyboard navigation maintains focus visibility
+- Matches Figma archived state
+- Dark mode variant applied
+- Mobile layout preserves hierarchy
+
+Non-Functional Requirements (NFRs):
+
+- Accessibility: WCAG 2.1 AA contrast; SR announces “archived”; focus visible
+- Responsiveness: 320–1920 px
+- Compatibility: last 2 major browser versions
+
+References:
+
+- Figma link; design tokens
 ```
 
 The key principle is to keep NFRs **out** of BDD scenarios while ensuring they're **visible** and **testable** in the linked technical tasks. How you structure the technical task tickets themselves is flexible. Teams can organize NFRs within acceptance criteria, dedicated NFR sections, checklists, or any format that fits their workflow and tooling.
