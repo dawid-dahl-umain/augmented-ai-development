@@ -50,7 +50,7 @@ This separates professional software development from "vibe coding." While vibe 
 
 `AAID` solves this. The TDD discipline forces every AI-generated line through comprehensive testing and mandatory reviews, capturing AI's productivity gains (increased **documentation quality**, **code quality**, **review and generation speed** [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)) without the stability loss.
 
-DORA proves speed and stability aren't tradeoffs [[3]](https://dora.dev/guides/dora-metrics-four-keys/). With `AAID`, speed comes from AI augmentation supported by the safety net of tests, stability from disciplined testing. You get both together, not one at the expense of the other.
+DORA proves speed and stability aren't trade-offs [[3]](https://dora.dev/guides/dora-metrics-four-keys/). With `AAID`, speed comes from AI augmentation supported by the safety net of tests, stability from disciplined testing. You get both together, not one at the expense of the other.
 
 [1] [DORA Capabilities: Test automation](https://dora.dev/capabilities/test-automation/)
 [2] [Announcing the 2024 DORA report | Google Cloud Blog](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)
@@ -60,7 +60,7 @@ DORA proves speed and stability aren't tradeoffs [[3]](https://dora.dev/guides/d
 
 ## Who This Guide Is For
 
-`AAID` is for developers who aim at maintainable software. Whether you're a professional engineer or someone building a personal project you expect to last over an extended period of time.
+`AAID` is for serious developers who aim at maintainable software. Whether you're a professional engineer or someone building a personal project you expect to last over an extended period of time.
 
 If you just need quick scripts or throwaway prototypes, other AI approaches work better.
 
@@ -91,7 +91,7 @@ Unlike most other AI-driven workflows, `AAID` doesn't try to reinvent product di
 - **Kent Beck**'s TDD cycles
 - **Dave Farley**'s Continuous Delivery and four-layer acceptance testing model
 - **Robert C. Martin**'s Three Laws of TDD
-- **Daniel Terhorst-North**'s Behaviour-Driven Development (BDD) methodology
+- **Daniel Terhorst-North**'s Behavior-Driven Development (BDD) methodology
 - **Aslak Hellesøy**'s BDD and Gherkin syntax for executable specifications
 - **Martin Fowler**'s work on refactoring and evolutionary design
 - And more.
@@ -104,7 +104,7 @@ These battle-tested practices become your foundation that guides AI-assisted dev
 
 The workflow applies to any AI-assisted environment - **Cursor**, **Claude Code**, **Gemini CLI**, etc. The principles are the same; only the mechanics differ.
 
-E.g. the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Notepads** in Cursor or **Custom slash commands** in Claude Code/Gemini CLI.
+E.g., the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Notepads** in Cursor or **Custom slash commands** in Claude Code/Gemini CLI.
 
 <a id="developer-mindset"></a>
 
@@ -134,7 +134,7 @@ This is why the TDD cycle in `AAID` adds multiple review checkpoints—**⏸️ 
 
 ## Prerequisite: Product Discovery & Specification Phase
 
-Before development begins, professional teams complete a product specification phase involving stakeholders, product owners, tech leads, product designers, developers, QA engineers, architects. From a high level it follows some kind of refinement-pattern like this:
+Before development begins, professional teams complete a product specification phase involving stakeholders, product owners, tech leads, product designers, developers, QA engineers, architects. From a high level, it follows some kind of refinement-pattern like this:
 
 **Client's Vague Wish → Stories → Examples**
 
@@ -142,12 +142,15 @@ Using techniques like Impact Mapping, Event Storming, and Story Mapping, teams e
 
 - User stories with BDD examples, organized into epics
   - Or a [Story Map](https://jpattonassociates.com/wp-content/uploads/2015/03/story_mapping.pdf) containing the user stories + BDD examples
-  - User stories with technical (non-behavioral) requirements such as caching, infra, monitoring, etc
 - PRD (Product Requirements Document)
 - Ubiquitous language documentation. (A common language shared among stakeholders, developers, and anyone taking part in the project)
 - Any additional project-specific requirements
 
 The exact combination varies by project.
+
+| ⚙️                                                                                                                                                                              |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Technical requirements (infrastructure, adapters, styling, NFRs) are tracked as separate linked tasks within stories, keeping behavioral specs pure. [Learn more](#appendix-d). |
 
 ### From Specification to Development
 
@@ -214,9 +217,9 @@ This diagram presents the formal workflow; detailed explanations for each step f
 
 Before any AI interaction, establish comprehensive context. The AI needs to understand the project landscape to generate relevant code.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on commands**: Throughout this guide, you'll see references like @project-context. These are Cursor notepad commands: pre-written **reusable** **prompts** with optional file references that you can quickly invoke with the @ key. They help you be clear and direct without typing lengthy instructions each time.<br><br>**You use these commands to augment your implementation speed.**<br><br>Find their implementations in [Appendix B](#appendix-b). |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on commands**: Throughout this guide, you'll see references like @project-context. These are pre-written **reusable** **prompts** with optional file references that you can quickly invoke with the @ key. They help you be clear and direct without typing lengthy instructions each time.<br><br>**You use these commands to augment your implementation speed.**<br><br>Find their implementations in [Appendix B](#appendix-b). |
 
 **Steps:**
 
@@ -259,6 +262,26 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 With the AI agent now informed of the feature you want to build's context, collaborate to understand the feature at a **high level** before diving into TDD. This is _not_ about prescribing implementation details, those will emerge through TDD. Instead, it's about making sure you and the AI are on the same page before testing and coding starts.
 
+#### Determining What You're Building
+
+After discussing the feature with the AI, you'll need to clarify what type of work you're doing:
+
+**Domain/Business Logic** — The core behavior that delivers business value
+
+- User stories, BDD scenarios, business rules
+- Uses Feature Roadmap template
+- Tested with unit tests (mocking all external dependencies) or [acceptance tests](#appendix-a)
+
+**Technical Implementation** — The technical elements/adapters and infrastructure that connect your domain to the real world
+
+- REST endpoints, database repositories, message queues, styling, etc.
+- Uses Technical Roadmap templates
+- Tested based on dependency type (integration for managed, contract for unmanaged)
+- Styling and presentational concerns, often validated manually
+- See [Appendix D](#appendix-d) for detailed guidance on technical implementation
+
+> This guide primarily focuses on the **domain/business logic** case. For technical implementation, refer to Appendix D.
+
 #### Planning vs TDD Discovery
 
 The planning stage provides a roadmap of _what_ to build and _which tests_ to write. TDD will still discover _how_ to build it through the red/green/refactor cycle. This isn't traditional upfront design—you're aligning on scope and test sequence, not implementation.
@@ -294,22 +317,30 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
    - Explore potential approaches with the AI
    - Clarify ambiguities; make sure the AI makes no wild assumptions
 
-2. **Check for Additional Context**
+2. **Determine What You're Building**
+
+   - **Domain/Business Logic**: Core behavior delivering business value (uses Feature Roadmap)
+   - **Technical Implementation**: implementation details/adapters or styling connecting domain to world (uses Technical Roadmap)
+   - This decision determines which roadmap template to use
+
+3. **Check for Additional Context**
 
    - Ask: "_Do you need any other context to understand the feature's scope and boundaries?_"
    - Provide any missing domain knowledge or system information
 
-3. **Request Feature Roadmap** (using `@ai-roadmap-template`)
+4. **Request Appropriate Roadmap**
 
+   - For domain/business logic: use `@ai-roadmap-template`
+   - For technical implementation: use `@ai-technical-roadmap-template` (from Appendix D)
    - Generate a high-level roadmap before any coding
    - Focus on test scenarios and their logical sequence
    - Keep at "mermaid diagram" level of abstraction
    - An actual mermaid diagram can be generated if applicable
-   - Save roadmap in repo, e.g. in an `ai-roadmaps` directory
+   - Save roadmap in repo, e.g., in an `ai-roadmaps` directory (or `ai-roadmaps/technical` for technical roadmaps)
 
-4. **Review and Refine**
+5. **Review and Refine**
    - Carefully review the roadmap to ensure alignment with business needs
-   - Check that it addresses all the business specifications
+   - Check that it addresses all the business specifications (or technical requirements)
    - Ensure it respects existing project patterns and boundaries
    - Verify the test sequence builds incrementally from simple to complex
    - Iterate with the AI if adjustments are needed
@@ -325,10 +356,6 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 > Automated tests = **objective** and **re-runnable** verification, eliminating both aforementioned problems of **trust** and **regression**.
 
 If the roadmap looks good, now is when disciplined development actually starts!
-
-| ☝️                                                                                                                                                                |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Technical implementation details are planned separately, with another Roadmap template. See [Appendix D: Handling Technical Implementation Details](#appendix-d). |
 
 <a id="stage-3-tdd-starts"></a>
 
@@ -732,7 +759,7 @@ That's the augmented advantage.
 
 > ### End of Guide
 >
-> You’ve reached the end of the `AAID` guide. The appendices below are optional reference material you can dip into as needed.
+> You've reached the end of the `AAID` guide. The appendices below are optional reference material you can dip into as needed.
 
 ---
 
@@ -766,7 +793,7 @@ The two kinds of tests answer different questions:
 - Mock all external dependencies
 - Test suite should run in seconds to tens-of-seconds
 - Apply design pressure through testability
-- Can but doesn’t necessarily map 1:1 to user stories/acceptance criteria
+- Can but doesn't necessarily map 1:1 to user stories/acceptance criteria
 - Guide code quality and modularity
 - Part of the fast feedback loop in CI/CD
 
@@ -796,7 +823,7 @@ describe("TodoService", () => {
 
 - Answer: "_Does the system meet business requirements?_"
 - Business specification validation through user-visible features
-- Test in production-like environment through system boundaries
+- Test in a production-like environment through system boundaries
 - Mock unmanaged external dependencies (like third-party APIs)
   - Don't mock managed external dependencies (like app's database)
 - Test suite will run in minutes (slower than unit tests)
@@ -850,7 +877,7 @@ In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing th
 
 ## Appendix B: Helpful Commands (Reusable Prompts)
 
-Here are examples of some helpful reusable prompt commands—e.g. Cursor notepads or whatever your AI IDE or CLI offers—to help you speed up your prompting. Use or change them as you wish.
+Here are examples of some helpful reusable prompt commands—e.g., Cursor notepads or whatever your AI IDE or CLI offers—to help you speed up your prompting. Use or change them as you wish.
 
 <a id="appendix-b-setup-commands"></a>
 
@@ -1291,7 +1318,7 @@ Configure your AI environment to understand the AAID workflow. These are simple 
 These AI workflow rules/instructions get loaded for **every prompt**, so keep them minimal:
 
 - **What belongs here:** The `AAID` workflow rules, and other general custom instructions for the AI such as tonality
-- **What doesn’t:** Project-specific code (load those once in Stage 1: Context Providing instead for every new agent session)
+- **What doesn't:** Project-specific code (load those once in Stage 1: Context Providing instead for every new agent session)
 
 | ☝️                                                                                                                                                                                                                                                                                                                                                                                                          |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1329,6 +1356,7 @@ The complete AAID workflow follows this order:
    - AI reads and acknowledges understanding
 2. **Stage 2: Planning** (normal conversation mode, optional)
    - Discuss feature approach and create roadmap with test scenarios
+   - Determine work type: domain/business logic vs technical implementation
    - AI helps plan but doesn't write code yet
 3. **Stage 3: TDD Starts** (transition to TDD mode)
    - User explicitly initiates TDD
@@ -1355,6 +1383,23 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 - User is discussing planning, architecture, or features
 - User asks general programming questions
 - User explicitly indicates working on something else
+
+## Domain vs Technical Implementation
+
+When in AAID TDD mode, the workflow applies to both:
+
+- **Domain/Business Logic**: BDD-driven features using unit tests with mocks (default focus)
+- **Technical Implementation**: Adapters, infrastructure, styling using appropriate test strategies
+
+The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
+
+- **Domain work** uses Feature Roadmaps and unit tests as described in these AAID instructions (or acceptance tests if user specifically requests for it)
+- **Technical work** uses Technical Roadmaps with tests based on dependency:
+  - Integration tests for managed dependencies (your database, cache, queues)
+  - Contract tests for unmanaged dependencies (external APIs like Stripe, SendGrid)
+  - Manual validation for pure visual styling
+- If user mentions "adapter", "repository", "controller", "infrastructure", "css" → likely technical
+- Ask user to clarify if unclear which type of work is being done
 
 ## Phase Recognition (When in TDD Mode)
 
@@ -1464,7 +1509,7 @@ When user initiates TDD mode:
 
 User chooses approach (ask which they prefer if not clear):
 
-1. **Test List**: Create list of unimplemented tests (skipped - e.g. `it.skip`) based on Roadmap plan file (if available)
+1. **Test List**: Create list of unimplemented tests (skipped - e.g., `it.skip`) based on Roadmap plan file (if available)
 2. **Single Test**: Start with one single unimplemented empty/skipped test for simplest scenario based on Roadmap plan file (if available)
 
 In all cases:
@@ -1505,11 +1550,11 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ## Appendix D: Handling Technical Implementation Details
 
-Available here: [link](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
 
 ---
 
 <a id="about-author"></a>
-Dawid Dahl is a full-stack developer and AI skill lead at [UMAIN](https://www.umain.com/) | [EIDRA](https://www.eidra.com/). In his free time, he enjoys metaphysical ontology and epistemology, analog synthesizers, consciousness, techno, Huayan and Madhyamika Prasangika philosophy, and being with friends and family.
+Dawid Dahl is a full-stack developer and AI skill lead at [UMAIN](https://www.umain.com/) | [EIDRA](https://www.eidra.com/). In his free time, he enjoys metaphysical ontology and epistemology, analog synthesizers, consciousness, techno, Huayan and Madhyamika Prasangika philosophy, and being with friends and family.
 
-Photography credits: [kaixapham](https://unsplash.com/@kaixapham)
+Photography credit: [kaixapham](https://unsplash.com/@kaixapham)

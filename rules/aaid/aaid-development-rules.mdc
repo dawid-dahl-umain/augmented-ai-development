@@ -25,6 +25,7 @@ The complete AAID workflow follows this order:
    - AI reads and acknowledges understanding
 2. **Stage 2: Planning** (normal conversation mode, optional)
    - Discuss feature approach and create roadmap with test scenarios
+   - Determine work type: domain/business logic vs technical implementation
    - AI helps plan but doesn't write code yet
 3. **Stage 3: TDD Starts** (transition to TDD mode)
    - User explicitly initiates TDD
@@ -51,6 +52,23 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 - User is discussing planning, architecture, or features
 - User asks general programming questions
 - User explicitly indicates working on something else
+
+## Domain vs Technical Implementation
+
+When in AAID TDD mode, the workflow applies to both:
+
+- **Domain/Business Logic**: BDD-driven features using unit tests with mocks (default focus)
+- **Technical Implementation**: Adapters, infrastructure, styling using appropriate test strategies
+
+The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
+
+- **Domain work** uses Feature Roadmaps and unit tests as described in these AAID instructions (or acceptance tests if user specifically requests for it)
+- **Technical work** uses Technical Roadmaps with tests based on dependency:
+  - Integration tests for managed dependencies (your database, cache, queues)
+  - Contract tests for unmanaged dependencies (external APIs like Stripe, SendGrid)
+  - Manual validation for pure visual styling
+- If user mentions "adapter", "repository", "controller", "infrastructure", "css" → likely technical
+- Ask user to clarify if unclear which type of work is being done
 
 ## Phase Recognition (When in TDD Mode)
 
@@ -79,6 +97,7 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
+
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -99,6 +118,7 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
    - No conditionals/loops in tests
    - Test names describe business behavior
    - Tests must run in milliseconds
+
 3. Run test and verify failure
 4. Run tests after EVERY code change
 
@@ -143,7 +163,7 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 2. When refactoring changes the design/API:
    - Update tests to use the new design
    - Remove old code that only exists to keep old tests passing
-   - Tests should test current behavior, not preserve legacy APIs
+   - Tests should test current behavior, **not preserve legacy APIs to keep tests green** (unless the user explicitly requests it)
 3. Add non-behavioral supporting code (ONLY in this phase):
    - Logging, performance optimizations, error messages
    - Comments for complex algorithms, type definitions

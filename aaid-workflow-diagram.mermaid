@@ -10,9 +10,16 @@ graph TD
     C3 --> PlanningPhase["🎯 Stage 2: <br> PLANNING"]
     
     PlanningPhase --> P1["Discuss Feature with AI Agent<br/>(Like with Human Colleague)"]
-    P1 --> P2{"Does AI Need<br/>More Context?"}
+    P1 --> TypeChoice{"What are you<br/>building?"}
+    
+    TypeChoice -->|Domain/Business Logic| P2A["Continue with<br/>Feature Planning"]
+    TypeChoice -->|Technical Implementation| P2B["Continue with<br/>Technical Planning"]
+    
+    P2A --> P2{"Does AI Need<br/>More Context?"}
+    P2B --> P2
+    
     P2 -->|Yes| P3["Provide Additional Context"]
-    P2 -->|No| P4["Request Feature Roadmap<br/>(@ai-roadmap-template)"]
+    P2 -->|No| P4["Request Roadmap(s)<br/><br/>• Feature Roadmap (@ai-roadmap-template)<br/><br/>• Technical Roadmap (@ai-technical-roadmap-template)<br/><br/>(See Appendix D for technical implementation)"]
     P3 --> P1
     P4 --> P5["📋 Review Roadmap Carefully"]
     P5 --> P6{"Is Roadmap Good & Aligned with Business Needs? (Specifications)"}
@@ -80,10 +87,6 @@ graph TD
     
     Complete["✨ Feature Complete<br/>(All Tests Green for This Feature)"] --> Deploy["📦 Ready for Deployment Pipeline"]
     
-    %% TECHNICAL IMPLEMENTATION NOTE
-    TechNote["📑 Technical Implementation<br/>(adapters, infrastructure, styling)<br/>tracked separately<br/>→ See Appendix D"]
-    PlanningPhase -.->|"Planned separately"| TechNote
-    
     %% STYLES - NO CHANGES
     style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
     style ContextPhase fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
@@ -92,6 +95,9 @@ graph TD
     style C3 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
     style PlanningPhase fill:#f57c00,stroke:#e65100,stroke-width:3px,color:#fff
     style P1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style TypeChoice fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P2A fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P2B fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P4 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
@@ -127,4 +133,3 @@ graph TD
     style CreateNext fill:#fef9e7,stroke:#f9a825,stroke-width:2px,color:#000
     style Complete fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
     style Deploy fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
-    style TechNote fill:#e8eaf6,stroke:#5e35b1,stroke-width:2px,stroke-dasharray: 5 5,color:#000

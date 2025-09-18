@@ -81,7 +81,7 @@ These are called _by_ the domain to interact with the outside:
 
 | Category                                                       | What We Test/Validate          | How We Test/Validate                                                                                                                 | Typical Items                                                                  | Hexagonal Architecture Examples                                                                                                                                               | Goes in BDD scenarios? |
 | -------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
-| **Observable Behavioural** (Functional requirements)           | Business behavior              | - **Unit tests** (TDD)<br>- **Acceptance tests** (BDD)                                                                               | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                       | **Yes**                |
+| **Observable Behavioral** (Functional requirements)            | Business behavior              | - **Unit tests** (TDD)<br>- **Acceptance tests** (BDD)                                                                               | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                       | **Yes**                |
 | **Observable Technical** (Pure Presentation / UI)              | Visual presentation            | - **Manual design review**<br>- **Visual regression tests**<br>- **Accessibility audits**<br>- **Cross-browser validation**<br>- Etc | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | **Presentation layer (outside the hexagon):** Pure visual elements that style output but don't contain transformation logic                                                   | **No**                 |
 | **Non‑Observable Technical** (Infrastructure & implementation) | Implementation & adapter logic | - **Integration tests** (managed deps)<br>- **Contract tests** (unmanaged deps)                                                      | Caching, infra, monitoring, all adapters                                       | **All adapter implementations:** REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | **No**                 |
 
@@ -198,7 +198,7 @@ Non-Functional Requirements (NFRs):
 - Performance: p95 ≤ 200 ms; supports 1000 concurrent
 - Security: JWT required; rate limit 100 req/min/user
 
-References
+References:
 
 - OpenAPI spec v2
 ```
@@ -250,7 +250,7 @@ When working on technical elements, add technical context to your `@project-cont
 Create roadmaps for each aspect of your feature:
 
 1. **Behavioral Roadmap**: Test scenarios for business logic (from main guide)
-2. **Technical Roadmaps**: One per technical element (connection layer/adapters, infrastructure piece)
+2. **Technical Roadmaps**: One per technical element (adapters, infrastructure piece)
 
 ### Stage 3: TDD Starts
 
@@ -281,7 +281,7 @@ The template is general enough to create both **Observable Technical** and **Non
 ```markdown
 # AI Technical Implementation Roadmap Template
 
-Create a roadmap for a single technical element (connection layer/adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
+Create a roadmap for a single technical element (connection layer, adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
 
 When done, ask user if the roadmap file should be saved to /ai-roadmaps/technical directory. Create directory if not exists.
 
@@ -660,7 +660,7 @@ describe("POST /todos", () => {
 
 🟢 **GREEN Phase**
 
-- Implement the actual connection layer/adapter with real dependencies
+- Implement the actual technical element/adapter with real dependencies
 - For managed dependencies: use real instances in tests
 - For unmanaged dependencies: use configurable mocks/stubs in tests
 
