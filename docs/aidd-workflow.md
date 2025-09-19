@@ -1428,6 +1428,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
+
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -1448,6 +1449,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - No conditionals/loops in tests
    - Test names describe business behavior
    - Tests must run in milliseconds
+
 3. Run test and verify failure
 4. Run tests after EVERY code change
 
@@ -1550,7 +1552,7 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ## Appendix D: Handling Technical Implementation Details
 
-The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](../appendices/appendix-d-handling-technical-implementation-details.md).
 
 ---
 

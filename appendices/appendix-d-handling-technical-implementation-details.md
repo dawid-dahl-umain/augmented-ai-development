@@ -287,6 +287,15 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 **First, if anything is unclear about the technical requirements or constraints, ask for clarification rather than making assumptions.**
 
+## Core Testing Principle for Technical Elements
+
+When generating test sequences, remember:
+
+- Test this element's responsibilities, not domain behavior
+- The domain already has comprehensive unit tests: trust them
+- Focus on what THIS element does: parsing, formatting, error translation, etc.
+- Don't re-test business rules through the adapter
+
 ## Format
 
 \`\`\`markdown
@@ -311,8 +320,30 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Test Sequence
 
-<!-- Focus on behavior from the perspective of the element's user (often another developer/system) -->
-<!-- Keep test names behavior-focused, not implementation-focused -->
+<!-- TEST NAMING: Test names should always describe behavior, not implementation details -->
+<!-- "Behavior" for technical elements = the technical promise (what it does for its users) -->
+<!-- Users here = other developers, systems, or internal modules -->
+<!-- Focus on behavior from the element's user perspective -->
+<!-- Test names should describe WHAT happens, not HOW -->
+<!-- If you refactor internals, the test name should still be valid -->
+
+<!-- GOOD test names (general for any technical element): -->
+<!-- ✅ "parses valid input format" -->
+<!-- ✅ "returns expected error code for invalid data" -->
+<!-- ✅ "formats output according to specification" -->
+<!-- ✅ "persists data with correct attributes" -->
+<!-- BAD test names (implementation details): -->
+<!-- ❌ "uses specific library method" -->
+<!-- ❌ "calls internal helper function" -->
+<!-- ❌ "uses regex /move (\d+)/ to extract number" -->
+<!-- ❌ "checks error.type === "NOT_FOUND" -->
+<!-- ❌ "executes INSERT statement with RETURNING clause" -->
+
+<!-- WHAT TO TEST by element type (not domain rules): -->
+<!-- Input Adapters: command parsing, input validation, error translation to user messages -->
+<!-- Output Adapters: data formatting, serialization, connection handling -->
+<!-- Infrastructure: persistence operations, caching behavior, queue management -->
+<!-- Presentation: visual rendering, style application (often manual validation) -->
 
 1. [Simplest case - usually happy path with minimal setup]
 2. [Next complexity - error handling or validation]
@@ -320,18 +351,36 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 4. [Integration scenarios if applicable]
 <!-- Continue as needed, but keep focused on this single element -->
 
+<!-- ANTI-PATTERNS to avoid: -->
+<!-- ❌ Re-testing domain rules (e.g., "validates business logic correctly") -->
+<!-- ✅ Instead: Test technical translation (e.g., "translates validation error to 400 response") -->
+<!-- ❌ Testing through multiple layers -->
+<!-- ✅ Instead: Test only this element's direct responsibilities -->
+
 ## Test Strategy
 
-<!-- Choose based on dependency type -->
+<!-- IMPORTANT: in AAID technical elements/adapters generally don't use unit tests; that is for domain logic -->
 
-- **Primary approach**: [Integration Tests | Contract Tests | Visual Testing]
-  - Integration Tests: For managed dependencies (our database, cache, queues)
-  - Contract Tests: For unmanaged dependencies (third-party APIs, external services)
-  - Visual Testing: For pure presentation elements (CSS, layouts)
+- **Primary approach**: [Choose ONE based on your main dependency]
+
+  **Integration Tests** — For technical elements/adapters with managed dependencies (your DB, cache, stdin/stdout)
+
+  - Use REAL domain logic + REAL managed dependencies
+  - Always MOCK unmanaged dependencies (external APIs)
+
+  **Contract Tests** — For technical elements/adapters primarily calling unmanaged dependencies (Stripe, SendGrid)
+
+  - Use REAL domain logic (never mock the business logic)
+  - Toggleable: MOCK for fast dev/CI, REAL for pre-deploy validation
+  - Validates your assumptions about external service behavior
+
+  **Visual Testing** — For pure presentation (CSS, layouts)
+
+  - Manual review, visual regression, accessibility checks
 
 ## Technical Constraints
 
-<!-- Include relevant categories; add others if needed -->
+<!-- Include relevant NFR categories; add others if needed -->
 
 - **Performance**: [Specific requirements if any, or "No performance constraints"]
 - **Compatibility**: [Versions, protocols, standards to support, or "No compatibility constraints"]
@@ -443,7 +492,7 @@ Output Adapter
 
 ## Test Strategy
 
-- **Primary approach**: Contract Tests
+- **Primary approach**: Contract Tests (for SendGrid integration)
   - Mocked mode: run against a stub to verify request structure and error handling
   - Live mode: run against SendGrid test/sandbox API before deploy to confirm contract holds
 
@@ -604,34 +653,68 @@ The RED → GREEN → REFACTOR cycle applies to all technical implementation, wi
 
 ### Test Naming Philosophy
 
-Even when testing technical elements, focus test names on **behavior from the user's perspective**. The "user" might be:
+**Key Principle: "Behavior" is contextual to the abstraction layer.**
+
+Even when testing technical elements, focus test names on **behavior from the element's user's perspective**. The "user" might be:
 
 - Another developer using your API
 - A system consuming your adapter's output
 - An internal module depending on your infrastructure
 
-**The key rule: Test names should describe observable behavior, not implementation details.**
+For technical elements, "behavior" means the **technical promise** they fulfill (parsing, formatting, error codes), not business behavior. This is still behavior—just at a different abstraction level.
 
-Examples:
+### How Each Layer Defines Behavior
 
-- ✅ Good name: `'should persist todo and return it with generated ID'`
-- ❌ Bad name: `'should call database.insert()'`
+To understand why testing "technical behavior" isn't a contradiction, consider how each architectural layer has different users who care about different behaviors:
 
-Even if your test implementation checks `mockDb.insert.toHaveBeenCalled()`, the test NAME should describe the behavior. This way, if/when you switch database technologies, the test name remains valid even if the implementation needs updating.
+```
+End User sees: "I can archive my todo"
+     ↓
+Domain sees: "Archive operation succeeds"
+     ↓
+REST Adapter sees: "Parse JSON, return 200"
+     ↓
+Database sees: "Execute update query"
+```
 
-### For Connection Layers and Infrastructure (Non-Observable Technical)
+This aligns with architectural patterns like Ports and Adapters—each port defines expected behavior that its adapters must fulfill.
+
+**Examples showing the distinction:**
+
+For a CLI Input Adapter:
+
+- ✅ Behavior: `'parses "move 5" into position 5'`
+- ❌ Implementation: `'uses regex /move (\d+)/ to extract number'`
+
+For a REST Controller:
+
+- ✅ Behavior: `'returns 404 for not found errors'`
+- ❌ Implementation: `'checks error.type === "NOT_FOUND"'`
+
+For a Database Repository:
+
+- ✅ Behavior: `'persists todo with generated ID'`
+- ❌ Implementation: `'executes INSERT statement with RETURNING clause'`
+
+The test name describes the **expected behavior** (what the element promises to its users), not the **mechanism** (how it fulfills that promise). This way, if you switch technologies, the test name remains valid even if the test implementation needs updating.
+
+### Testing Technical Elements: Adapters and Infrastructure (Non-Observable Technical)
 
 **Test Types by Dependency:**
 
-- **Managed dependencies** (your database, cache, queues) → Integration tests with real resources
-- **Unmanaged dependencies** (Stripe, SendGrid, external APIs) → Contract tests with toggleable mocking
+- **Managed dependencies** (your database, cache, queues) → **Integration** tests with real resources
+- **Unmanaged dependencies** (Stripe, SendGrid, external APIs) → **Contract** tests with toggleable mocking
 
-**Contract Testing Approach:**
-Contract tests can toggle between mocked and real connections to unmanaged dependencies. This enables:
+> **Contract Testing Approach:**
+> Contract tests can toggle between mocked and real connections to unmanaged dependencies. This enables:
+>
+> - **Development**: Mocked connections for deterministic, fast testing
+> - **Pre-deploy validation**: Real connections to verify external services still work
+> - **CI/CD flexibility**: Choose when to run with real vs mocked dependencies
 
-- **Development**: Mocked connections for deterministic, fast testing
-- **Pre-deploy validation**: Real connections to verify external services still work
-- **CI/CD flexibility**: Choose when to run with real vs mocked dependencies
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Principle of single testing responsibility**: When testing technical elements, don’t overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn’t repeat it. Instead, focus on the adapter’s or infrastructure’s own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation <br>**Output Adapters** → formatting, serialization <br>**Infrastructure** → persistence, caching, queue handling |
 
 **Modified TDD Cycle for Integration Tests:**
 
@@ -643,7 +726,7 @@ Contract tests can toggle between mocked and real connections to unmanaged depen
 describe("POST /todos", () => {
   it("should persist todo and return it with an ID", async () => {
     // Given
-    const app = await createTestApp(); // Real database connection
+    const app = await createTestApp(); // Real database connection + real domain logic
 
     // When
     const response = await request(app)
@@ -670,7 +753,7 @@ describe("POST /todos", () => {
 - Consider modularity, abstraction, cohesion, separation of concerns, readability
 - Ensure proper error handling and logging
 
-### For Presentation (Observable Technical)
+### Testing Visual Elements: Pure Presentation (Observable Technical)
 
 Pure visual elements that don't contain logic are validated differently:
 
@@ -721,3 +804,7 @@ Dependencies flow inward. Domain never knows about technical elements. Technical
 6. **Document interfaces** as contracts between layers, regardless of your architecture pattern
 
 The disciplined approach of `AAID` applies equally to technical implementation. Adjust the test types and tracking methods to match the element you're building, while maintaining the same RED → GREEN → REFACTOR discipline that ensures quality.
+
+---
+
+⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)

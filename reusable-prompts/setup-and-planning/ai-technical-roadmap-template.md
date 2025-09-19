@@ -6,6 +6,14 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 **First, if anything is unclear about the technical requirements or constraints, ask for clarification rather than making assumptions.**
 
+## Core Testing Principle for Technical Elements
+
+<!-- IMPORTANT: When generating test sequences, remember: -->
+<!-- Test this element's responsibilities, not domain behavior -->
+<!-- The domain already has comprehensive unit tests: trust them -->
+<!-- Focus on what THIS element does: parsing, formatting, error translation, etc. -->
+<!-- Don't re-test business rules through the adapter -->
+
 ## Format
 
 ```markdown
@@ -29,8 +37,30 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Test Sequence
 
-<!-- Focus on behavior from the perspective of the element's user (often another developer/system) -->
-<!-- Keep test names behavior-focused, not implementation-focused -->
+<!-- TEST NAMING: Test names should always describe behaviour, not implementation details -->
+<!-- "Behavior" for technical elements = the technical promise (what it does for its users) -->
+<!-- Users here = other developers, systems, or internal modules -->
+<!-- Focus on behavior from the element's user perspective -->
+<!-- Test names should describe WHAT happens, not HOW -->
+<!-- If you refactor internals, the test name should still be valid -->
+
+<!-- GOOD test names (general for any technical element): -->
+<!-- ✅ "parses valid input format" -->
+<!-- ✅ "returns expected error code for invalid data" -->
+<!-- ✅ "formats output according to specification" -->
+<!-- ✅ "persists data with correct attributes" -->
+<!-- BAD test names (implementation details): -->
+<!-- ❌ "uses specific library method" -->
+<!-- ❌ "calls internal helper function" -->
+<!-- ❌ "uses regex /move (\d+)/ to extract number" -->
+<!-- ❌ "checks error.type === "NOT_FOUND" -->
+<!-- ❌ "executes INSERT statement with RETURNING clause" -->
+
+<!-- WHAT TO TEST by element type (not domain rules): -->
+<!-- Input Adapters: command parsing, input validation, error translation to user messages -->
+<!-- Output Adapters: data formatting, serialization, connection handling -->
+<!-- Infrastructure: persistence operations, caching behavior, queue management -->
+<!-- Presentation: visual rendering, style application (often manual validation) -->
 
 1. [Simplest case - usually happy path with minimal setup]
 2. [Next complexity - error handling or validation]
@@ -38,18 +68,36 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 4. [Integration scenarios if applicable]
 <!-- Continue as needed, but keep focused on this single element -->
 
+<!-- ANTI-PATTERNS to avoid: -->
+<!-- ❌ Re-testing domain rules (e.g., "validates business logic correctly") -->
+<!-- ✅ Instead: Test technical translation (e.g., "translates validation error to 400 response") -->
+<!-- ❌ Testing through multiple layers -->
+<!-- ✅ Instead: Test only this element's direct responsibilities -->
+
 ## Test Strategy
 
-<!-- Choose based on dependency type -->
+<!-- IMPORTANT: in AAID technical elements/adapters generally don't use unit tests; that is for domain logic -->
 
-- **Primary approach**: [Integration Tests | Contract Tests | Visual Testing]
-  - Integration Tests: For managed dependencies (our database, cache, queues)
-  - Contract Tests: For unmanaged dependencies (third-party APIs, external services)
-  - Visual Testing: For pure presentation elements (CSS, layouts)
+- **Primary approach**: [Choose ONE based on your main dependency]
+
+  **Integration Tests** — For technical elements/adapters with managed dependencies (your DB, cache, stdin/stdout)
+
+  - Use REAL domain logic + REAL managed dependencies
+  - Always MOCK unmanaged dependencies (external APIs)
+
+  **Contract Tests** — For technical elements/adapters primarily calling unmanaged dependencies (Stripe, SendGrid)
+
+  - Use REAL domain logic (never mock the business logic)
+  - Toggleable: MOCK for fast dev/CI, REAL for pre-deploy validation
+  - Validates your assumptions about external service behavior
+
+  **Visual Testing** — For pure presentation (CSS, layouts)
+
+  - Manual review, visual regression, accessibility checks
 
 ## Technical Constraints
 
-<!-- Include relevant categories; add others if needed -->
+<!-- Include relevant NFR categories; add others if needed -->
 
 - **Performance**: [Specific requirements if any, or "No performance constraints"]
 - **Compatibility**: [Versions, protocols, standards to support, or "No compatibility constraints"]
@@ -162,8 +210,8 @@ Output Adapter
 ## Test Strategy
 
 - **Primary approach**: Contract Tests (for SendGrid integration)
-  - Contract tests verify API interaction without calling real service
-  - Use SendGrid mock/stub in tests
+  - Mocked mode: run against a stub to verify request structure and error handling
+  - Live mode: run against SendGrid test/sandbox API before deploy to confirm contract holds
 
 ## Technical Constraints
 

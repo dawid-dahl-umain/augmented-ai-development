@@ -1,32 +1,62 @@
-graph TD
+graph TD   
     Start["🚀 Development Phase Begins<br/>(After Product Discovery<br/>& Specification)"] 
     
     Start --> ContextPhase["📚 Stage 1: <br> CONTEXT PROVIDING"]
     
     ContextPhase --> C1["Add High-Level Context<br/>(README, architecture docs, code style guide)<br/>@project-context"]
-    C1 --> C2["Add Specification Context<br/>(User Stories, BDD Scenarios)"]
-    C2 --> C3["Add Relevant Code Context<br/>(Dependencies, Tests, Utils, Similar Features)"]
     
-    C3 --> PlanningPhase["🎯 Stage 2: <br> PLANNING"]
+    C1 --> BuildChoice{"What are you<br/>building?"}
+    
+    BuildChoice -->|Domain/Business Logic| C2A["Add Specification Context<br/>(User Stories, BDD Scenarios)"]
+    BuildChoice -->|Technical Implementation<br/>Non-Observable| C2B["Add Specification Context<br/>(Technical Tasks, NFRs, Architecture)"]
+    BuildChoice -->|Presentation/UI Implementation<br/>Observable| C2C["Add Specification Context<br/>(Design Specs, Figma, Style Guide)"]
+    
+    C2A --> C3A["Add Relevant Code Context<br/>(Domain Dependencies, Tests, Similar Features)"]
+    C2B --> C3B["Add Relevant Code Context<br/>(Adapters, Infrastructure, Integration Points)"]
+    C2C --> C3C["Add Relevant Code Context<br/>(Components, Design System, CSS Framework)"]
+    
+    C3A --> PlanningPhase
+    C3B --> PlanningPhase
+    C3C --> PlanningPhase
+    
+    PlanningPhase["🎯 Stage 2: <br> PLANNING"]
     
     PlanningPhase --> P1["Discuss Feature with AI Agent<br/>(Like with Human Colleague)"]
-    P1 --> TypeChoice{"What are you<br/>building?"}
     
-    TypeChoice -->|Domain/Business Logic| P2A["Continue with<br/>Feature Planning"]
-    TypeChoice -->|Technical Implementation| P2B["Continue with<br/>Technical Planning"]
-    
-    P2A --> P2{"Does AI Need<br/>More Context?"}
-    P2B --> P2
+    P1 --> P2{"Does AI Need<br/>More Context?"}
     
     P2 -->|Yes| P3["Provide Additional Context"]
-    P2 -->|No| P4["Request Roadmap(s)<br/><br/>• Feature Roadmap (@ai-roadmap-template)<br/><br/>• Technical Roadmap (@ai-technical-roadmap-template)<br/><br/>(See Appendix D for technical implementation)"]
+    P2 -->|No| RoadmapChoice
     P3 --> P1
-    P4 --> P5["📋 Review Roadmap Carefully"]
-    P5 --> P6{"Is Roadmap Good & Aligned with Business Needs? (Specifications)"}
-    P6 -->|No| P7["Refine Roadmap with AI"]
-    P7 --> P4
-    P6 -->|Yes| TDDPhase
     
+    RoadmapChoice{"Select Roadmap Type<br/>Based on Work"}
+    
+    RoadmapChoice -->|Domain/Business| P4A["Request Feature Roadmap<br/>@ai-roadmap-template<br/>(Save to /ai-roadmaps)"]
+    RoadmapChoice -->|Technical Implementation| P4B["Request Technical Roadmap<br/>@ai-technical-roadmap-template<br/>(Save to /ai-roadmaps/technical)"]
+    RoadmapChoice -->|Presentation/UI| P4C["Request Presentation Roadmap<br/>@ai-presentation-roadmap-template<br/>(Save to /ai-roadmaps/presentation)"]
+    
+    P4A --> P5["📋 Review Roadmap Carefully"]
+    P4B --> P5
+    P4C --> P5
+    
+    P5 --> P6{"Is Roadmap Good &<br/>Aligned with Requirements?"}
+    
+    P6 -->|No| P7["Refine Roadmap with AI"]
+    P7 --> RoadmapChoice
+    
+    P6 -->|Yes| DevPath{"Development Path?"}
+    
+    DevPath -->|Domain/Business or<br/>Technical Implementation| TDDPhase
+    DevPath -->|Presentation/UI| PresImplementation
+    
+    %% PRESENTATION PATH (No TDD)
+    PresImplementation["IMPLEMENTATION<br/>No TDD - Implement per Design Specs<br/>(Follow Team Standards)"]
+    
+    PresImplementation --> PresValidation["✅ VALIDATE<br/>(Manual Review, Accessibility,<br/>Visual Tests as Needed)"]
+    
+    PresValidation --> PresComplete["✨ Feature Complete<br/>(Presentation Validated)<br/>Ready for Deployment Pipeline"]
+    
+    %% TDD PATH (Domain/Business and Technical Implementation)
     TDDPhase["✅ Stage 3: <br> TDD DEVELOPMENT STARTS"]
     
     TDDPhase --> InitChoice{"Choose TDD<br/>Approach"}
@@ -85,25 +115,36 @@ graph TD
     NextTest -->|Yes, Single| CreateNext["📝 Design Next Test Case<br/><i>Return to RED Phase<br/>with new test</i>"]
     NextTest -->|No| Complete
     
-    Complete["✨ Feature Complete<br/>(All Tests Green for This Feature)"] --> Deploy["📦 Ready for Deployment Pipeline"]
+    Complete["✨ Feature Complete<br/>(All Tests Green for This Feature)"] 
     
-    %% STYLES - NO CHANGES
+    Complete --> Deploy["📦 Ready for Deployment Pipeline"]
+    
+    %% STYLES
     style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
     style ContextPhase fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
     style C1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-    style C2 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-    style C3 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style BuildChoice fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C2A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C2B fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C2C fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C3A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C3B fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style C3C fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
     style PlanningPhase fill:#f57c00,stroke:#e65100,stroke-width:3px,color:#fff
     style P1 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style TypeChoice fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style P2A fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style P2B fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P2 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P3 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style P4 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style RoadmapChoice fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P4A fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P4B fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style P4C fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P5 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P6 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
     style P7 fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style DevPath fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style PresImplementation fill:#e1bee7,stroke:#7b1fa2,stroke-width:3px,color:#000
+    style PresValidation fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style PresComplete fill:#ba68c8,stroke:#7b1fa2,stroke-width:3px,color:#fff
     style TDDPhase fill:#388e3c,stroke:#1b5e20,stroke-width:3px,color:#fff
     style InitChoice fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
     style TL1 fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
@@ -133,3 +174,19 @@ graph TD
     style CreateNext fill:#fef9e7,stroke:#f9a825,stroke-width:2px,color:#000
     style Complete fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
     style Deploy fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
+    
+    %% ARROW COLORS
+    %% Blue for Domain/Business Logic paths (and shared paths)
+    linkStyle 0,1,2,3 stroke:#1976d2,stroke-width:3px
+    linkStyle 6,9,10,11,12,13,14,15,16 stroke:#1976d2,stroke-width:3px
+    linkStyle 17 stroke:#1976d2,stroke-width:3px
+    linkStyle 20,23,24,25,26,27 stroke:#1976d2,stroke-width:3px
+    linkStyle 29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65 stroke:#1976d2,stroke-width:3px
+    
+    %% Orange for Technical Implementation specific paths
+    linkStyle 4,7,10 stroke:#f57c00,stroke-width:3px
+    linkStyle 18,21 stroke:#f57c00,stroke-width:3px
+    
+    %% Purple for Presentation/UI specific paths
+    linkStyle 5,8,11 stroke:#7b1fa2,stroke-width:3px
+    linkStyle 19,22,28,29,30 stroke:#7b1fa2,stroke-width:3px

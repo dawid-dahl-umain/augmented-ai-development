@@ -96,7 +96,7 @@ Pre-written AI commands organized by purpose:
 ## Getting Started
 
 1. **Read the Guide**: Start with [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the complete methodology
-2. **Set Up AI Rules**: Copy the rules from [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) to your AI IDE
+2. **Set Up AI Rules**: Copy the rules from [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) to your AI IDE or CLI
 3. **Use Reusable Prompts**: Import commands from [`reusable-prompts/`](reusable-prompts/) as notepads or custom commands
 4. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development
 

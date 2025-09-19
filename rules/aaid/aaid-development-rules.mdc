@@ -158,6 +158,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
 
 1. Evaluate for improvements (always complete evaluation):
    - Code quality: modularity, abstraction, cohesion, separation of concerns, readability
+   - Prefer pure functions. Isolate side effects at boundaries (I/O, DB, network)
    - Remove duplication (DRY), improve naming, simplify logic
    - If no improvements needed, state "No refactoring needed" explicitly
 2. When refactoring changes the design/API:
