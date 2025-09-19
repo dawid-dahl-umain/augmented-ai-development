@@ -111,6 +111,12 @@ See the full diagram: [AAID Workflow Diagram](aaid-workflow-diagram.mermaid)
 
 Each phase includes specific commands, review checkpoints, and quality gates to ensure AI augmentation enhances rather than compromises your development process.
 
+> The diagram shows three distinct development paths, distinguished by colored arrows:
+>
+> - **Blue arrows**: Common workflow and Domain/Business Logic (including shared TDD stages)
+> - **Orange arrows**: Technical Implementation specific branches (see [Appendix D](./appendices/appendix-d-handling-technical-implementation-details.md))
+> - **Purple arrows**: Presentation/UI specific branches (no TDD - see [Appendix D](./appendices/appendix-d-handling-technical-implementation-details.md))
+
 ## Who This Is For
 
 AAID is for developers building **maintainable software** - whether professional engineers or personal project builders expecting longevity. If you need quick scripts or throwaway prototypes, simpler AI approaches work better.
