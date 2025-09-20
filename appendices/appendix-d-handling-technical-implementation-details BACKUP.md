@@ -6,21 +6,19 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 
 - [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
   - [A Note on Adapters and Architecture Patterns](#a-note-on-adapters-and-architecture-patterns)
-- [Quick AAID Reference Table](#quick-aaid-reference-table)
+- [Quick Reference Table](#quick-reference-table)
 - [Examples in Practice](#examples-in-practice)
 - [Specifications for Technical Details](#specifications-for-technical-details)
   - [What Goes Where](#what-goes-where)
   - [Example Story with Linked Technical Tasks](#example-story-with-linked-technical-tasks)
   - [How Non-Functional Requirements (NFRs) Fit In](#how-non-functional-requirements-nfrs-fit-in)
 - [Practical Workflow Integration](#practical-workflow-integration)
-- [AI Roadmaps for Technical Implementation](#ai-roadmaps-for-technical-implementation)
-  - [Non-Observable Technical Roadmap Template](#ai-technical-roadmap-template)
-  - [Observable Technical (Presentation) Roadmap Template](#ai-presentation-roadmap-template)
-- [TDD Workflow for Non-Observable Technical](#tdd-workflow-for-non-observable-technical)
-  - [Test Naming Philosophy](#test-naming-philosophy)
-  - [How Each Layer Defines Behavior](#how-each-layer-defines-behavior)
-  - [Testing Technical Elements](#testing-technical-elements)
-- [Validation Workflow for Observable Technical](#validation-workflow-for-observable-technical)
+- [AI Roadmap for Technical Implementation](#ai-roadmap-for-technical-implementation)
+  - [Example: REST Input Adapter](#ai-technical-roadmap-template)
+  - [Example: Email Output Adapter](#ai-technical-roadmap-template)
+  - [Example: CLI Renderer](#ai-technical-roadmap-template)
+  - [Example: Visual Styling](#ai-technical-roadmap-template)
+- [TDD Workflow for Technical Implementation](#tdd-workflow-for-technical-implementation)
 - [Key Integration Patterns](#key-integration-patterns)
 - [Practical Guidelines](#practical-guidelines)
 
@@ -29,12 +27,14 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 The `AAID` framework divides all development work into three categories to maintain clear separation of concerns:
 
 - **Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
-- **Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
+- **Observable Technical**: Pure visual/presentation elements that users see but aren't behavior (styling, layouts, templates without logic)
 - **Non-Observable Technical**: Internal implementation including all adapters (input/output), persistence, caching, infrastructure
 
-| ☝️                                                                                                                                                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it presents. Mixing them pollutes your specifications and couples behavior to implementation. |
+Technical work (the latter two categories) is tracked **separately** from BDD scenarios.
+
+| ☝️                                                                                                                                                                                                       |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it looks. Mixing them pollutes your specifications and couples behavior to implementation. |
 
 ### A Note on Adapters and Architecture Patterns
 
@@ -43,7 +43,7 @@ Whether you're using Hexagonal Architecture (Ports & Adapters), MVC, Clean Archi
 **All adapters are Non-Observable Technical**, regardless of their output. This might seem counterintuitive for adapters with visual effects (like CLI renderers), but the distinction is important:
 
 - We **test the adapter's logic** (Non-Observable Technical)
-- We **validate pure presentation** (Observable Technical)
+- We **validate pure visual styling** (Observable Technical)
 - The fact that adapter logic might produce visible output doesn't change what we're testing
 
 Examples of adapters (all **Non-Observable Technical**):
@@ -77,39 +77,29 @@ These are called _by_ the domain to interact with the outside:
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
 
-## Quick AAID Reference Table
+## Quick Reference Table
 
-| Category                     | What We Test/Validate          | How We Test/Validate                                                               | Typical Items                                                                     | Hexagonal Architecture Examples                                                                                                | Uses BDD scenarios? | Uses TDD? |
-| ---------------------------- | ------------------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------- | --------- |
-| **Observable Behavioral**    | Business behavior              | Unit tests<br>Acceptance tests                                                     | Domain logic, pure functions/morphisms, use cases, business rules                 | Core domain (inside hexagon): Entities, Value Objects, Domain Services, Application Services                                   | **Yes**             | **Yes**   |
-| **Observable Technical**     | User presentation (any sense)  | Manual review<br>Visual regression<br>Accessibility audits<br>Cross-browser checks | CSS styling, layouts, animations, screen reader text, audio cues, haptic feedback | Presentation layer (outside hexagon): Pure sensory elements without logic                                                      | **No**              | **No**    |
-| **Non-Observable Technical** | Implementation & adapter logic | Integration tests (managed deps)<br>Contract tests (unmanaged deps)                | All adapters, caching, monitoring, infrastructure                                 | All adapter implementations: REST/GraphQL controllers, Database repositories, Message publishers, CLI renderers, Email senders | **No**              | **Yes**   |
+| Category                                                       | What We Test/Validate          | How We Test/Validate                                                                                                                 | Typical Items                                                                  | Hexagonal Architecture Examples                                                                                                                                               | Goes in BDD scenarios? |
+| -------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------- |
+| **Observable Behavioral** (Functional requirements)            | Business behavior              | - **Unit tests** (TDD)<br>- **Acceptance tests** (BDD)                                                                               | "Search returns results", "User can place order", "Game rules enforced"        | Domain logic, Use cases, Business rules                                                                                                                                       | **Yes**                |
+| **Observable Technical** (Pure Presentation / UI)              | Visual presentation            | - **Manual design review**<br>- **Visual regression tests**<br>- **Accessibility audits**<br>- **Cross-browser validation**<br>- Etc | Brand colours, spacing, CSS styling, layouts, visual templates (without logic) | **Presentation layer (outside the hexagon):** Pure visual elements that style output but don't contain transformation logic                                                   | **No**                 |
+| **Non‑Observable Technical** (Infrastructure & implementation) | Implementation & adapter logic | - **Integration tests** (managed deps)<br>- **Contract tests** (unmanaged deps)                                                      | Caching, infra, monitoring, all adapters                                       | **All adapter implementations:** REST/GraphQL controllers, Database repositories, Message queue publishers, CLI renderers, Email senders, Input parsers, External API clients | **No**                 |
 
-> The key distinction: **Observable** categories involve what users directly experience (behavior or sensory presentation), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces observable output.
+> The key distinction: **Observable** categories involve what users directly experience (behavior or pure visuals), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces visible output.
 
 ## Examples in Practice
 
 **TicTacToe Game Example:**
 
-- **Observable Behavioral**: "Player wins with three in a row"
-- **Observable Technical**: Board colors, X/O fonts, victory sound effect, screen reader announcements
+- **Behavior (BDD)**: "Player wins with three in a row"
+- **Observable Technical**: CSS styling, color schemes, fonts, layout grid
 - **Non-Observable Technical**: CLI renderer (output adapter), CLI input parser (input adapter), board state repository (persistence adapter)
 
 **Todo Application Example:**
 
-- **Observable Behavioral**: "User archives completed todos"
-- **Observable Technical**: Archive button styling, success toast visual design, completion sound
+- **Behavior (BDD)**: "User archives completed todos"
+- **Observable Technical**: Archive button styling, success toast visual design
 - **Non-Observable Technical**: REST controller (input adapter), email sender (output adapter), database repository (persistence adapter), Redis cache
-
-**Frontend Form Example:**
-
-- **Observable Behavioral**: "Form validates email format before submission"
-- **Observable Technical**: Error message red color, screen reader error announcement, field shake animation
-- **Non-Observable Technical**: Form submission adapter, API client, validation service
-
-| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Note for Frontend Developers**: TDD with `AAID` absolutely applies to frontend development as well! The distinction is:<br><br>**Frontend Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Presentation (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "Screen reader announces 'Error: Invalid email format'"<br>• "Submit button has 200ms fade transition"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling the sensory aspects and their NFRs via mainly manual validation. |
 
 ## Specifications for Technical Details
 
@@ -122,7 +112,7 @@ Specifications include:
 
 - User stories with BDD examples (Observable Behavioral)
 - Technical requirements as separate linked tasks:
-  - Presentation/UI Tasks (Observable Technical: pure styling/accessibility/sensory feedback)
+  - Presentation/UI Tasks (Observable Technical: pure styling/layout)
   - Technical Tasks (Non-Observable Technical: all adapters, infrastructure, performance, caching, etc.)
 - PRD, ubiquitous language glossary, etc.
 ```
@@ -137,11 +127,10 @@ Specifications include:
 Story: User archives completed todos
 BDD Scenarios: [behavioral specifications]
 
-Linked Presentation/UI Tasks:
+Linked Presentation / UI Tasks:
 
 - UI-103: Style archived todo visual state (grayed out)
 - UI-104: Design "Successfully archived" toast notification visuals
-- UI-105: Add screen reader announcement for archive action
 
 Linked Technical Tasks:
 
@@ -179,7 +168,7 @@ Scenario: User archives completed todo
 
 The performance, security, and technical constraints belong in the linked technical tasks, not in the BDD scenarios. Specifically:
 
-- NFRs like accessibility or responsiveness are detailed within **Linked Presentation/UI Tasks**
+- NFRs like accessibility or responsiveness are detailed within **Linked Presentation / UI Tasks**
 - NFRs like performance or security are detailed within **Linked Technical Tasks**
 
 This keeps NFRs out of BDD scenarios entirely, while ensuring they're properly tracked and validated.
@@ -190,7 +179,7 @@ Here's how the linked tasks from the story example above could look when expande
 
 ```markdown
 Tag: [Technical Task]
-Linked Story: [STORY-123 "User archives completed todos"]
+Linked Story: [STORY-123 “User archives completed todos”]
 
 Title: Implement REST PUT /todos/{id}/archive endpoint
 
@@ -218,7 +207,7 @@ References:
 
 ```markdown
 Tag: [Presentation Task]
-Linked Story: [STORY-123 "User archives completed todos"]
+Linked Story: [STORY-123 “User archives completed todos”]
 
 Title: Style archived todo visual state
 
@@ -232,7 +221,7 @@ Acceptance Criteria:
 
 Non-Functional Requirements (NFRs):
 
-- Accessibility: WCAG 2.1 AA contrast; SR announces "archived"; focus visible
+- Accessibility: WCAG 2.1 AA contrast; SR announces “archived”; focus visible
 - Responsiveness: 320–1920 px
 - Compatibility: last 2 major browser versions
 
@@ -260,15 +249,10 @@ When working on technical elements, add technical context to your `@project-cont
 
 Create roadmaps for each aspect of your feature:
 
-1. **Behavioral Roadmap**: Test scenarios for business logic (`@ai-roadmap-template`)
-2. **Technical Roadmaps**: One per Non-Observable Technical element (`@ai-technical-roadmap-template`)
-3. **Presentation Roadmaps**: One per Observable Technical element (`@ai-presentation-roadmap-template`)
+1. **Behavioral Roadmap**: Test scenarios for business logic (from main guide)
+2. **Technical Roadmaps**: One per technical element (adapters, infrastructure piece)
 
 ### Stage 3: TDD Starts
-
-| ☝️                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------- |
-| **For Observable Technical:** Stage 3 and 4 is skipped - proceed directly to implementation and validation without TDD. |
 
 **Recommended approach: Domain-first**
 Build pure business logic first, then add technical elements. This ensures your core domain remains decoupled from technical concerns and follows the natural flow of dependencies.
@@ -280,24 +264,24 @@ Alternative approaches for specific situations:
 
 ### Stage 4: TDD Cycle
 
-The framework adapts based on what you're building:
+The framework will adapt based on what you're building:
 
 - **Building domain logic?** → Unit tests with mocks (as described in main guide)
-- **Building Non-Observable Technical?** → Integration/contract tests based on dependency type
-- **Building Observable Technical?** → _N/A: Implementation and validation without TDD_
+- **Building adapters/infrastructure?** → Integration/contract tests based on dependency type
+- **Building pure presentation?** → Visual validation or regression tests (without AI, or with the aid of AI tools like `Playwright MCP`)
 
-## AI Roadmaps for Technical Implementation
+## AI Roadmap for Technical Implementation
 
-Create focused roadmaps for individual technical implementation elements that complement your behavioral roadmap.
+Create focused roadmaps for individual technical implementation elements, that complement your behavioral roadmap.
+
+The template is general enough to create both **Observable Technical** and **Non-Observable Technical** roadmaps.
 
 ### `@ai-technical-roadmap-template`
-
-For Non-Observable Technical elements (adapters, infrastructure):
 
 ```markdown
 # AI Technical Implementation Roadmap Template
 
-Create a roadmap for a single Non-Observable Technical element (adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
+Create a roadmap for a single technical element (connection layer, adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
 
 When done, ask user if the roadmap file should be saved to /ai-roadmaps/technical directory. Create directory if not exists.
 
@@ -324,7 +308,7 @@ When generating test sequences, remember:
 
 ## Element Type
 
-[Identify as: Input Adapter | Output Adapter | Infrastructure | Other]
+[Identify as: Input Adapter | Output Adapter | Infrastructure | Presentation Layer | Other]
 
 ## Integration Points
 
@@ -352,13 +336,14 @@ When generating test sequences, remember:
 <!-- ❌ "uses specific library method" -->
 <!-- ❌ "calls internal helper function" -->
 <!-- ❌ "uses regex /move (\d+)/ to extract number" -->
-<!-- ❌ "checks error.type === 'NOT_FOUND'" -->
+<!-- ❌ "checks error.type === "NOT_FOUND" -->
 <!-- ❌ "executes INSERT statement with RETURNING clause" -->
 
 <!-- WHAT TO TEST by element type (not domain rules): -->
 <!-- Input Adapters: command parsing, input validation, error translation to user messages -->
 <!-- Output Adapters: data formatting, serialization, connection handling -->
 <!-- Infrastructure: persistence operations, caching behavior, queue management -->
+<!-- Presentation: visual rendering, style application (often manual validation) -->
 
 1. [Simplest case - usually happy path with minimal setup]
 2. [Next complexity - error handling or validation]
@@ -389,6 +374,10 @@ When generating test sequences, remember:
   - Toggleable: MOCK for fast dev/CI, REAL for pre-deploy validation
   - Validates your assumptions about external service behavior
 
+  **Visual Testing** — For pure presentation (CSS, layouts)
+
+  - Manual review, visual regression, accessibility checks
+
 ## Technical Constraints
 
 <!-- Include relevant NFR categories; add others if needed -->
@@ -400,7 +389,8 @@ When generating test sequences, remember:
 
 ## Spec References
 
-- [Reference to linked technical task ticket (e.g., TECH-101)]
+- [Reference to linked technical task ticket (e.g., TECH-101, UI-103)]
+- [Design specifications if applicable (e.g., Figma link, style guide)]
 - [Technical standards or architectural decisions records (ADRs)]
 - [Any relevant documentation or requirements]
 
@@ -414,7 +404,7 @@ When generating test sequences, remember:
 [Important constraints, clarifications, or open questions]
 \`\`\`
 
-## Example: REST Endpoint (Non-Observable Technical)
+## Example (REST Input Adapter)
 
 \`\`\`markdown
 
@@ -472,7 +462,64 @@ Input Adapter
 - Include OpenAPI documentation
   \`\`\`
 
-## Example: CLI Renderer (Non-Observable Technical)
+## Example (Email Output Adapter)
+
+\`\`\`markdown
+
+# Technical Roadmap: Archive Confirmation Email Sender
+
+## Overview
+
+Email sending adapter for archive confirmation notifications. Sends formatted, branded emails when users archive todos.
+
+## Element Type
+
+Output Adapter
+
+## Integration Points
+
+- **Connects to Domain**: Triggered by TodoArchived domain event
+- **External Dependencies**: SendGrid API (unmanaged)
+- **Data Flow**: Domain event → template rendering → SendGrid API → user inbox
+
+## Test Sequence
+
+1. Sends email with correct recipient and subject
+2. Includes todo title and archive timestamp in body
+3. Handles SendGrid API errors gracefully
+4. Skips sending for users with email notifications disabled
+5. Retries on temporary failures
+
+## Test Strategy
+
+- **Primary approach**: Contract Tests (for SendGrid integration)
+  - Mocked mode: run against a stub to verify request structure and error handling
+  - Live mode: run against SendGrid test/sandbox API before deploy to confirm contract holds
+
+## Technical Constraints
+
+- **Performance**: Queue for async processing
+- **Compatibility**: HTML email standards, dark mode support
+- **Security**: No sensitive data in email content
+
+## Spec References
+
+- TECH-107: Email notification sender task
+- Figma design: [link to email template design]
+- Email design system guidelines
+
+## Dependencies
+
+- **Depends on**: Domain event system, SendGrid account setup
+- **Blocks**: User notification preferences feature
+
+## Notes
+
+- Follow company email design system
+- Template styling handled separately as Observable Technical task
+  \`\`\`
+
+## Example (CLI Renderer)
 
 \`\`\`markdown
 
@@ -527,227 +574,82 @@ Output Adapter
 - Consider color support detection in future iteration
 - ASCII art design should be clear and readable
   \`\`\`
-```
 
-### `@ai-presentation-roadmap-template`
-
-For Observable Technical elements (pure presentation/UI):
-
-```markdown
-# AI Presentation/UI Roadmap Template
-
-Create a roadmap for Observable Technical elements (presentation/UI) that complements the behavioral implementation. This roadmap guides validation without using TDD.
-
-When done, ask user if the roadmap file should be saved to /ai-roadmaps/presentation directory. Create directory if not exists.
-
-**First, if anything is unclear about the design requirements or constraints, ask for clarification rather than making assumptions.**
-
-## Core Validation Principle for Presentation Elements
-
-When generating validation sequences, remember:
-
-- Validate sensory presentation, not behavior
-- The domain and adapters already handle functionality: trust them
-- Focus on what users EXPERIENCE: visuals, sounds, haptic feedback, screen reader text
-- Manual review is the primary validation method
-
-## Format
+## Example (Visual Styling)
 
 \`\`\`markdown
 
-# Presentation Roadmap: [UI Element/Feature Name]
+# Technical Roadmap: Archived Todo Visual Styling
 
 ## Overview
 
-[2-3 sentences describing sensory purpose and user experience goals]
+Pure CSS styling for archived todos in the UI. Provides visual distinction between active and archived items without any behavioral logic.
 
 ## Element Type
 
-[Component Styling | Layout | Animation | Typography | Theme | Icons | Audio | Haptic | Accessibility | Other]
+Observable Technical (Pure Presentation)
 
-## Design Integration
+## Integration Points
 
-- **Design Source**: [Figma link, style guide reference]
-- **Affected Components**: [What UI elements this touches]
-- **Design Tokens**: [Colors, spacing, typography scales used]
+- **Connects to Domain**: Applied to elements with 'archived' class/attribute
+- **External Dependencies**: Design system tokens
+- **Data Flow**: CSS classes → browser rendering → visual output
 
-## Validation Sequence
+## Test Sequence
 
-<!-- VALIDATION NAMING: Describe what should be sensory verified -->
-<!-- Focus on observable sensory characteristics -->
-<!-- These are not automated tests, but checklist items for manual review -->
+1. Archived todos appear visually distinct from active todos
+2. Hover states work correctly on archived items
+3. Dark mode displays archived state appropriately
+4. Mobile responsive behavior maintains visual hierarchy
+5. Accessibility contrast requirements are met
 
-1. [Visual match to design specifications]
-2. [Responsive behavior across breakpoints]
-3. [Accessibility compliance (contrast, screen reader, focus states)]
-4. [Dark/light mode support if applicable]
-5. [Animation performance and smoothness]
-6. [Cross-browser visual consistency]
-<!-- Continue as needed for this sensory element -->
+## Test Strategy
 
-## Validation Strategy
+- **Primary approach**: Visual Testing
+  - Manual design review against Figma specs
+  - Visual regression testing for style changes
+  - Accessibility audit for WCAG compliance
+  - Cross-browser visual validation
 
-- **Primary method**: Manual design review
-- **Supporting methods**: [Choose applicable:]
-  - Visual regression tests (e.g., Chromatic, Percy)
-  - Accessibility audits (e.g., axe, WAVE)
-  - Cross-browser validation
-  - Performance profiling for animations
-  - User testing for "feel" and UX
+## Technical Constraints
 
-## Design Constraints
-
-<!-- Include relevant NFR categories for presentation -->
-
-- **Accessibility**: [WCAG requirements, contrast ratios, or "Standard WCAG AA"]
-- **Performance**: [Animation frame rates, paint times, or "No performance constraints"]
-- **Browser Support**: [Compatibility requirements, or "Last 2 major versions"]
-- **Responsive Design**: [Breakpoints, mobile-first approach, or specific requirements]
+- **Performance**: No CSS animation jank
+- **Compatibility**: Support last 2 browser versions
+- **Security**: No security constraints
 
 ## Spec References
 
-- [Reference to linked UI task ticket (e.g., UI-103)]
-- [Figma designs or other design tool links]
-- [Design system documentation]
-- [Brand guidelines if applicable]
+- UI-103: Archived todo visual state task
+- Figma: [link to archived todo design specs]
+- Design system color tokens documentation
 
 ## Dependencies
 
-- **Depends on**: [Design system, component library, base styles]
-- **Blocks**: [Features waiting for UI completion]
+- **Depends on**: Design system base styles
+- **Blocks**: Archive feature user acceptance
 
 ## Notes
 
-[Design decisions, trade-offs, questions for designers]
-\`\`\`
-
-## Example: Archive Button Styling (Observable Technical)
-
-\`\`\`markdown
-
-# Presentation Roadmap: Archive Button Styling
-
-## Overview
-
-Visual styling for archive button to provide clear affordance and feedback for the archive action. Ensures consistent visual language across the application.
-
-## Element Type
-
-Component Styling
-
-## Design Integration
-
-- **Design Source**: Figma - Todo Actions v3.2
-- **Affected Components**: TodoItem, ActionBar
-- **Design Tokens**: color-action-secondary, spacing-md, transition-standard
-
-## Validation Sequence
-
-1. Matches Figma idle, hover, active, and disabled states
-2. Maintains 3:1 contrast ratio in all states
-3. Smooth transitions between states (200ms ease-out)
-4. Consistent appearance across all breakpoints
-5. Focus indicator visible for keyboard navigation
-6. Dark mode variant applies correct color tokens
-7. Screen reader announces button state changes
-
-## Validation Strategy
-
-- **Primary method**: Manual design review with designer
-- **Supporting methods**:
-  - Chromatic visual regression tests
-  - axe accessibility scan for contrast
-  - Cross-browser testing (Chrome, Firefox, Safari, Edge)
-
-## Design Constraints
-
-- **Accessibility**: WCAG AA compliance, visible focus states, screen reader friendly
-- **Performance**: CSS transitions under 16ms paint time
-- **Browser Support**: Last 2 versions of major browsers
-- **Responsive Design**: Mobile-first, 320px minimum width
-
-## Spec References
-
-- UI-103: Archive button visual states
-- Design system button guidelines
-- Figma: [link to specific frame]
-
-## Dependencies
-
-- **Depends on**: Base button component, design tokens
-- **Blocks**: Archive feature release
-
-## Notes
-
-- Consider loading state for async operation
-- May need custom focus style to match brand
+- Use existing design system opacity tokens
+- Ensure visual state doesn't imply disabled/non-interactive
   \`\`\`
 
-## Example: Archive Success Audio (Observable Technical)
+## Alternative Examples
 
-\`\`\`markdown
-
-# Presentation Roadmap: Archive Success Audio Feedback
-
-## Overview
-
-Audio feedback for successful archive action. Provides non-visual confirmation for accessibility and enhanced user experience.
-
-## Element Type
-
-Audio
-
-## Design Integration
-
-- **Design Source**: Audio design guidelines v2.1
-- **Affected Components**: TodoItem, ArchiveAction
-- **Design Tokens**: audio-success-short, volume-feedback
-
-## Validation Sequence
-
-1. Plays success chime on archive completion
-2. Audio duration under 500ms
-3. Volume respects system settings
-4. Can be disabled via user preferences
-5. Does not overlap with screen reader announcements
-6. Fallback to haptic on mobile when audio disabled
-
-## Validation Strategy
-
-- **Primary method**: Manual review with sound designer
-- **Supporting methods**:
-  - User testing for audio clarity
-  - Accessibility testing with screen readers
-  - Performance testing for lag
-
-## Design Constraints
-
-- **Accessibility**: Non-intrusive, optional, doesn't interfere with screen readers
-- **Performance**: No lag between action and feedback
-- **Browser Support**: Web Audio API compatibility
-- **Responsive Design**: Appropriate for device context
-
-## Spec References
-
-- UI-105: Audio feedback specifications
-- Accessibility guidelines section 4.2
-- Sound design library
-
-## Dependencies
-
-- **Depends on**: Web Audio API support detection
-- **Blocks**: Enhanced accessibility features
-
-## Notes
-
-- Consider cultural differences in audio feedback
-- Test with actual users who rely on audio cues
-  \`\`\`
+- **Database Repository**: Focus on query operations and transaction handling
+- **Cache Adapter**: Focus on cache hits/misses and invalidation
+- **Authentication Middleware**: Focus on token validation and access control
+- **Message Queue Consumer**: Focus on message processing and acknowledgment
+- **Toast Notification Styling**: Focus on animation timing and positioning
 ```
 
-## TDD Workflow for Non-Observable Technical
+| ☝️                                                                                                                                              |
+| ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Keep roadmaps linked but separate**: Your behavioral roadmap defines WHAT to build. Technical roadmaps define HOW to connect it to the world. |
 
-The RED → GREEN → REFACTOR cycle applies to Non-Observable Technical implementation, with test types matched to the element type.
+## TDD Workflow for Technical Implementation
+
+The RED → GREEN → REFACTOR cycle applies to all technical implementation, with test types matched to the element type:
 
 ### Test Naming Philosophy
 
@@ -796,7 +698,7 @@ For a Database Repository:
 
 The test name describes the **expected behavior** (what the element promises to its users), not the **mechanism** (how it fulfills that promise). This way, if you switch technologies, the test name remains valid even if the test implementation needs updating.
 
-### Testing Technical Elements
+### Testing Technical Elements: Adapters and Infrastructure (Non-Observable Technical)
 
 **Test Types by Dependency:**
 
@@ -812,7 +714,7 @@ The test name describes the **expected behavior** (what the element promises to 
 
 | ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Principle of single testing responsibility**: When testing technical elements, don't overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn't repeat it. Instead, focus on the adapter's or infrastructure's own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation <br>**Output Adapters** → formatting, serialization <br>**Infrastructure** → persistence, caching, queue handling |
+| **Principle of single testing responsibility**: When testing technical elements, don’t overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn’t repeat it. Instead, focus on the adapter’s or infrastructure’s own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation <br>**Output Adapters** → formatting, serialization <br>**Infrastructure** → persistence, caching, queue handling |
 
 **Modified TDD Cycle for Integration Tests:**
 
@@ -851,58 +753,57 @@ describe("POST /todos", () => {
 - Consider modularity, abstraction, cohesion, separation of concerns, readability
 - Ensure proper error handling and logging
 
-## Validation Workflow for Observable Technical
+### Testing Visual Elements: Pure Presentation (Observable Technical)
 
-Pure sensory elements that don't contain logic are validated differently from TDD:
+Pure visual elements that don't contain logic are validated differently:
 
-1. **Implement** based on design specifications (Figma, style guide, audio specs)
-2. **Validate** through:
-   - Manual design review (primary)
+1. **Implement based on design specs** (Figma, style guide)
+2. **Validate through:**
    - Visual regression tests
+   - Manual design review
    - Accessibility checks
-   - Cross-browser testing
-   - Audio/haptic testing where applicable
-3. **Refine** based on feedback
-4. **Final review** with stakeholders
+3. **Refactor for maintainability:**
+   - Extract reusable styles
+   - Create design tokens
+   - Improve responsive behavior
 
-| ☝️                                                                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual review remains essential. |
+| ☝️                                                                                                                                                                                                            |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **The "feel" test**: Some Observable Technical aspects can only be validated by humans. A perfectly passing visual regression test doesn't guarantee good UX. This is where manual reviews remains important. |
 
 ## Key Integration Patterns
 
 ### The Dependency Rule
 
 ```
-Presentation → Adapters/Infrastructure → Domain
-     ↓                  ↓                   ↓
-Observable          Non-Observable      Observable
-Technical            Technical          Behavioral
+Presentation → Technical Elements → Domain
+     ↓               ↓                 ↓
+Observable      Non-Observable      Pure
+Technical        Technical        Business
+                                    Logic
 ```
 
 Dependencies flow inward. Domain never knows about technical elements. Technical elements never know about presentation.
 
-### Testing/Validation by Layer
+### Testing Through Layers
 
 - **BDD/Acceptance tests**: Test through all layers with DSL
 - **Contract tests**: Test with toggleable mocking - real connections for deploy validation, mocked for development
 - **Integration tests**: Test connection layers with real managed dependencies, mock unmanaged ones
 - **Unit tests**: Test domain in isolation
-- **Visual/sensory validation**: Manual review and automated checks for presentation
 
 ## Practical Guidelines
 
 1. **Track technical tasks separately** in your project management tool:
-   - "Linked Presentation/UI Tasks" for Observable Technical (pure styling/accessibility/sensory)
-   - "Linked Technical Tasks" for Non-Observable Technical (all adapters, infrastructure)
+   - "Linked Presentation / UI Tasks" for Observable Technical (pure styling/layout)
+   - "Linked Technical Tasks" for Non-Observable Technical (all connection layers, infrastructure)
 2. **Create one roadmap per technical element** rather than bundling multiple components
 3. **Test at the appropriate level** based on dependency type (managed vs unmanaged)
 4. **Name tests based on behavior** even for technical elements - the test name should remain valid even if underlying technology changes
-5. **Let tests drive design** of your adapters just like they drive domain design
-6. **Use validation for sensory elements** - manual review as primary, automated tools as support
-7. **Document interfaces** as contracts between layers, regardless of your architecture pattern
+5. **Let tests drive design** of your connection layers just like they drive domain design
+6. **Document interfaces** as contracts between layers, regardless of your architecture pattern
 
-The disciplined approach of `AAID` adapts to each category: TDD for logic (Observable Behavioral and Non-Observable Technical), validation for sensory presentation (Observable Technical), while maintaining quality through appropriate testing or validation methods.
+The disciplined approach of `AAID` applies equally to technical implementation. Adjust the test types and tracking methods to match the element you're building, while maintaining the same RED → GREEN → REFACTOR discipline that ensures quality.
 
 ---
 
