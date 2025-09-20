@@ -34,36 +34,14 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 ## Repository Structure
 
 ```
-.
-├── README.md
-├── aaid-workflow-diagram.mermaid
-├── docs/
-│   └── aidd-workflow.md
-├── appendices/
-│   ├── appendix-a-unit-testing-and-acceptance-testing.md
-│   ├── appendix-b-reusable-prompts.md
-│   ├── appendix-c-aaid-ai-workflow-rules.md
-│   └── appendix-d-handling-technical-implementation-details.md
-├── reusable-prompts/
+├── docs/              # Complete AAID methodology and workflow guide
+├── appendices/        # Supporting documentation (testing, prompts, rules, technical details)
+├── reusable-prompts/  # Pre-written AI commands organized by purpose
 │   ├── setup-and-planning/
-│   │   ├── ai-roadmap-template.md
-│   │   ├── ai-technical-roadmap-template.md
-│   │   └── project-context.md
 │   ├── tdd/
-│   │   ├── green-&-stop.md
-│   │   ├── red-&-stop.md
-│   │   └── refactor-&-stop.md
 │   ├── investigation-and-problem-solving/
-│   │   ├── analyze-&-stop.md
-│   │   ├── analyze-command-&-stop.md
-│   │   ├── debug-&-stop.md
-│   │   └── minimal-fix-&-analyze-&-stop.md
 │   └── misc/
-│       ├── gherkin-guard.md
-│       └── git-commit.md
-└── rules/
-    └── aaid/
-        └── aaid-development-rules.mdc
+└── rules/             # AI workflow rules for IDEs and CLIs
 ```
 
 ## Core Components

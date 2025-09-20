@@ -19,6 +19,7 @@ Research the codebase and relevant documentation to gather context for the curre
    - Look up official documentation for frameworks/libraries being used
    - Find best practices for the current approach
    - Research API documentation or technical specifications
+   - Use web search tool if needed
 
 3. **Report Findings**
    - Summarize relevant patterns and code found
