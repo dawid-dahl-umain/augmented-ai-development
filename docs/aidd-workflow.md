@@ -2,6 +2,8 @@
 
 _Professional TDD for AI-Augmented Software Development_
 
+![AAID Augmented Being]()
+
 ## Table of Contents
 
 - [What Is AAID and Why It Matters](#what-is-aaid)
@@ -1178,6 +1180,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
+
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -1198,6 +1201,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - No conditionals/loops in tests
    - Test names describe business behavior
    - Tests must run in milliseconds
+
 3. Run test and verify failure
 4. Run tests after EVERY code change
 
