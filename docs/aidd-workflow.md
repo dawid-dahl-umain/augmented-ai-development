@@ -351,9 +351,9 @@ If the roadmap looks good, now is when disciplined development actually starts!
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Path Divergence**: After roadmap approval, the workflow splits:<br>• **Domain/Business Logic** and **Technical Implementation** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI** → Proceeds to implementation and validation without TDD (see [Appendix D](#appendix-d)) |
 
-| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! The distinction is:<br><br>**Frontend Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Presentation (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "All interactive elements have sufficient color contrast (WCAG AA)"<br>• "Loading spinner rotates smoothly"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling pure visual aspects through design validation. |
+| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note for Frontend Developers**: Many frontend developers believe TDD doesn't apply to their work. This is a misconception! `AAID` absolutely applies to frontend development. The key is understanding the distinction:<br><br>**Frontend Observable Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Observable Technical (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "Screen reader announces 'Error: Invalid email format'"<br>• "Submit button has 200ms fade transition"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling the sensory aspects and their NFRs via mainly manual validation. Your components have testable behavior: TDD that. Your styling and sensory feedback needs human validation: validate that without TDD. |
 
 <a id="stage-3-tdd-starts"></a>
 
@@ -1176,6 +1176,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
+
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -1196,6 +1197,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - No conditionals/loops in tests
    - Test names describe business behavior
    - Tests must run in milliseconds
+
 3. Run test and verify failure
 4. Run tests after EVERY code change
 
@@ -1297,6 +1299,8 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 <a id="appendix-d"></a>
 
 ## Appendix D: Handling Technical Implementation Details
+
+![AAID implementation categories](../assets/aaid-implementation-categories-s.webp)
 
 The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
 
