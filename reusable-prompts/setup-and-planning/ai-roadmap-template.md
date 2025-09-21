@@ -81,6 +81,8 @@ Otherwise, write "No diagram needed - [brief reason]"]
 
 ## Examples
 
+Here are examples of how the generated roadmaps should look, when properly following the roadmap template format above.
+
 ### Example 1: Todo Archive Feature
 
 ```markdown
