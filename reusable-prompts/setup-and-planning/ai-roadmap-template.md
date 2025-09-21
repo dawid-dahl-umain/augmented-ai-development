@@ -1,34 +1,29 @@
-# AI Roadmap Template
+# AI Domain/Business Logic Roadmap Template
 
-Create a high-level feature roadmap that aligns developer and AI understanding before TDD begins. This roadmap guides test sequence without prescribing implementation details: those should be designed by the TDD process itself.
+Create a high-level roadmap for domain/business logic features that guides TDD without prescribing implementation details. This roadmap focuses on behavioral requirements and test scenarios that will emerge through the TDD process.
 
-When done, ask user if the roadmap file should be saved to /ai-roadmaps directory in root. Create directory if not exists.
+When done, ask user if the roadmap file should be saved to /ai-roadmaps directory. Create directory if not exists.
 
-**First, if anything is unclear about the requirements or scope, ask for clarification rather than making assumptions.**
+**First, if anything is unclear about the business requirements or acceptance criteria, ask for clarification rather than making assumptions.**
 
-## Roadmap Requirements
+## Core Testing Principle for Domain Logic
 
-**Include:**
+When generating test sequences, remember:
 
--   Test progression from simple to complex
--   System boundaries and interaction points
--   External dependencies to mock
--   Existing patterns to follow from the codebase
-
-**Exclude:**
-
--   Specific class/method names
--   Data structures or schemas
--   Any implementation decisions tests haven't forced yet
+- Test business behavior, not technical implementation
+- Focus on WHAT the system should do, not HOW
+- Each test should force one small piece of functionality
+- Start with simplest test and build incrementally
+- Implementation details emerge through the RED-GREEN-REFACTOR cycle
 
 ## Format
 
 ```markdown
-# Feature Roadmap: [Feature Name]
+# Domain/Business Logic Roadmap: [Feature Name]
 
 ## Overview
 
-[2-3 sentences describing the business value and scope]
+[2-3 sentences describing the business value and user-facing behavior this feature provides]
 
 ## System View
 
@@ -42,95 +37,169 @@ Otherwise, write "No diagram needed - [brief reason]"]
 - Sequence diagram for complex flows
 - Or describe the system view in text -->
 
-## Spec references
+## Spec References
 
--   Reference the authoritative specifications for this feature (e.g., user story + BDD scenarios, PRD sections, RFCs/design docs, Jira tickets, Story Maps, Ubiquitous Language docs). Keep concise.
--   Include stable identifiers or links/paths (doc path, epic/story IDs, section headings).
+- [User story + BDD scenario reference]
+- [Product documentation links]
+- [Any other relevant specifications]
 
-## Test Scenario Sequence
+## Test Sequence
 
-<!-- Focus on behavior (what), not implementation (how) -->
-<!-- Unit-level plan for technical correctness/edge cases; multiple tests may derive from one BDD scenario. -->
+<!-- Order tests from simplest to most complex -->
+<!-- Each test should build on previous ones -->
+<!-- Test names should describe business behavior, not implementation -->
 
-1. [Simplest scenario - usually happy path]
-2. [Next complexity - validation/business rules]
-3. [Edge cases and error handling]
-4. [Integration points if needed]
- <!-- Continue as needed -->
+1. [Simplest case - usually happy path with minimal setup]
+2. [Next layer of complexity - often validation or business rules]
+3. [Edge cases or alternative paths]
+4. [Error scenarios]
+5. [Complex interactions if applicable]
+<!-- Continue as needed -->
 
-## Boundaries & Dependencies
+## Test Strategy
 
--   **External Systems**: [What to mock in unit tests]
--   **Internal Patterns**: [Existing patterns to follow]
--   **Integration Points**: [Where integration tests may be needed]
+- **Test Type**: Unit tests with mocked dependencies
+- **Isolation**: Mock all external units. Mock all external systems (database, APIs, file system)
+- **Speed**: Tests should run in milliseconds
+- **Coverage**: Each business rule needs at least one test
 
-## Non-Functional Requirements
+## Boundaries & Integration Points
 
-<!-- Include ONLY if explicitly required by specifications -->
+- **External Systems**: [What to mock in unit tests]
+- **Internal Patterns**: [Existing domain patterns to follow]
+- **Integration Points**: [Where integration tests may be needed]
 
--   **Performance**: [Specific latency/throughput needs]
--   **Security**: [Auth/encryption requirements]
--   **Observability**: [Logging/metrics needs]
+## Dependencies
+
+- **Depends on**: [Other features or components that must exist]
+- **Blocks/Enables**: [What can't proceed until this is done / What this unlocks]
 
 ## Notes
 
-[Important constraints, clarifications, or open questions]
+[Important clarifications, assumptions, or open questions]
 ```
 
-## Example (Backend Service)
+## Examples
 
-````markdown
-# Feature Roadmap: Archive Completed Todos
+### Example 1: Todo Archive Feature
+
+```markdown
+# Domain/Business Logic Roadmap: Archive Completed Todos
 
 ## Overview
 
-Users can archive completed todos to declutter their active list. Archived items remain accessible and restorable.
+Allows users to archive completed todos to keep their active list clean. Archived todos move to a separate list and can be restored if needed.
 
 ## System View
 
-```mermaid
+\`\`\`mermaid
 graph LR
-    API[API Layer] --> Service[Todo Service]
-    Service --> Repo[Repository]
-    Service --> Events[Event Bus]
-    Repo --> DB[(Database)]
-```
-````
+API[REST API] --> Service[TodoService]
+Service --> Repo[Repository]
+Service --> Events[Event Bus]
+Repo --> DB[(Database)]
+\`\`\`
 
-## Spec references
+## Spec References
 
--   User Story + BDD scenarios: specs/todos.feature
-    -   Scenario: Archive completed
-    -   Scenario: Prevent archiving incomplete
-    -   Scenario: Restore
--   PRD: docs/product/todos.md#archiving
--   Jira: TODO-456
+- STORY-123: User archives completed todos
 
-## Test Scenario Sequence
+## Test Sequence
 
-1. Archive a completed todo moves it from active to archived
-2. Archive is idempotent when the todo is already archived
-3. Prevent archiving an incomplete todo returns a domain error and leaves state unchanged
-4. Restore an archived todo moves it back to active
-5. Restore is idempotent when the todo is already active
+1. Archive a completed todo successfully
+2. Prevent archiving of incomplete todos
+3. Verify archived todo is removed from active list
+4. Verify archived todo appears in archived list
+5. Restore an archived todo to active list
+6. Handle archiving non-existent todo
+7. Prevent duplicate archiving of same todo
 
-## Boundaries & Dependencies
+## Test Strategy
 
--   **External Systems**: Database, Event Bus (mock in unit tests)
--   **Internal Patterns**: Service/Repository pattern from existing code
--   **Integration Points**: Repository tests will need database connection
+- **Test Type**: Unit tests with mocked dependencies
+- **Isolation**: Mock TodoRepository for persistence
+- **Speed**: Tests should run in milliseconds
+- **Coverage**: Each business rule needs at least one test
+
+## Boundaries & Integration Points
+
+- **External Systems**: Database (mock in unit tests)
+- **Internal Patterns**: Service/Repository pattern from existing code
+- **Integration Points**: Acceptance tests will verify full REST to database flow
+
+## Dependencies
+
+- **Depends on**: Todo completion feature
+- **Blocks/Enables**: Archive analytics dashboard, Bulk archive operations
 
 ## Notes
 
--   Archive operation should be idempotent
-
+- Consider soft delete pattern for data recovery
+- Archive timestamp will be added in future iteration
 ```
 
-## Alternative Examples
-- **Frontend**: Focus on user interactions and state changes
-- **DevOps/Infra**: Focus on deployment stages and rollback scenarios
-- **Data Pipeline**: Focus on transformation stages and validation points
+### Example 2: User Registration Feature
 
-## When to Update This Plan
-Regenerate if requirements change, test order needs adjustment, or system boundaries shift. Don't add implementation details discovered through TDD.
+```markdown
+# Domain/Business Logic Roadmap: User Registration
+
+## Overview
+
+Enables new users to create accounts with email and password. Includes validation, uniqueness checks, and welcome email triggering.
+
+## System View
+
+\`\`\`mermaid
+graph TD
+Input[Registration Data] --> Service[UserService]
+Service --> Validator[ValidationRules]
+Service --> Repo[UserRepository]
+Service --> Email[EmailService]
+Service --> Prefs[PreferencesService]
+Repo --> DB[(Database)]
+Email --> Queue[Message Queue]
+\`\`\`
+
+## Spec References
+
+- STORY-456: New user registration
+- Security requirements document section 3.2
+- Email service API documentation
+
+## Test Sequence
+
+1. Register user with valid email and password
+2. Validate email format
+3. Enforce minimum password length
+4. Enforce password complexity requirements
+5. Prevent registration with existing email
+6. Email addresses must be treated as the same regardless of letter case when checking uniqueness
+7. Passwords must never be stored in plaintext, only as secrets
+8. Trigger welcome email on successful registration
+9. Set default user preferences
+10. Handle registration when email service unavailable
+
+## Test Strategy
+
+- **Test Type**: Unit tests with mocked dependencies
+- **Isolation**: Mock UserRepository, EmailService, PreferencesService
+- **Speed**: Tests should run in milliseconds
+- **Coverage**: Each validation rule and business flow needs coverage
+
+## Boundaries & Integration Points
+
+- **External Systems**: Database, Email service (mock in unit tests)
+- **Internal Patterns**: Domain events pattern for email triggering
+- **Integration Points**: Acceptance tests will verify full registration flow including real email
+
+## Dependencies
+
+- **Depends on**: Email service configuration, Password policy definition
+- **Blocks/Enables**: User login, Profile customization, Password reset
+
+## Notes
+
+- Consider rate limiting for registration attempts
+- GDPR compliance for data storage confirmed with legal
+- Two-factor authentication planned for Q3
 ```
