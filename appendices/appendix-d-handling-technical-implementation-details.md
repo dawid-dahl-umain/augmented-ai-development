@@ -1,12 +1,12 @@
 # Appendix D: Handling Technical Implementation Details
 
-While the main `AAID` guide focuses on BDD/TDD for business logic, real applications need adapters, infrastructure, and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
+While the main `AAID` guide focuses on BDD/TDD for business logic and system **behavior**, real applications need adapters, infrastructure, and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
 
 ## Table of Contents
 
 - [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
   - [A Note on Adapters and Architecture Patterns](#a-note-on-adapters-and-architecture-patterns)
-- [Quick AAID Reference Table](#quick-aaid-reference-table)
+- [AAID Implementation Matrix: Build Types and Verification](#aaid-implementation-matrix-build-types-and-verification)
 - [Examples in Practice](#examples-in-practice)
 - [Specifications for Technical Details](#specifications-for-technical-details)
   - [What Goes Where](#what-goes-where)
@@ -26,15 +26,17 @@ While the main `AAID` guide focuses on BDD/TDD for business logic, real applicat
 
 ## Understanding Technical Implementation Categories
 
+![AAID implementation categories](../assets/aaid-implementation-categories-s.webp)
+
 The `AAID` framework divides all development work into three categories to maintain clear separation of concerns:
 
 - **Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
 - **Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
 - **Non-Observable Technical**: Internal implementation including all adapters (input/output), persistence, caching, infrastructure
 
-| ☝️                                                                                                                                                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it presents. Mixing them pollutes your specifications and couples behavior to implementation. |
+| ☝️                                                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it presents. Mixing them pollutes your specifications and couples behavior to implementation, making the system hard to change. |
 
 ### A Note on Adapters and Architecture Patterns
 
@@ -77,13 +79,13 @@ These are called _by_ the domain to interact with the outside:
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
 
-## Quick AAID Reference Table
+## AAID Implementation Matrix: Build Types and Verification
 
-| Category                     | What We Test/Validate          | How We Test/Validate                                                               | Typical Items                                                                     | Hexagonal Architecture Examples                                                                                                | Uses BDD scenarios? | Uses TDD? |
-| ---------------------------- | ------------------------------ | ---------------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ------------------- | --------- |
-| **Observable Behavioral**    | Business behavior              | Unit tests<br>Acceptance tests                                                     | Domain logic, pure functions/morphisms, use cases, business rules                 | Core domain (inside hexagon): Entities, Value Objects, Domain Services, Application Services                                   | **Yes**             | **Yes**   |
-| **Observable Technical**     | User presentation (any sense)  | Manual review<br>Visual regression<br>Accessibility audits<br>Cross-browser checks | CSS styling, layouts, animations, screen reader text, audio cues, haptic feedback | Presentation layer (outside hexagon): Pure sensory elements without logic                                                      | **No**              | **No**    |
-| **Non-Observable Technical** | Implementation & adapter logic | Integration tests (managed deps)<br>Contract tests (unmanaged deps)                | All adapters, caching, monitoring, infrastructure                                 | All adapter implementations: REST/GraphQL controllers, Database repositories, Message publishers, CLI renderers, Email senders | **No**              | **Yes**   |
+| Category                     | What We Test/Validate                    | How We Test/Validate                                                                                                | Typical Items                                                                                                                          | Hexagonal Architecture Examples                                                                                                                                              | Uses BDD scenarios? | Uses TDD? |
+| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | --------- |
+| **Observable Behavioral**    | Business behavior                        | <ul><li>Unit tests (TDD)</li><li>Acceptance tests (BDD)</li></ul>                                                   | <ul><li>Domain logic</li><li>Pure functions/morphisms</li><li>Use cases</li><li>Business rules</li></ul>                               | Core domain (inside hexagon): <ul><li>Entities</li><li>Value Objects</li><li>Domain Services</li><li>Application Services</li></ul>                                          | **Yes**             | **Yes**   |
+| **Observable Technical**     | User presentation (any sense perception) | <ul><li>Manual review</li><li>Visual regression</li><li>Accessibility audits</li><li>Cross-browser checks</li></ul> | <ul><li>CSS styling</li><li>Layouts</li><li>Animations</li><li>Screen reader text</li><li>Audio cues</li><li>Haptic feedback</li></ul> | Presentation layer (outside hexagon): <ul><li>Pure sensory elements without logic</li></ul>                                                                                  | **No**              | **No**    |
+| **Non-Observable Technical** | Implementation & adapter logic           | <ul><li>Integration tests (managed deps)</li><li>Contract tests (unmanaged deps)</li></ul>                          | <ul><li>All adapters</li><li>Caching</li><li>Monitoring</li><li>Infrastructure</li></ul>                                               | All adapter implementations: <ul><li>REST/GraphQL controllers</li><li>Database repositories</li><li>Message publishers</li><li>CLI renderers</li><li>Email senders</li></ul> | **No**              | **Yes**   |
 
 > The key distinction: **Observable** categories involve what users directly experience (behavior or sensory presentation), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces observable output.
 
@@ -107,9 +109,9 @@ These are called _by_ the domain to interact with the outside:
 - **Observable Technical**: Error message red color, screen reader error announcement, field shake animation
 - **Non-Observable Technical**: Form submission adapter, API client, validation service
 
-| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Note for Frontend Developers**: TDD with `AAID` absolutely applies to frontend development as well! The distinction is:<br><br>**Frontend Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Presentation (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "Screen reader announces 'Error: Invalid email format'"<br>• "Submit button has 200ms fade transition"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling the sensory aspects and their NFRs via mainly manual validation. |
+| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note for Frontend Developers**: TDD with `AAID` absolutely applies to frontend development as well! The distinction is:<br><br>**Frontend Observable Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Observable Technical (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "Screen reader announces 'Error: Invalid email format'"<br>• "Submit button has 200ms fade transition"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling the sensory aspects and their NFRs via mainly manual validation. |
 
 ## Specifications for Technical Details
 
@@ -154,7 +156,7 @@ Linked Technical Tasks:
 
 ### How Non-Functional Requirements (NFRs) Fit In
 
-NFRs (performance, security, accessibility, etc) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story, never in BDD scenarios.
+[NFRs](https://en.wikipedia.org/wiki/Non-functional_requirement) (performance, security, accessibility, etc) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story, never in BDD scenarios.
 
 **Counter-example: What NOT to do**
 
@@ -753,13 +755,13 @@ The RED → GREEN → REFACTOR cycle applies to Non-Observable Technical impleme
 
 **Key Principle: "Behavior" is contextual to the abstraction layer.**
 
-Even when testing technical elements, focus test names on **behavior from the element's user's perspective**. The "user" might be:
+Even when testing technical elements, focus test names on **behavior from the element's user's perspective**. Here “user” means the element’s consumer, not the "end user" (as in BDD).
 
 - Another developer using your API
 - A system consuming your adapter's output
 - An internal module depending on your infrastructure
 
-For technical elements, "behavior" means the **technical promise** they fulfill (parsing, formatting, error codes), not business behavior. This is still behavior—just at a different abstraction level.
+For technical elements, "behavior" means the **technical promise** they fulfill (parsing, formatting, error codes), not business behavior. This is still behavior, just at a different abstraction level.
 
 ### How Each Layer Defines Behavior
 
@@ -768,9 +770,9 @@ To understand why testing "technical behavior" isn't a contradiction, consider h
 ```
 End User sees: "I can archive my todo"
      ↓
-Domain sees: "Archive operation succeeds"
+Domain sees: "It should archive a todo"
      ↓
-REST Adapter sees: "Parse JSON, return 200"
+REST Adapter sees: "Parse JSON, return status 200"
      ↓
 Database sees: "Execute update query"
 ```
@@ -819,7 +821,7 @@ The test name describes the **expected behavior** (what the element promises to 
 🔴 **RED Phase - Integration Test**
 
 ```tsx
-// Example: Testing a REST controller with real database
+// Example: Integration testing a REST controller with real database
 
 describe("POST /todos", () => {
   it("should persist todo and return it with an ID", async () => {
@@ -843,7 +845,7 @@ describe("POST /todos", () => {
 
 - Implement the actual technical element/adapter with real dependencies
 - For managed dependencies: use real instances in tests
-- For unmanaged dependencies: use configurable mocks/stubs in tests
+- For unmanaged dependencies: use toggleable mocks/stubs in tests
 
 🧼 **REFACTOR Phase**
 

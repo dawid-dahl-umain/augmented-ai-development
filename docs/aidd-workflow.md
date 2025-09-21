@@ -1,5 +1,3 @@
-# AAID: Augmented AI Development
-
 _Professional TDD for AI-Augmented Software Development_
 
 ## Table of Contents
@@ -199,7 +197,13 @@ Now that you have your specs from the product specification phase (like the user
 
 This diagram presents the formal workflow; detailed explanations for each step follow in the **AAID Development Stages** section below.
 
-![AAID Workflow Diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2ulywojfy11fkmzx9ujk.png)
+![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2ulywojfy11fkmzx9ujk.png)
+
+The diagram shows three distinct development paths, distinguished by colored arrows:
+
+- **Blue arrows**: Common workflow and Domain/Business Logic (including shared TDD stages)
+- **Orange arrows**: Technical Implementation specific branches (see [Appendix D](#appendix-d))
+- **Purple arrows**: Presentation/UI specific branches (no TDD - see [Appendix D](#appendix-d))
 
 | 🔗                                                                                                                                                    |
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -229,26 +233,32 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    - Overall system design and patterns
    - `AAID` Testing strategy documentation
    - Technical patterns and adapter implementations (if applicable)
+   - **AI Research**: Use `@research-&-stop` to let AI proactively search codebase patterns and relevant documentation
 
    | 🤖                                                                                                                                                     |
    | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
    | This will make the AI read through and summarize the basic project context, and how to do things. This is similar to onboarding a new human colleague. |
 
-2. **Add Specification Context**
+2. **Determine What You're Building**
+   Choose your development type early to load the right context:
+   - **Domain/Business Logic**: Core behavior delivering business value
+   - **Technical Implementation**: Adapters, infrastructure, integration (see [Appendix D](#appendix-d))
+   - **Presentation/UI**: Visual styling, layouts, pure presentation (see [Appendix D](#appendix-d))
+3. **Add Specification Context** (specific to your development type)
 
-   - Relevant user stories with BDD scenarios
-   - PRD sections relevant to current feature
-   - Any wireframes or design specifications
+   - **For Domain/Business**: User stories with BDD scenarios, PRD sections
+   - **For Technical**: Technical tasks, NFRs, architecture decisions
+   - **For Presentation**: Design specs, Figma files, style guides
 
-   | 🤖                                                                                           |
-   | -------------------------------------------------------------------------------------------- |
-   | The AI is now fundamentally aligned with your goal to create business value for your client. |
+   | 🤖                                                                                                                                                                    |
+   | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | The AI is now fundamentally aligned with your development goals, whether creating business value, implementing technical infrastructure, or crafting user interfaces. |
 
-3. **Add Relevant Code Context**
+4. **Add Relevant Code Context** (specific to your development type)
 
-   - Direct dependencies of the feature you want to build; code, tests, documentation, utility functions, etc
-   - Similar existing features as reference
-   - Test examples from other parts of the codebase
+   - **For Domain/Business**: Domain dependencies, tests, similar features
+   - **For Technical**: Existing adapters, infrastructure patterns, integration points
+   - **For Presentation**: Components, design system, CSS framework
 
    | 🤖                                                                                                                                                                                                                                                                                                                                                                                     |
    | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -260,39 +270,22 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 ![Stage 2 - Planning](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p6e7p5fqz66bxejm3cv4.jpg)
 
-With the AI agent now informed of the feature you want to build's context, collaborate to understand the feature at a **high level** before diving into TDD. This is _not_ about prescribing implementation details, those will emerge through TDD. Instead, it's about making sure you and the AI are on the same page before testing and coding starts.
+With the AI agent now informed of your specific development context from Stage 1, collaborate to understand the feature at a **high level** before diving into implementation. This is _not_ about prescribing implementation details—those will emerge through TDD for domain and technical work, or through design implementation for presentation work. Instead, it's about making sure you and the AI are aligned on scope and approach.
 
-#### Determining What You're Building
-
-After discussing the feature with the AI, you'll need to clarify what type of work you're doing:
-
-**Domain/Business Logic** — The core behavior that delivers business value
-
-- User stories, BDD scenarios, business rules
-- Uses Feature Roadmap template
-- Tested with unit tests (mocking all external dependencies) or [acceptance tests](#appendix-a)
-
-**Technical Implementation** — The technical elements/adapters and infrastructure that connect your domain to the real world
-
-- REST endpoints, database repositories, message queues, styling, etc.
-- Uses Technical Roadmap templates
-- Tested based on dependency type (integration for managed, contract for unmanaged)
-- Styling and presentational concerns, often validated manually
-- See [Appendix D](#appendix-d) for detailed guidance on technical implementation
-
-> This guide primarily focuses on the **domain/business logic** case. For technical implementation, refer to Appendix D.
+> Since you already determined your development type in Stage 1 (Domain/Business Logic, Technical Implementation, or Presentation/UI), the AI will guide you toward the appropriate roadmap template.
 
 #### Planning vs TDD Discovery
 
-The planning stage provides a roadmap of _what_ to build and _which tests_ to write. TDD will still discover _how_ to build it through the red/green/refactor cycle. This isn't traditional upfront design—you're aligning on scope and test sequence, not implementation.
+For domain and technical work, the planning stage provides a roadmap of _what_ to build and _which tests_ to write. TDD will still discover _how_ to build it through the red/green/refactor cycle. For presentation work, planning outlines validation criteria rather than tests.
 
 **What Planning IS:**
 
 - Understanding which parts of the system are involved
-- Creating a test roadmap (what to test, in what order)
+- Creating a test roadmap (what to test, in what order) for domain/technical work
+- Creating validation criteria for presentation work
 - Recognizing existing patterns to follow
 - Mapping out the feature's boundaries and key interfaces
-- Identifying external dependencies to mock
+- Identifying external dependencies to mock (for testable work)
 
 **What Planning IS NOT:**
 
@@ -317,32 +310,29 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
    - Explore potential approaches with the AI
    - Clarify ambiguities; make sure the AI makes no wild assumptions
 
-2. **Determine What You're Building**
-
-   - **Domain/Business Logic**: Core behavior delivering business value (uses Feature Roadmap)
-   - **Technical Implementation**: implementation details/adapters or styling connecting domain to world (uses Technical Roadmap)
-   - This decision determines which roadmap template to use
-
-3. **Check for Additional Context**
+2. **Check for Additional Context**
 
    - Ask: "_Do you need any other context to understand the feature's scope and boundaries?_"
    - Provide any missing domain knowledge or system information
+   - Use `@research-&-stop` for AI-driven investigation
 
-4. **Request Appropriate Roadmap**
+3. **Request Appropriate Roadmap**
+   Based on your Stage 1 choice:
 
-   - For domain/business logic: use `@ai-roadmap-template`
-   - For technical implementation: use `@ai-technical-roadmap-template` (from Appendix D)
+   - For **domain/business logic**: use `@ai-roadmap-template` → `/ai-roadmaps`
+   - For **technical implementation**: use `@ai-technical-roadmap-template` → `/ai-roadmaps/technical`
+   - **For presentation/UI**: use `@ai-presentation-roadmap-template` → `/ai-roadmaps/presentation`
    - Generate a high-level roadmap before any coding
-   - Focus on test scenarios and their logical sequence
+   - Focus on test/validation scenarios and their logical sequence
    - Keep at "mermaid diagram" level of abstraction
    - An actual mermaid diagram can be generated if applicable
-   - Save roadmap in repo, e.g., in an `ai-roadmaps` directory (or `ai-roadmaps/technical` for technical roadmaps)
 
-5. **Review and Refine**
+4. **Review and Refine**
    - Carefully review the roadmap to ensure alignment with business needs
-   - Check that it addresses all the business specifications (or technical requirements)
+   - Check that it addresses all the specifications (business, technical, or presentation requirements)
    - Ensure it respects existing project patterns and boundaries
-   - Verify the test sequence builds incrementally from simple to complex
+   - For domain/technical: Verify the test sequence builds incrementally from simple to complex
+   - For presentation: Verify validation criteria are clear and measurable
    - Iterate with the AI if adjustments are needed
 
 > ☝️ **Note on task lists**: Many other AI workflows (such as [Task Master](https://github.com/eyaltoledano/claude-task-master)) generate "task lists" with checkboxes in the planning stage. The idea is the AI will then arbitrarily check off items as "done" as it goes. But how can you **trust** the AI's judgment for when something is actually done?
@@ -351,11 +341,19 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 >
 > In addition, with such checkboxes, you must manually re-verify everything after future code changes, to prevent **regressions**.
 >
-> That's why you don't use checkbox-planning in `AAID`. Instead you express completion criteria as good old **automated tests**. Tests aren't added as an afterthought, they're treated as first-class citizens.
+> That's why you don't use checkbox-planning in `AAID`. Instead, for domain and technical work, you express completion criteria as good old **automated tests**. For presentation work, you define clear validation criteria. Tests aren't added as an afterthought, they're treated as first-class citizens.
 >
 > Automated tests = **objective** and **re-runnable** verification, eliminating both aforementioned problems of **trust** and **regression**.
 
 If the roadmap looks good, now is when disciplined development actually starts!
+
+| 🔀                                                                                                                                                                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Path Divergence**: After roadmap approval, the workflow splits:<br>• **Domain/Business Logic** and **Technical Implementation** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI** → Proceeds to implementation and validation without TDD (see [Appendix D](#appendix-d)) |
+
+| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! The distinction is:<br><br>**Frontend Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Presentation (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "All interactive elements have sufficient color contrast (WCAG AA)"<br>• "Loading spinner rotates smoothly"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling pure visual aspects through design validation. |
 
 <a id="stage-3-tdd-starts"></a>
 
@@ -885,7 +883,7 @@ Here are examples of some helpful reusable prompt commands—e.g., Cursor notepa
 
 ### `@project-context`
 
-_Used in Stage 1: Context Providing_
+_Used in **Stage 1: Context** Providing to establish comprehensive project understanding_
 
 ```
 # Project Context
@@ -907,159 +905,39 @@ _Used in Stage 1: Context Providing_
 Summarize what you learned and confirm when ready.
 ```
 
+[@project-context](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/project-context.md)
+
 ### `@ai-roadmap-template`
 
-_Used in Stage 2: Planning_
+_Used in **Stage 2: Planning** to create high-level feature roadmaps that guide TDD without prescribing implementation details_
 
-| ☝️                                                                                                                                                           |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| Some tools have dedicated mechanics for planning. Claude Code for example has [Plan Mode](https://claudelog.com/mechanics/plan-mode/). Use it if beneficial. |
+| ☝️                                                                                                                                                                                     |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Some tools have dedicated mechanics for planning. Claude Code for example has [Plan Mode](https://claudelog.com/mechanics/plan-mode/). Use it with the roadmap commands if beneficial. |
 
-```markdown
-# AI Roadmap Template
+[@ai-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/ai-roadmap-template.md)
 
-Create a high-level feature roadmap that aligns developer and AI understanding before TDD begins. This roadmap guides test sequence without prescribing implementation details: those should be designed by the TDD process itself.
+### `@ai-technical-roadmap-template`
 
-When done, ask user if the roadmap file should be saved to /ai-roadmaps directory in root. Create directory if not exists.
+_Used in **Stage 2: Planning** to create high-level feature roadmaps that guide TDD when building technical implementation details_
 
-**First, if anything is unclear about the requirements or scope, ask for clarification rather than making assumptions.**
+[@ai-technical-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)
 
-## Roadmap Requirements
+For more information: [Appendix D](#appendix-d)
 
-**Include:**
+### `@ai-presentation-roadmap-template`
 
-- Test progression from simple to complex
-- System boundaries and interaction points
-- External dependencies to mock
-- Existing patterns to follow from the codebase
+_Used in **Stage 2: Planning** to create high-level feature roadmaps for technical implementation details that are observable_
 
-**Exclude:**
+[@ai-presentation-roadmap-template](LINK_WHEN_AVAILIBLE)
 
-- Specific class/method names
-- Data structures or schemas
-- Any implementation decisions tests haven't forced yet
-
-## Format
-
-\`\`\`markdown
-
-# Feature Roadmap: [Feature Name]
-
-## Overview
-
-[2-3 sentences describing the business value and scope]
-
-## System View
-
-[Create a diagram ONLY if the feature involves multiple components/services interacting,
-complex flows, or state transitions that benefit from visualization.
-Otherwise, write "No diagram needed - [brief reason]"]
-
-<!-- If diagram is beneficial, choose appropriate type:
-- Mermaid diagram for component interactions
-- State diagram for workflows
-- Sequence diagram for complex flows
-- Or describe the system view in text -->
-
-## Spec references
-
-- Reference the authoritative specifications for this feature (e.g., user story + BDD scenarios, PRD sections, RFCs/design docs, Jira tickets, Story Maps, Ubiquitous Language docs). Keep concise.
-- Include stable identifiers or links/paths (doc path, epic/story IDs, section headings).
-
-## Test Scenario Sequence
-
-<!-- Focus on behavior (what), not implementation (how) -->
-<!-- Unit-level plan for technical correctness/edge cases; multiple tests may derive from one BDD scenario. -->
-
-1. [Simplest scenario - usually happy path]
-2. [Next complexity - validation/business rules]
-3. [Edge cases and error handling]
-4. [Integration points if needed]
-<!-- Continue as needed -->
-
-## Boundaries & Dependencies
-
-- **External Systems**: [What to mock in unit tests]
-- **Internal Patterns**: [Existing patterns to follow]
-- **Integration Points**: [Where integration tests may be needed]
-
-## Non-Functional Requirements
-
-<!-- Include ONLY if explicitly required by specifications -->
-
-- **Performance**: [Specific latency/throughput needs]
-- **Security**: [Auth/encryption requirements]
-- **Observability**: [Logging/metrics needs]
-
-## Notes
-
-[Important constraints, clarifications, or open questions]
-\`\`\`
-
-## Example (Backend Service)
-
-\`\`\`markdown
-
-# Feature Roadmap: Archive Completed Todos
-
-## Overview
-
-Users can archive completed todos to declutter their active list. Archived items remain accessible and restorable.
-
-## System View
-
-\`\`\`mermaid
-graph LR
-API[API Layer] --> Service[Todo Service]
-Service --> Repo[Repository]
-Service --> Events[Event Bus]
-Repo --> DB[(Database)]
-\`\`\`
-
-## Spec references
-
-- User Story + BDD scenarios: specs/todos.feature
-  - Scenario: Archive completed
-  - Scenario: Prevent archiving incomplete
-  - Scenario: Restore
-- PRD: docs/product/todos.md#archiving
-- Jira: TODO-456
-
-## Test Scenario Sequence
-
-1. Archive a completed todo moves it from active to archived
-2. Archive is idempotent when the todo is already archived
-3. Prevent archiving an incomplete todo returns a domain error and leaves state unchanged
-4. Restore an archived todo moves it back to active
-5. Restore is idempotent when the todo is already active
-
-## Boundaries & Dependencies
-
-- **External Systems**: Database, Event Bus (mock in unit tests)
-- **Internal Patterns**: Service/Repository pattern from existing code
-- **Integration Points**: Repository tests will need database connection
-
-## Notes
-
-- Archive operation should be idempotent
-  \`\`\`
-
-## Alternative Examples
-
-- **Frontend**: Focus on user interactions and state changes
-- **DevOps/Infra**: Focus on deployment stages and rollback scenarios
-- **Data Pipeline**: Focus on transformation stages and validation points
-
-## When to Update This Plan
-
-Regenerate if requirements change, test order needs adjustment, or system boundaries shift. Don't add implementation details discovered through TDD.
-```
+For more information: [Appendix D](#appendix-d)
 
 <a id="appendix-b-tdd-commands"></a>
 
 ### TDD Development Commands
 
-_Used in Stage 4: The TDD Cycle_
+_Used in **Stage 4: The TDD Cycle**_
 
 These `AAID` commands embed the Three Laws of TDD:
 
@@ -1087,6 +965,8 @@ Enter RED phase as defined in the AAID rules file:
 - If rules file missing, STOP and request it
 ```
 
+[@red-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/red-%26-stop.md)
+
 ### **`@green-&-stop`**
 
 ```
@@ -1098,6 +978,8 @@ Enter GREEN phase as defined in the AAID rules file:
 - STOP and AWAIT USER REVIEW
 - If rules file missing, STOP and request it
 ```
+
+[@green-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/green-%26-stop.md)
 
 ### **`@refactor-&-stop`**
 
@@ -1111,73 +993,47 @@ Enter REFACTOR phase as defined in the AAID rules file:
 - If rules file missing, STOP and request it
 ```
 
+[@refactor-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/refactor-%26-stop.md)
+
 <a id="appendix-b-investigation-commands"></a>
 
 ### Investigation & Problem Solving Commands
 
-_Used in Stage 4: The TDD Cycle, during the "Handle potential issues" step of each TDD phase._
+Used in various AAID stages. Like in **Stage 2: Planning** to direct the AI agent to research if additional context is needed. **Or in Stage 4: The TDD Cycle** during the "Handle potential issues" step of each TDD phase.
 
 ### `@analyze-&-stop`
 
-```
-Analyze the issue, scan relevant files, optionally consult docs, summarize next steps. Stop.
+_Diagnose specific problems, errors, or failures without making changes (use @research-&-stop for broader context gathering)_
 
-I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
-
-1. Analyze issue or task at hand
-2. Research any relevant files for context
-   a. Optional: use the web tool for documentation
-3. Analyze how to solve it or how to move forward
-4. Report back with your findings
-5. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
-```
+[@analyze-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/analyze-%26-stop.md)
 
 ### `@analyze-command-&-stop`
+
+_Run a specific command and analyze the results without making changes_
 
 | ☝️                                                                                                   |
 | ---------------------------------------------------------------------------------------------------- |
 | The user discusses or simply types out the command, for example: "`@analyze-command-&-stop` test:db" |
 
-```
-Run the command, but if it fails, analyze, report back then STOP.
-
-I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
-
-1. Run command
-2. Analyze the result
-3. Report back with your findings
-4. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
-```
+[@analyze-command-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/analyze-command-%26-stop.md)
 
 ### `@debug-&-stop`
 
-```
-Debug and research any relevant files for context, report back then STOP.
+_Add debug logging and analyze results to understand issues_
 
-I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
-
-1. Add debug logs
-2. Research any relevant files for context
-   a. Optional: use the web tool for documentation
-3. Run the command necessary to analyze the logs
-4. Report back with your findings
-5. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
-```
+[@debug-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/debug-%26-stop.md)
 
 ### `@minimal-fix-&-analyze-&-stop`
 
-```
-Implement the simplest and cleanest fix, analyze and research any relevant files for context, then verify if the fix was successful or not, report back then STOP.
+_Implement the simplest fix, verify results, and analyze outcome_
 
-I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
+[@minimal-fix-&-analyze-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/minimal-fix-%26-analyze-%26-stop.md)
 
-1. Research any relevant files for context
-2. Implement the cleanest and simplest fix
-3. Verify success or failure of the fix by running tests and/or code
-4. Analyze result
-5. Report back with your findings
-6. STOP. DON'T CHANGE, ADD, OR DELETE ANYTHING.
-```
+### `@research-&-stop`
+
+_Used for comprehensive investigation and context gathering during development_
+
+[@research-&-stop](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/research-%26-stop.md)
 
 <a id="appendix-b-misc-commands"></a>
 
@@ -1185,125 +1041,17 @@ I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 ### `@git-commit`
 
-```
-@docs/git-commit-message-guidelines.md
+_Create clean commit messages following project guidelines_
 
-1. Do "git add ." to add all changes
-2. Follow our git commit message guidelines and construct a good and clean commit message
-3. Commit with that message
-4. Do not push. The user will do that manually
-```
-
-These are just some examples of AI Commands. Feel free to change them, create new ones, or not use them at all. But do use reusable prompts, as it can greatly speed up your work.
+[@git-commit](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/git-commit.md)
 
 ### `@gherkin-guard`
 
-```
-# Gherkin Guard Command
+_Enforce consistent Gherkin-style Given/When/Then comments in tests_
 
-Enforce consistent Gherkin-style Given/When/Then comments in test(s) you're currently working with. Use this command when writing new tests or reviewing specific existing tests.
+[@gherkin-guard](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/gherkin-guard.md)
 
-## Goal
-
-Enforce our Gherkin-style Given/When/Then comments in tests without changing behavior.
-
-## Supported Structures
-
-Choose one per test:
-- **A) Standard:** `// Given` → `// When` → `// Then`
-- **B) Minimal:** `// When` → `// Then` (only when no setup is needed)
-
-## Notes (Spec vs. Team Style)
-
-- Gherkin allows multiple Then steps; our team style restricts to one `// Then`. Use `// And` or `// But` for additional expectations.
-
-## Team Rules — Structure
-
-- Exactly one `// Then`. Extra expectations go under the same `// Then` as `// And` (or `// But`). No second `// Then`.
-- If additional expectations aren't tightly related to the same behavior, prefer a **separate test case**.
-- `// When` is one triggering event. If more seem needed, move prep to `// Given` or split; use `// And` after `// When` only if inseparable.
-- No assertions in `// Given` or `// When`.
-- No loops/conditionals inside tests.
-- Do **not** include an empty `// Given`. If there's no setup, use structure B.
-
-## Team Rules — Formatting
-
-- Comments must be exactly: `// Given`, `// When`, `// Then`, `// And`, `// But` (capitalized; one space after `//`; no extra text).
-- The code for a section starts on the next line (no blank line between the comment and its code).
-- No empty section comments.
-- Exactly 1 blank line between sections.
-
-## Action
-
-- **Scope:** Apply only to the test(s) being discussed or referenced in the current context
-- **New tests:** Generate following these rules
-- **Existing tests:** Rewrite to comply, preserving intent and outcome
-- **Output:** Final test code only (no explanations unless requested)
-
-## Self-Check (Internal Use)
-
-Verify all are true before outputting:
-
-- [ ] Uses A (`Given`/`When`/`Then`) or B (`When`/`Then`)
-- [ ] `When` is one triggering event (`And` only if inseparable)
-- [ ] Extra expectations use `And`/`But` (no extra `Then`)
-- [ ] If expectations aren't tightly related, split into another test
-- [ ] No assertions in `Given`/`When`; no loops/conditionals
-- [ ] Comment casing/spacing exact; no extra text
-- [ ] No empty sections; no blank line between comment and its code
-- [ ] Exactly 1 blank line between sections
-
-## Examples (Valid Per Our Team Style)
-
-### 1: Standard
-
-\`\`\`ts
-it('adds a new item to the list', () => {
-  // Given
-  const list = createList()
-
-  // When
-  list.add('Milk')
-
-  // Then
-  expect(list.items).toContain('Milk')
-})
-\`\`\`
-
-### 2: Minimal (No Setup)
-
-\`\`\`ts
-it('returns empty results for an unknown query', () => {
-  // When
-  const results = search('unknown')
-
-  // Then
-  expect(results).toHaveLength(0)
-})
-\`\`\`
-
-### 3: Multiple Expectations via And/But
-
-\`\`\`ts
-it('authenticates a user but locks on too many attempts', () => {
-  // Given
-  const auth = createAuth()
-  auth.failLogin('alice'); auth.failLogin('alice')
-
-  // When
-  auth.failLogin('alice')
-
-  // Then
-  expect(auth.isAuthenticated()).toBe(false)
-
-  // And
-  expect(auth.attempts('alice')).toBe(3)
-
-  // But
-  expect(auth.isLocked('alice')).toBe(true)
-})
-\`\`\`
-```
+These are just some examples of AI Commands. Feel free to change them or create new ones. But do use reusable prompts, as they will greatly augment your development speed.
 
 ---
 
@@ -1428,7 +1176,6 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
-
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -1449,7 +1196,6 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - No conditionals/loops in tests
    - Test names describe business behavior
    - Tests must run in milliseconds
-
 3. Run test and verify failure
 4. Run tests after EVERY code change
 
@@ -1552,7 +1298,7 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ## Appendix D: Handling Technical Implementation Details
 
-The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](../appendices/appendix-d-handling-technical-implementation-details.md).
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
 
 ---
 
