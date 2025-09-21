@@ -1302,6 +1302,8 @@ Place in `CLAUDE.md` file in your project root (or `~/.claude/CLAUDE.md` for glo
 **For other AI tools:**
 Look for "custom instructions", "custom rules", or "system prompt" settings
 
+---
+
 <a id="appendix-d"></a>
 
 ## Appendix D: Handling Technical Implementation Details
