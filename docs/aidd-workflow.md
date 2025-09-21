@@ -1,3 +1,5 @@
+# AAID: Augmented AI Development
+
 _Professional TDD for AI-Augmented Software Development_
 
 ## Table of Contents
@@ -197,7 +199,7 @@ Now that you have your specs from the product specification phase (like the user
 
 This diagram presents the formal workflow; detailed explanations for each step follow in the **AAID Development Stages** section below.
 
-![Image description](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2ulywojfy11fkmzx9ujk.png)
+![AAID workflow diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2ulywojfy11fkmzx9ujk.png)
 
 The diagram shows three distinct development paths, distinguished by colored arrows:
 
@@ -351,9 +353,9 @@ If the roadmap looks good, now is when disciplined development actually starts!
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Path Divergence**: After roadmap approval, the workflow splits:<br>• **Domain/Business Logic** and **Technical Implementation** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI** → Proceeds to implementation and validation without TDD (see [Appendix D](#appendix-d)) |
 
-| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note for Frontend Developers**: Many frontend developers believe TDD doesn't apply to their work. This is a misconception! `AAID` absolutely applies to frontend development. The key is understanding the distinction:<br><br>**Frontend Observable Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "User can filter search results"<br><br>**Frontend Observable Technical (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "Screen reader announces 'Error: Invalid email format'"<br>• "Submit button has 200ms fade transition"<br><br>Frontend teams use `AAID`'s TDD workflow for all behavioral logic while handling the sensory aspects and their NFRs via mainly manual validation. Your components have testable behavior: TDD that. Your styling and sensory feedback needs human validation: validate that without TDD. |
+| 💻                                                                                                                                                                                                                                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! Frontend behavioral logic (form validation, state management, data transformations) uses TDD just like backend. Only pure visual aspects (colors, spacing, animations) skip TDD for manual validation. See [Appendix D](#appendix-d) for detailed examples. |
 
 <a id="stage-3-tdd-starts"></a>
 
@@ -915,13 +917,13 @@ _Used in **Stage 2: Planning** to create high-level feature roadmaps that guide 
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Some tools have dedicated mechanics for planning. Claude Code for example has [Plan Mode](https://claudelog.com/mechanics/plan-mode/). Use it with the roadmap commands if beneficial. |
 
-[@ai-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/ai-roadmap-template.md)
+[@ai-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-roadmap-template.md)
 
 ### `@ai-technical-roadmap-template`
 
 _Used in **Stage 2: Planning** to create high-level feature roadmaps that guide TDD when building technical implementation details_
 
-[@ai-technical-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)
+[@ai-technical-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)
 
 For more information: [Appendix D](#appendix-d)
 
@@ -929,7 +931,7 @@ For more information: [Appendix D](#appendix-d)
 
 _Used in **Stage 2: Planning** to create high-level feature roadmaps for technical implementation details that are observable_
 
-[@ai-presentation-roadmap-template](LINK_WHEN_AVAILIBLE)
+[@ai-presentation-roadmap-template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-presentation-roadmap-template.md)
 
 For more information: [Appendix D](#appendix-d)
 
@@ -1176,7 +1178,6 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
-
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -1197,7 +1198,6 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
    - No conditionals/loops in tests
    - Test names describe business behavior
    - Tests must run in milliseconds
-
 3. Run test and verify failure
 4. Run tests after EVERY code change
 
@@ -1282,6 +1282,8 @@ In all cases:
 3. Write only enough production code to pass
 ```
 
+[AAID AI Workflow Rules/Instructions](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/rules/aaid/aaid-development-rules.mdc)
+
 ### Usage Guide
 
 **For Cursor:**
@@ -1300,7 +1302,7 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ## Appendix D: Handling Technical Implementation Details
 
-![AAID implementation categories](../assets/aaid-implementation-categories-s.webp)
+![AAID implementation categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/aaid-implementation-categories-s.webp)
 
 The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
 
