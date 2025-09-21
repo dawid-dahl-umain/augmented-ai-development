@@ -17,8 +17,7 @@ When generating validation sequences, remember:
 
 ## Format
 
-\`\`\`markdown
-
+```markdown
 # Presentation Roadmap: [UI Element/Feature Name]
 
 ## Overview
@@ -207,3 +206,4 @@ Audio
 - Consider cultural differences in audio feedback
 - Test with actual users who rely on audio cues
   \`\`\`
+```

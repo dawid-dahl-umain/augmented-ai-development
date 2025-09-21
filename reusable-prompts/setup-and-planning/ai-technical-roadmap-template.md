@@ -17,8 +17,7 @@ When generating test sequences, remember:
 
 ## Format
 
-\`\`\`markdown
-
+```markdown
 # Technical Roadmap: [Specific Element Name]
 
 ## Overview
@@ -230,3 +229,4 @@ Output Adapter
 - Consider color support detection in future iteration
 - ASCII art design should be clear and readable
   \`\`\`
+```
