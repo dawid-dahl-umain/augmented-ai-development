@@ -255,3 +255,7 @@ Hidden --> [*]
 - Consider haptic feedback on mobile for important notifications
 - May need to adjust timing based on message length
 ```
+
+---
+
+⬅️ Back to: [Appendix D](../../appendices/appendix-d-handling-technical-implementation-details.md)

@@ -262,3 +262,7 @@ EmailSender->>Logger: Log result
 - Template changes need design team approval
 - Monitor SendGrid quota usage
 ```
+
+---
+
+⬅️ Back to: [Appendix D](../../appendices/appendix-d-handling-technical-implementation-details.md)
