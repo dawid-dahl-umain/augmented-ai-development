@@ -1,6 +1,6 @@
 # AI Technical Implementation Roadmap Template
 
-Create a roadmap for a single technical element (connection layer/adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
+Create a roadmap for a single Non-Observable Technical element (adapter, infrastructure piece) that complements the behavioral implementation. This roadmap guides test sequence without prescribing implementation details: those should emerge through the TDD process.
 
 When done, ask user if the roadmap file should be saved to /ai-roadmaps/technical directory. Create directory if not exists.
 
@@ -8,15 +8,17 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Core Testing Principle for Technical Elements
 
-<!-- IMPORTANT: When generating test sequences, remember: -->
-<!-- Test this element's responsibilities, not domain behavior -->
-<!-- The domain already has comprehensive unit tests: trust them -->
-<!-- Focus on what THIS element does: parsing, formatting, error translation, etc. -->
-<!-- Don't re-test business rules through the adapter -->
+When generating test sequences, remember:
+
+- Test this element's responsibilities, not domain behavior
+- The domain already has comprehensive unit tests: trust them
+- Focus on what THIS element does: parsing, formatting, error translation, etc.
+- Don't re-test business rules through the adapter
 
 ## Format
 
-```markdown
+\`\`\`markdown
+
 # Technical Roadmap: [Specific Element Name]
 
 ## Overview
@@ -25,7 +27,7 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Element Type
 
-[Identify as: Input Adapter | Output Adapter | Infrastructure | Presentation Layer | Other]
+[Identify as: Input Adapter | Output Adapter | Infrastructure | Other]
 
 ## Integration Points
 
@@ -37,7 +39,7 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Test Sequence
 
-<!-- TEST NAMING: Test names should always describe behaviour, not implementation details -->
+<!-- TEST NAMING: Test names should always describe behavior, not implementation details -->
 <!-- "Behavior" for technical elements = the technical promise (what it does for its users) -->
 <!-- Users here = other developers, systems, or internal modules -->
 <!-- Focus on behavior from the element's user perspective -->
@@ -53,14 +55,13 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 <!-- ❌ "uses specific library method" -->
 <!-- ❌ "calls internal helper function" -->
 <!-- ❌ "uses regex /move (\d+)/ to extract number" -->
-<!-- ❌ "checks error.type === "NOT_FOUND" -->
+<!-- ❌ "checks error.type === 'NOT_FOUND'" -->
 <!-- ❌ "executes INSERT statement with RETURNING clause" -->
 
 <!-- WHAT TO TEST by element type (not domain rules): -->
 <!-- Input Adapters: command parsing, input validation, error translation to user messages -->
 <!-- Output Adapters: data formatting, serialization, connection handling -->
 <!-- Infrastructure: persistence operations, caching behavior, queue management -->
-<!-- Presentation: visual rendering, style application (often manual validation) -->
 
 1. [Simplest case - usually happy path with minimal setup]
 2. [Next complexity - error handling or validation]
@@ -91,10 +92,6 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
   - Toggleable: MOCK for fast dev/CI, REAL for pre-deploy validation
   - Validates your assumptions about external service behavior
 
-  **Visual Testing** — For pure presentation (CSS, layouts)
-
-  - Manual review, visual regression, accessibility checks
-
 ## Technical Constraints
 
 <!-- Include relevant NFR categories; add others if needed -->
@@ -106,8 +103,7 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 
 ## Spec References
 
-- [Reference to linked technical task ticket (e.g., TECH-101, UI-103)]
-- [Design specifications if applicable (e.g., Figma link, style guide)]
+- [Reference to linked technical task ticket (e.g., TECH-101)]
 - [Technical standards or architectural decisions records (ADRs)]
 - [Any relevant documentation or requirements]
 
@@ -121,7 +117,7 @@ When done, ask user if the roadmap file should be saved to /ai-roadmaps/technica
 [Important constraints, clarifications, or open questions]
 \`\`\`
 
-## Example (REST Input Adapter)
+## Example: REST Endpoint (Non-Observable Technical)
 
 \`\`\`markdown
 
@@ -179,64 +175,7 @@ Input Adapter
 - Include OpenAPI documentation
   \`\`\`
 
-## Example (Email Output Adapter)
-
-\`\`\`markdown
-
-# Technical Roadmap: Archive Confirmation Email Sender
-
-## Overview
-
-Email sending adapter for archive confirmation notifications. Sends formatted, branded emails when users archive todos.
-
-## Element Type
-
-Output Adapter
-
-## Integration Points
-
-- **Connects to Domain**: Triggered by TodoArchived domain event
-- **External Dependencies**: SendGrid API (unmanaged)
-- **Data Flow**: Domain event → template rendering → SendGrid API → user inbox
-
-## Test Sequence
-
-1. Sends email with correct recipient and subject
-2. Includes todo title and archive timestamp in body
-3. Handles SendGrid API errors gracefully
-4. Skips sending for users with email notifications disabled
-5. Retries on temporary failures
-
-## Test Strategy
-
-- **Primary approach**: Contract Tests (for SendGrid integration)
-  - Mocked mode: run against a stub to verify request structure and error handling
-  - Live mode: run against SendGrid test/sandbox API before deploy to confirm contract holds
-
-## Technical Constraints
-
-- **Performance**: Queue for async processing
-- **Compatibility**: HTML email standards, dark mode support
-- **Security**: No sensitive data in email content
-
-## Spec References
-
-- TECH-107: Email notification sender task
-- Figma design: [link to email template design]
-- Email design system guidelines
-
-## Dependencies
-
-- **Depends on**: Domain event system, SendGrid account setup
-- **Blocks**: User notification preferences feature
-
-## Notes
-
-- Follow company email design system
-- Template styling handled separately as Observable Technical task
-  \`\`\`
-
-## Example (CLI Renderer)
+## Example: CLI Renderer (Non-Observable Technical)
 
 \`\`\`markdown
 
@@ -291,71 +230,3 @@ Output Adapter
 - Consider color support detection in future iteration
 - ASCII art design should be clear and readable
   \`\`\`
-
-## Example (Visual Styling)
-
-\`\`\`markdown
-
-# Technical Roadmap: Archived Todo Visual Styling
-
-## Overview
-
-Pure CSS styling for archived todos in the UI. Provides visual distinction between active and archived items without any behavioral logic.
-
-## Element Type
-
-Observable Technical (Pure Presentation)
-
-## Integration Points
-
-- **Connects to Domain**: Applied to elements with 'archived' class/attribute
-- **External Dependencies**: Design system tokens
-- **Data Flow**: CSS classes → browser rendering → visual output
-
-## Test Sequence
-
-1. Archived todos appear visually distinct from active todos
-2. Hover states work correctly on archived items
-3. Dark mode displays archived state appropriately
-4. Mobile responsive behavior maintains visual hierarchy
-5. Accessibility contrast requirements are met
-
-## Test Strategy
-
-- **Primary approach**: Visual Testing
-  - Manual design review against Figma specs
-  - Visual regression testing for style changes
-  - Accessibility audit for WCAG compliance
-  - Cross-browser visual validation
-
-## Technical Constraints
-
-- **Performance**: No CSS animation jank
-- **Compatibility**: Support last 2 browser versions
-- **Security**: No security constraints
-
-## Spec References
-
-- UI-103: Archived todo visual state task
-- Figma: [link to archived todo design specs]
-- Design system color tokens documentation
-
-## Dependencies
-
-- **Depends on**: Design system base styles
-- **Blocks**: Archive feature user acceptance
-
-## Notes
-
-- Use existing design system opacity tokens
-- Ensure visual state doesn't imply disabled/non-interactive
-  \`\`\`
-
-## Alternative Examples
-
-- **Database Repository**: Focus on query operations and transaction handling
-- **Cache Adapter**: Focus on cache hits/misses and invalidation
-- **Authentication Middleware**: Focus on token validation and access control
-- **Message Queue Consumer**: Focus on message processing and acknowledgment
-- **Toast Notification Styling**: Focus on animation timing and positioning
-```
