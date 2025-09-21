@@ -169,3 +169,7 @@ _Enforce consistent Gherkin-style Given/When/Then comments in tests_
 [@gherkin-guard](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/gherkin-guard.md)
 
 These are just some examples of AI Commands. Feel free to change them or create new ones. But do use reusable prompts, as they will greatly augment your development speed.
+
+---
+
+⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)

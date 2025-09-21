@@ -32,3 +32,7 @@ Place in `CLAUDE.md` file in your project root (or `~/.claude/CLAUDE.md` for glo
 
 **For other AI tools:**
 Look for "custom instructions", "custom rules", or "system prompt" settings
+
+---
+
+⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)

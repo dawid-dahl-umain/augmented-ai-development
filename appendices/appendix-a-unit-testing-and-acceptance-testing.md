@@ -98,8 +98,12 @@ The DSL provides business vocabulary (like `user` or `archive todo`), while the 
 
 Notice how unit tests directly test the class with mocks, while acceptance tests use this DSL layer to express tests in business terms.
 
-| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. It uses real managed resources (databases, file systems) but mocks external unmanaged dependencies (third-party APIs). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify. See: [Appendix D](./appendix-d-handling-technical-implementation-details.md) |
+| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. It uses real managed resources (databases, file systems) but mocks external unmanaged dependencies (third-party APIs). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify.<br><br>See: [Appendix D](./appendix-d-handling-technical-implementation-details.md) |
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
+
+---
+
+⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)
