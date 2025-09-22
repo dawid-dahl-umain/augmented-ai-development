@@ -59,7 +59,7 @@ Otherwise, write "No diagram needed - [brief reason]"]
 ## Test Strategy
 
 - **Test Type**: Unit tests with mocked dependencies
-- **Isolation**: Mock all external units. Mock all external systems (database, APIs, file system)
+- **Isolation**: Mock all external dependencies (database, APIs, file system)
 - **Speed**: Tests should run in milliseconds
 - **Coverage**: Each business rule needs at least one test
 
@@ -170,16 +170,16 @@ Email --> Queue[Message Queue]
 
 ## Test Sequence
 
-1. Register user with valid email and password
-2. Validate email format
-3. Enforce minimum password length
-4. Enforce password complexity requirements
-5. Prevent registration with existing email
-6. Email addresses must be treated as the same regardless of letter case when checking uniqueness
+1. Registers user with valid email and password
+2. Validates email format
+3. Enforces minimum password length
+4. Enforces password complexity requirements
+5. Prevents registration with existing email
+6. Treats email addresses as case-insensitive when checking uniqueness
 7. Passwords must never be stored in plaintext, only as secrets
-8. Trigger welcome email on successful registration
-9. Set default user preferences
-10. Handle registration when email service unavailable
+8. Triggers welcome email on successful registration
+9. Sets default user preferences
+10. Handles registration when email service unavailable
 
 ## Test Strategy
 

@@ -106,7 +106,7 @@ These battle-tested practices become your foundation that guides AI-assisted dev
 
 The workflow applies to any AI-assisted environment - **Cursor**, **Claude Code**, **Gemini CLI**, etc. The principles are the same; only the mechanics differ.
 
-E.g., the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Notepads** in Cursor or **Custom slash commands** in Claude Code/Gemini CLI.
+For example, the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Notepads** in Cursor or **Custom slash commands** in Claude Code/Gemini CLI.
 
 <a id="developer-mindset"></a>
 
@@ -205,8 +205,8 @@ This diagram presents the formal workflow; detailed explanations for each step f
 
 The diagram shows three distinct development paths, distinguished by colored arrows:
 
-- **Blue arrows**: Common workflow and Domain/Business Logic (including shared TDD stages)
-- **Orange arrows**: Technical Implementation specific branches (see [Appendix D](#appendix-d))
+- **Blue arrows**: Common workflow and domain/business logic (including shared TDD stages)
+- **Orange arrows**: Technical implementation specific branches (see [Appendix D](#appendix-d))
 - **Purple arrows**: Presentation/UI specific branches (no TDD - see [Appendix D](#appendix-d))
 
 | 🔗                                                                                                                                                    |
@@ -351,13 +351,13 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 
 If the roadmap looks good, now is when disciplined development actually starts!
 
-| 🔀                                                                                                                                                                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Path Divergence**: After roadmap approval, the workflow splits:<br>• **Domain/Business Logic** and **Technical Implementation** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI** → Proceeds to implementation and validation without TDD (see [Appendix D](#appendix-d)) |
+| 🔀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Path Divergence**: After roadmap approval, the workflow splits into three paths:<br><br>• **Domain/Business Logic** → Continue to Stage 3 (TDD Development)<br>• **Technical Implementation (Non-Observable)** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI (Observable Technical)** → Proceeds to implementation and validation without TDD<br><br>See [Appendix D](#appendix-d) or the [Workflow Diagram](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/aaid-workflow-diagram.mermaid) for more information on these three categories. |
 
-| 💻                                                                                                                                                                                                                                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! Frontend behavioral logic (form validation, state management, data transformations) uses TDD just like backend. Only pure visual aspects (colors, spacing, animations) skip TDD for manual validation. See [Appendix D](#appendix-d) for detailed examples. |
+| 💻                                                                                                                                                                                                                                                                                                                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! Frontend behavioral logic (form validation, state management, data transformations) uses TDD just like backend. Only pure presentation aspects (colors, spacing, animations, screen reader announcements) skip TDD for manual validation. See [Appendix D](#appendix-d) for detailed examples. |
 
 <a id="stage-3-tdd-starts"></a>
 
@@ -867,9 +867,9 @@ The DSL provides business vocabulary (like `user` or `archive todo`), while the 
 
 Notice how unit tests directly test the class with mocks, while acceptance tests use this DSL layer to express tests in business terms.
 
-| 🔌                                                                                                                                                                                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. It uses real managed resources (databases, file systems) but mocks external unmanaged dependencies (third-party APIs). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify. |
+| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration Testing in the `AAID` context uses real managed resources (your database, cache, file systems) but mocks unmanaged dependencies (external APIs like Stripe, SendGrid). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify. |
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
 

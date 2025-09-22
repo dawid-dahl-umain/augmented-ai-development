@@ -137,11 +137,11 @@ No diagram needed - straightforward styling of existing button component with st
 
 1. Idle state matches Figma design (color, padding, border)
 2. Hover state shows correct elevation and color shift
-3. Active/pressed state has appropriate feedback
+3. Active/pressed state provides appropriate feedback
 4. Disabled state clearly indicates unavailability
-5. Focus indicator visible and meets 3:1 contrast ratio
-6. Loading state spinner animates smoothly
-7. Dark mode uses correct color tokens
+5. Focus indicator remains visible and meets 3:1 contrast ratio
+6. Loading spinner animates smoothly
+7. Dark mode applies correct color tokens
 8. Touch target meets 44x44px minimum
 9. Screen reader announces state changes appropriately
 
@@ -217,10 +217,10 @@ Hidden --> [*]
 
 1. Slide-in animation matches design timing (300ms ease-out)
 2. Position respects safe areas on mobile devices
-3. Stacking behavior for multiple toasts works correctly
-4. Auto-dismiss after 4 seconds with fade-out
+3. Multiple toasts stack correctly
+4. Auto-dismisses after 4 seconds with fade-out
 5. Progress bar indicates time remaining
-6. Manual dismiss button is easily clickable/tappable
+6. Dismiss button remains easily clickable/tappable
 7. Screen reader announces immediately with role="alert"
 8. Respects prefers-reduced-motion settings
 9. Z-index keeps toast above all content

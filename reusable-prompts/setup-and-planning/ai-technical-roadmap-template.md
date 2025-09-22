@@ -156,13 +156,13 @@ No diagram needed - simple request/response flow with single domain service depe
 
 ## Test Sequence
 
-1. Successfully archives todo and returns 200 with archived todo
+1. Archives todo successfully and returns 200 with archived todo
 2. Returns 404 when todo doesn't exist
 3. Returns 400 when todo is already archived
 4. Returns 401 for unauthenticated requests
-5. Validates request format and returns 422 for invalid data
-6. Handles malformed JSON with appropriate error
-7. Respects rate limiting with 429 response
+5. Returns 422 for invalid request format
+6. Returns appropriate error for malformed JSON
+7. Returns 429 when rate limit exceeded
 
 ## Test Strategy
 

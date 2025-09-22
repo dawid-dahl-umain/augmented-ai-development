@@ -156,7 +156,7 @@ Linked Technical Tasks:
 
 ### How Non-Functional Requirements (NFRs) Fit In
 
-[NFRs](https://en.wikipedia.org/wiki/Non-functional_requirement) (performance, security, accessibility, etc) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story, never in BDD scenarios.
+[NFRs](https://en.wikipedia.org/wiki/Non-functional_requirement) (performance, security, accessibility, etc.) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story, never in BDD scenarios.
 
 **Counter-example: What NOT to do**
 
@@ -262,9 +262,9 @@ When working on technical elements, add technical context to your `@project-cont
 
 Create roadmaps for each aspect of your feature:
 
-1. **Behavioral Roadmap**: Test scenarios for business logic (`@ai-roadmap-template`)
-2. **Technical Roadmaps**: One per Non-Observable Technical element (`@ai-technical-roadmap-template`)
-3. **Presentation Roadmaps**: One per Observable Technical element (`@ai-presentation-roadmap-template`)
+1. **Observable Behavioral**: One roadmap per domain/business logic feature (`@ai-roadmap-template`)
+2. **Non-Observable Technical**: One roadmap per adapter/infrastructure element (`@ai-technical-roadmap-template`)
+3. **Observable Technical (UI)**: One roadmap per presentation element (`@ai-presentation-roadmap-template`)
 
 ### Stage 3: TDD Starts
 
@@ -345,7 +345,7 @@ For a CLI Input Adapter:
 
 For a REST Controller:
 
-- ✅ Behavior: `'returns 404 for not found errors'`
+- ✅ Behavior: `'returns 404 when todo not found'`
 - ❌ Implementation: `'checks error.type === "NOT_FOUND"'`
 
 For a Database Repository:
@@ -443,7 +443,7 @@ Dependencies flow inward. Domain never knows about technical elements. Technical
 
 ### Testing/Validation by Layer
 
-- **BDD/Acceptance tests**: Test through all layers with DSL
+- **BDD/Acceptance tests**: Test through all layers using DSL
 - **Contract tests**: Test with toggleable mocking - real connections for deploy validation, mocked for development
 - **Integration tests**: Test connection layers with real managed dependencies, mock unmanaged ones
 - **Unit tests**: Test domain in isolation
