@@ -1,0 +1,1 @@
+../../../../../reusable-prompts/investigation-and-problem-solving/analyze-command-&-stop.md

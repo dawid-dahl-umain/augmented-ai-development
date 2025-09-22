@@ -24,8 +24,8 @@ The complete AAID workflow follows this order:
    - User provides project context, specifications, and relevant code
    - AI reads and acknowledges understanding
 2. **Stage 2: Planning** (normal conversation mode, optional)
-   - Discuss feature approach and create roadmap with test scenarios
-   - Determine work type: domain/business logic vs technical implementation
+   - Discuss feature approach and create "Roadmap" (a planning file) with test scenarios
+   - Determine work type: domain/business logic vs technical implementation vs presentation/UI
    - AI helps plan but doesn't write code yet
 3. **Stage 3: TDD Starts** (transition to TDD mode)
    - User explicitly initiates TDD
@@ -53,22 +53,25 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 - User asks general programming questions
 - User explicitly indicates working on something else
 
-## Domain vs Technical Implementation
+## Development Categories
 
-When in AAID TDD mode, the workflow applies to both:
+When in AAID mode, the workflow applies differently based on category:
 
-- **Domain/Business Logic**: BDD-driven features using unit tests with mocks (default focus)
-- **Technical Implementation**: Adapters, infrastructure, styling using appropriate test strategies
+- **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
+- **Technical Implementation**: Adapters and infrastructure using integration/contract tests
+- **Presentation/UI**: Pure visual styling and sensory feedback - NO TDD, validation only
 
-The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
+The TDD phases (RED/GREEN/REFACTOR) apply only to Domain and Technical Implementation work:
 
 - **Domain work** uses Feature Roadmaps and unit tests as described in these AAID instructions (or acceptance tests if user specifically requests for it)
-- **Technical work** uses Technical Roadmaps with tests based on dependency:
+- **Technical Implementation work** uses Technical Roadmaps with tests based on dependency:
   - Integration tests for managed dependencies (your database, cache, queues)
   - Contract tests for unmanaged dependencies (external APIs like Stripe, SendGrid)
-  - Manual validation for pure visual styling
-- If user mentions "adapter", "repository", "controller", "infrastructure", "css" → likely technical
-- Ask user to clarify if unclear which type of work is being done
+- **Presentation/UI work** skips TDD entirely - proceeds directly to implementation with manual validation, visual regression, accessibility audits
+
+If user mentions "adapter", "repository", "controller", "infrastructure" → Technical Implementation
+If user mentions "css", "styling", "animation", "visual design", "colors", "spacing" → Presentation/UI (no TDD)
+Ask user to clarify if unclear which type of work is being done
 
 ## Phase Recognition (When in TDD Mode)
 
@@ -93,7 +96,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
 1. Write the SMALLEST test that will fail for the next requirement
    - If test list exists: Un-skip the next test and implement its body
    - If single test approach: Write a new test for the next scenario
-   - Follow test sequence from roadmap/specs if provided
+   - Follow test sequence from Roadmap/specs if provided
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
