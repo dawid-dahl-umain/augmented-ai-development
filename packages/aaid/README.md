@@ -1,6 +1,8 @@
 # aaid
 
-Typed, extendable API exposing AAID reusable prompts and rules.
+Typed API exposing AAID reusable prompts and rules.
+
+AAID (Augmented AI Development) is a disciplined, TDD‑centric workflow for AI‑assisted software development.
 
 ## Install
 
