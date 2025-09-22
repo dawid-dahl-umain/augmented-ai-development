@@ -23,7 +23,7 @@ This separates professional software development from "vibe coding." While vibe 
 - **Production Quality**: Tests ensure code meets business requirements
 - **Speed + Stability**: AI accelerates development while TDD ensures reliability
 
-Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Delivery, Robert C. Martin's Three Laws of TDD, and other battle-tested practices.
+Built on proven foundations from Kent Beck's TDD, Dave Farley's Continous Delivery & Four Layer Model, Robert C. Martin's Three Laws of TDD, and other battle-tested practices.
 
 ## Quick Links
 
@@ -62,13 +62,6 @@ const analyze = prompts.investigationAndProblemSolving.analyzeAndStop;
 
 // Rules
 const aaidRules = rules.aaidDevelopmentRules;
-```
-
-- **Subpath imports**
-
-```ts
-import * as prompts from "aaid/prompts";
-import * as rules from "aaid/rules";
 ```
 
 ## Core Components

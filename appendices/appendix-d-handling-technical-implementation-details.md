@@ -1,5 +1,7 @@
 # Appendix D: Handling Technical Implementation Details
 
+![Appendix D](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pl6x69jvidsn04396hn8.png)
+
 While the main `AAID` guide focuses on BDD/TDD for business logic and system **behavior**, real applications need adapters, infrastructure, and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
 
 ## Table of Contents

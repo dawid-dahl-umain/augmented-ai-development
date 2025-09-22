@@ -1,5 +1,7 @@
 # Appendix A: Unit Testing and Acceptance Testing
 
+![Appendix A](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/e3xra22c01p5m3dh27an.png)
+
 This article on `AAID` focuses on TDD (Test-Driven Development) for **Unit Testing**, which ensures you actually write your code correctly and with high quality.
 
 **Acceptance Testing**, on the other hand, verifies that your software aligns with business goals and is actually _done_. It serves as an executable definition-of-done.

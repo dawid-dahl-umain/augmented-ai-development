@@ -1,5 +1,7 @@
 # Appendix B: Helpful Commands (Reusable Prompts)
 
+![Appendix B](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bi3pb8m680ooad039qq0.png)
+
 Here are examples of some helpful reusable prompt commands—e.g., Cursor notepads or whatever your AI IDE or CLI offers—to help you speed up your prompting. Use or change them as you wish.
 
 ## **Setup & Planning Commands**

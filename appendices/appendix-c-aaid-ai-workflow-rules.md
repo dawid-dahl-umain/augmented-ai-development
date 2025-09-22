@@ -1,5 +1,7 @@
 # Appendix C: AAID AI Workflow Rules
 
+![Appendix C](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/34gja5j2umhsllvz3i7a.png)
+
 Configure your AI environment to understand the AAID workflow. These are simple text instructions - no special AAID app or tool is required. The workflow rules get loaded by your AI tool (via `.cursor/rules`, `CLAUDE.md`, or similar instruction files), focusing on workflow state management rather than project specifics.
 
 ## Why Minimal AI Workflow Instructions?
