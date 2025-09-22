@@ -108,6 +108,8 @@ The workflow applies to any AI-assisted environment - **Cursor**, **Claude Code*
 
 For example, the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Notepads** in Cursor or **Custom slash commands** in Claude Code/Gemini CLI.
 
+> 📦 **NPM Package**: For convenience, you can access the latest versions of the AAID rules and reusable prompts via npm: `npm install -D aaid` ([npmjs.com/package/aaid](https://www.npmjs.com/package/aaid))
+
 <a id="developer-mindset"></a>
 
 ## Developer Mindset
