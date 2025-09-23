@@ -17,7 +17,7 @@ _Professional TDD for AI-Augmented Software Development_
 - [AAID Development Stages](#development-stages)
   - [Stage 1: Context Providing](#stage-1-context)
   - [Stage 2: Planning](#stage-2-planning)
-  - [Stage 3: TDD Development Starts](#stage-3-tdd-starts)
+  - [Stage 3: TDD Development Begins](#stage-3-tdd-begins)
   - [Stage 4: The TDD Cycle](#stage-4-tdd-cycle)
 - [Continuing the TDD Cycle](#continuing-tdd-cycle)
 - [Conclusion: The Augmented Advantage](#conclusion)
@@ -106,7 +106,7 @@ These battle-tested practices become your foundation that guides AI-assisted dev
 
 The workflow applies to any AI-assisted environment - **Cursor**, **Claude Code**, **Gemini CLI**, etc. The principles are the same; only the mechanics differ.
 
-For example, the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Notepads** in Cursor or **Custom slash commands** in Claude Code/Gemini CLI.
+For example, the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Commands** in Cursor [[link](https://cursor.com/docs/agent/chat/commands)] (stored under `.cursor/commands/`) or as **custom slash commands** in Claude Code/Gemini CLI [[link](https://docs.claude.com/en/docs/claude-code/slash-commands#custom-slash-commands)].
 
 <a id="developer-mindset"></a>
 
@@ -227,19 +227,19 @@ The diagram shows three distinct development paths, distinguished by colored arr
 
 Before any AI interaction, establish comprehensive context. The AI needs to understand the project landscape to generate relevant code.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on commands**: Throughout this guide, you'll see references like @project-context. These are pre-written **reusable** **prompts** with optional file references that you can quickly invoke with the @ key. They help you be clear and direct without typing lengthy instructions each time.<br><br>**You use these commands to augment your implementation speed.**<br><br>Find their implementations in [Appendix B](#appendix-b). |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on commands**: Throughout this guide, you'll see references like `/project-context`. These are pre-written **reusable** **prompts** that you trigger with the `/` prefix. Commands do not auto-attach files, so include any context in the same message (for example `/project-context @README.md @docs/testing.md`).<br><br>**You use these commands to augment your implementation speed.**<br><br>Find their implementations in [Appendix B](#appendix-b). |
 
 **Steps:**
 
-1. **Add High-Level Context** (using `@project-context` notepad command)
+1. **Add High-Level Context** (trigger `/project-context` and include the relevant context in the same message)
 
    - Project README, architecture docs, package.json, etc
    - Overall system design and patterns
    - `AAID` Testing strategy documentation
    - Technical patterns and adapter implementations (if applicable)
-   - **AI Research**: Use `@research-&-stop` to let AI proactively search codebase patterns and relevant documentation
+   - **AI Research**: Use `/research-&-stop` to let AI proactively search codebase patterns and relevant documentation
 
    | 🤖                                                                                                                                                     |
    | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -277,8 +277,6 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 ![Stage 2 - Planning](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p6e7p5fqz66bxejm3cv4.jpg)
 
 With the AI agent now informed of your specific development context from Stage 1, collaborate to understand the feature at a **high level** before diving into implementation. This is _not_ about prescribing implementation details—those will emerge through TDD for domain and technical work, or through design implementation for presentation work. Instead, it's about making sure you and the AI are aligned on scope and approach.
-
-> Since you already determined your development type in Stage 1 (Domain/Business Logic, Technical Implementation, or Presentation/UI), the AI will guide you toward the appropriate roadmap template.
 
 #### Planning vs TDD Discovery
 
@@ -320,14 +318,14 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 
    - Ask: "_Do you need any other context to understand the feature's scope and boundaries?_"
    - Provide any missing domain knowledge or system information
-   - Use `@research-&-stop` for AI-driven investigation
+   - Trigger `/research-&-stop` for AI-driven investigation
 
 3. **Request Appropriate Roadmap**
    Based on your Stage 1 choice:
 
-   - For **domain/business logic**: use `@ai-roadmap-template` → `/ai-roadmaps`
-   - For **technical implementation**: use `@ai-technical-roadmap-template` → `/ai-roadmaps/technical`
-   - **For presentation/UI**: use `@ai-presentation-roadmap-template` → `/ai-roadmaps/presentation`
+   - For **domain/business logic**: trigger `/ai-roadmap-template` → `/ai-roadmaps`
+   - For **technical implementation**: trigger `/ai-technical-roadmap-template` → `/ai-roadmaps/technical`
+   - **For presentation/UI**: trigger `/ai-presentation-roadmap-template` → `/ai-roadmaps/presentation`
    - Generate a high-level roadmap before any coding
    - Focus on test/validation scenarios and their logical sequence
    - Keep at "mermaid diagram" level of abstraction
@@ -361,11 +359,11 @@ If the roadmap looks good, now is when disciplined development actually starts!
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! Frontend behavioral logic (form validation, state management, data transformations) uses TDD just like backend. Only pure presentation aspects (colors, spacing, animations, screen reader announcements) skip TDD for manual validation. See [Appendix D](#appendix-d) for detailed examples. |
 
-<a id="stage-3-tdd-starts"></a>
+<a id="stage-3-tdd-begins"></a>
 
-### ✅ Stage 3: TDD Development Starts
+### ✅ Stage 3: TDD Development Begins
 
-![Stage 3 - TDD Development Starts](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rsmfkcb5kmfmgrl4g7qe.jpg)
+![Stage 3 - TDD Development Begins](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rsmfkcb5kmfmgrl4g7qe.jpg)
 
 Choose one of these two approaches for implementing your tests when starting work on a new feature:
 
@@ -405,7 +403,7 @@ describe("User archives completed todos", () => {
 
 | 🤖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TDD Commands Enforce the Three Laws**: The reusable TDD commands (`@red-&-stop`, `@green-&-stop`, `@refactor-&-stop`) enforce Robert C. Martin's Three Laws of TDD by putting the AI into a disciplined _mode_.<br><br>• **RED mode**: Write a minimal failing test.<br>• **GREEN mode**: Write the simplest code to pass.<br>• **REFACTOR mode**: Improve code while keeping tests green.<br><br>The AAID [rules file](#appendix-c) often handles phase discipline automatically, but these commands provide explicit control when needed. Re-issue them with your own feedback to guide the AI within each phase. |
+| **TDD Commands Enforce the Three Laws**: The reusable TDD commands (`/red-&-stop`, `/green-&-stop`, `/refactor-&-stop`) enforce Robert C. Martin's Three Laws of TDD by putting the AI into a disciplined _mode_.<br><br>• **RED mode**: Write a minimal failing test.<br>• **GREEN mode**: Write the simplest code to pass.<br>• **REFACTOR mode**: Improve code while keeping tests green.<br><br>The AAID [rules file](#appendix-c) often handles phase discipline automatically, but these commands provide explicit control when needed. Re-issue them with your own feedback to guide the AI within each phase. |
 
 For each test, follow this disciplined 3-phase cycle:
 
@@ -420,12 +418,12 @@ For each test, follow this disciplined 3-phase cycle:
 > - **Collaborate and generate with AI** ¹
 > - **Run tests**
 > - **Handle potential issues** _(if any arise)_
->   - Use `@analyze-&-stop` or other [investigation & problem solving commands](#appendix-b-investigation-commands) as needed
+>   - Use `/analyze-&-stop` or other [investigation & problem solving commands](#appendix-b-investigation-commands) as needed
 > - **`AWAIT USER REVIEW`**
 
 Let's walk through a full TDD cycle using this consistent structure.
 
-> ¹ 🦾 **Proficiency Note**: As you master `AAID`, the initial "collaborate" step often becomes autonomous AI generation using your established commands and context. This speeds up the workflow considerably. You might simply invoke `@red-&-stop` and let the AI generate appropriate code, then focus your attention on the `AWAIT USER REVIEW` checkpoints. This dual-review structure (light collaboration + formal review) is what enables both speed and control.
+> ¹ 🦾 **Proficiency Note**: As you master `AAID`, the initial "collaborate" step often becomes autonomous AI generation using your established commands and context. This speeds up the workflow considerably. You might simply invoke `/red-&-stop` and let the AI generate appropriate code, then focus your attention on the `AWAIT USER REVIEW` checkpoints. This dual-review structure (light collaboration + formal review) is what enables both speed and control.
 
 ---
 
@@ -458,7 +456,7 @@ Scenario: Add a new active todo
 
 ### 🔴 RED Phase
 
-**→ Collaborate with AI to write test** (`@red-&-stop`)
+**→ Collaborate with AI to write test** (`/red-&-stop`)
 
 - Un-skip the first test if using test list
 - Or write the first test from scratch if using single test approach
@@ -470,13 +468,13 @@ Scenario: Add a new active todo
 **→ Handle potential issues** _(if any arise)_
 
 - If test passes unexpectedly: AI stops and reports the issue
-- Choose investigation approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `@analyze-&-stop`)
+- Choose investigation approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `/analyze-&-stop`)
 - AI implements your chosen fix, then stops for review
 
 **Example RED phase prompt:**
 
 ```
-@red-&-stop
+/red-&-stop
 
 // link/paste the business specification, e.g the BDD scenario
 ```
@@ -506,7 +504,7 @@ describe("addTodo", () => {
 **Optional: example RED Phase follow-up prompt:**
 
 ```
-@red-&-stop
+/red-&-stop
 
 - Create todo service class instead of function
 - Inject repository
@@ -546,7 +544,7 @@ describe("TodoService", () => {
 
 ### 🟢 GREEN Phase
 
-**→ Collaborate with AI to write code** (`@green-&-stop`)
+**→ Collaborate with AI to write code** (`/green-&-stop`)
 
 - Write only enough to make the test pass
 - No extra logic for untested scenarios
@@ -563,13 +561,13 @@ describe("TodoService", () => {
 **→ Handle potential issues** _(if any arise)_
 
 - If tests fail: AI stops and reports which ones failed
-- Choose debugging approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `@debug-&-stop`)
+- Choose debugging approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `/debug-&-stop`)
 - AI implements your chosen solution, then stops for review
 
 **Example GREEN phase prompt:**
 
 ```
-@green-&-stop
+/green-&-stop
 ```
 
 **Generated code:**
@@ -607,7 +605,7 @@ export class TodoService {
 | ❕  | This phase is the main reason developers won't be replaced any time soon |
 | --- | ------------------------------------------------------------------------ |
 
-**→ Collaborate with AI to refactor** (`@refactor-&-stop`)
+**→ Collaborate with AI to refactor** (`/refactor-&-stop`)
 
 - Collaborate to enhance code while keeping tests green
 - Apply patterns that improve current code quality
@@ -620,7 +618,7 @@ export class TodoService {
 
 - If refactoring breaks tests: AI stops and reports what failed
 - Review failure and choose: fix the issue or revert to green state
-- Use [investigation & problem solving commands](#appendix-b-investigation-commands) like `@minimal-fix-&-analyze-&-stop` for fixes
+- Use [investigation & problem solving commands](#appendix-b-investigation-commands) like `/minimal-fix-&-analyze-&-stop` for fixes
 - Revert when the refactoring approach itself is flawed
 
 **Example REFACTOR phase prompt:**
@@ -885,7 +883,7 @@ In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing th
 
 ![Appendix B](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bi3pb8m680ooad039qq0.png)
 
-These reusable prompt commands speed up your AAID workflow. Use them as Cursor notepads, Custom slash commands in Claude Code/Gemini CLI, or your AI tool's equivalent. Feel free to customize them for your needs.
+These reusable prompt commands speed up your AAID workflow. Use them as Cursor Commands (via `.cursor/commands/`), custom slash commands in Claude Code/Gemini CLI, or your AI tool's equivalent. Feel free to customize them for your needs.
 
 <a id="appendix-b-setup-commands"></a>
 
@@ -895,16 +893,16 @@ _Used in Stage 1: Context Providing and Stage 2: Planning_
 
 | Command                             | Description                                                                                                      | Stage   | Link                                                                                                                                                                                       |
 | ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@project-context`                  | Establishes comprehensive project understanding with architecture, testing strategy, and code style              | Stage 1 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/project-context.md)                  |
-| `@ai-roadmap-template`              | Creates high-level roadmap for domain/business logic features that guides TDD without prescribing implementation | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-roadmap-template.md)              |
-| `@ai-technical-roadmap-template`    | Creates roadmap for technical implementation (adapters, infrastructure) - see [Appendix D](#appendix-d)          | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)    |
-| `@ai-presentation-roadmap-template` | Creates roadmap for observable technical elements (pure UI/sensory) - see [Appendix D](#appendix-d)              | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-presentation-roadmap-template.md) |
+| `/project-context`                  | Establishes comprehensive project understanding with architecture, testing strategy, and code style              | Stage 1 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/project-context.md)                  |
+| `/ai-roadmap-template`              | Creates high-level roadmap for domain/business logic features that guides TDD without prescribing implementation | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-roadmap-template.md)              |
+| `/ai-technical-roadmap-template`    | Creates roadmap for technical implementation (adapters, infrastructure) - see [Appendix D](#appendix-d)          | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)    |
+| `/ai-presentation-roadmap-template` | Creates roadmap for observable technical elements (pure UI/sensory) - see [Appendix D](#appendix-d)              | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-presentation-roadmap-template.md) |
 
 | ☝️                                                                                                                                                                                                   |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Planning Tools**: Some tools have dedicated planning mechanics (e.g., Claude Code's [Plan Mode](https://claudelog.com/mechanics/plan-mode/)). Combine these with roadmap commands when beneficial. |
 
-**Example: @project-context**
+**Example: /project-context**
 
 ```
 # Project Context
@@ -942,9 +940,9 @@ Each command enforces these laws at the appropriate phase by referencing the [AA
 
 | Command            | Description                                                               | TDD Phase   | Link                                                                                                                                                         |
 | ------------------ | ------------------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `@red-&-stop`      | Enter RED phase: Write minimal failing test, then STOP for review         | 🔴 RED      | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/red-%26-stop.md)      |
-| `@green-&-stop`    | Enter GREEN phase: Write simplest passing code, then STOP for review      | 🟢 GREEN    | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/green-%26-stop.md)    |
-| `@refactor-&-stop` | Enter REFACTOR phase: Improve code with tests green, then STOP for review | 🧼 REFACTOR | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/refactor-%26-stop.md) |
+| `/red-&-stop`      | Enter RED phase: Write minimal failing test, then STOP for review         | 🔴 RED      | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/red-%26-stop.md)      |
+| `/green-&-stop`    | Enter GREEN phase: Write simplest passing code, then STOP for review      | 🟢 GREEN    | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/green-%26-stop.md)    |
+| `/refactor-&-stop` | Enter REFACTOR phase: Improve code with tests green, then STOP for review | 🧼 REFACTOR | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/tdd/refactor-%26-stop.md) |
 
 **In practice:** Since the rules file is automatically loaded by your IDE/CLI, you often won't need these commands; the AI will follow the workflow from the rules alone. The commands remain useful as explicit phase triggers when needed.
 
@@ -974,15 +972,15 @@ These commands help when you need additional context (Stage 2: Planning) or enco
 
 | Command                         | Description                                                                   | Primary Use         | Link                                                                                                                                                                                                      |
 | ------------------------------- | ----------------------------------------------------------------------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@analyze-&-stop`               | Diagnose specific problems, errors, or failures without making changes        | Debugging failures  | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/analyze-%26-stop.md)                 |
-| `@analyze-command-&-stop`       | Run a specific command and analyze results without making changes             | Command diagnostics | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/analyze-command-%26-stop.md)         |
-| `@debug-&-stop`                 | Add debug logging and analyze results to understand issues                    | Deep debugging      | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/debug-%26-stop.md)                   |
-| `@minimal-fix-&-analyze-&-stop` | Implement the simplest fix, verify results, and analyze outcome               | Quick fixes         | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/minimal-fix-%26-analyze-%26-stop.md) |
-| `@research-&-stop`              | Comprehensive investigation and context gathering (use for broad exploration) | Context gathering   | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/research-%26-stop.md)                |
+| `/analyze-&-stop`               | Diagnose specific problems, errors, or failures without making changes        | Debugging failures  | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/analyze-%26-stop.md)                 |
+| `/analyze-command-&-stop`       | Run a specific command and analyze results without making changes             | Command diagnostics | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/analyze-command-%26-stop.md)         |
+| `/debug-&-stop`                 | Add debug logging and analyze results to understand issues                    | Deep debugging      | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/debug-%26-stop.md)                   |
+| `/minimal-fix-&-analyze-&-stop` | Implement the simplest fix, verify results, and analyze outcome               | Quick fixes         | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/minimal-fix-%26-analyze-%26-stop.md) |
+| `/research-&-stop`              | Comprehensive investigation and context gathering (use for broad exploration) | Context gathering   | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/investigation-and-problem-solving/research-%26-stop.md)                |
 
 | ☝️                                                                                                   |
 | ---------------------------------------------------------------------------------------------------- |
-| The user discusses or simply types out the command, for example: "`@analyze-command-&-stop` test:db" |
+| The user discusses or simply types out the command, for example: "`/analyze-command-&-stop test:db`" |
 
 <a id="appendix-b-misc-commands"></a>
 
@@ -992,8 +990,8 @@ _Utility commands for common development tasks_
 
 | Command          | Description                                                        | Use Case        | Link                                                                                                                                                      |
 | ---------------- | ------------------------------------------------------------------ | --------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `@git-commit`    | Create clean commit messages following project guidelines          | Version control | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/git-commit.md)    |
-| `@gherkin-guard` | Enforce consistent Gherkin-style Given/When/Then comments in tests | Test formatting | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/gherkin-guard.md) |
+| `/git-commit`    | Create clean commit messages following project guidelines          | Version control | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/git-commit.md)    |
+| `/gherkin-guard` | Enforce consistent Gherkin-style Given/When/Then comments in tests | Test formatting | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/misc/gherkin-guard.md) |
 
 These are just examples of AAID commands. Create your own or modify these to match your workflow. The key is using reusable prompts to greatly augment your development speed.
 

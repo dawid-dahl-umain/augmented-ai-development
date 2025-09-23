@@ -1,7 +1,5 @@
 # Project Context
 
-## General
-
-{{GENERAL_CONTEXT}}
+{{CONTEXT}}
 
 Summarize what you learned and confirm when ready.
