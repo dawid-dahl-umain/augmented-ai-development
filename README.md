@@ -36,12 +36,12 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continous Delive
 ```
 ├── docs/              # Complete AAID methodology and workflow guide
 ├── appendices/        # Supporting documentation (testing, prompts, rules, technical details)
-├── reusable-prompts/  # Pre-written AI commands organized by purpose
-│   ├── setup-and-planning/
+├── .cursor/commands/  # Cursor slash commands (copy markdown to other tools' custom-command folders)
+│   ├── planning/
 │   ├── tdd/
-│   ├── investigation-and-problem-solving/
+│   ├── investigation/
 │   └── misc/
-└── rules/             # AI workflow rules for IDEs and CLIs
+└── rules/             # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
 ```
 
 ## Use via npm package
@@ -94,8 +94,8 @@ Pre-written AI commands organized by purpose:
 ## Getting Started
 
 1. **Read the Guide**: Start with [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the complete methodology
-2. **Set Up AI Rules**: Copy the rules from [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) to your AI IDE or CLI
-3. **Use Reusable Prompts**: Import commands from [`reusable-prompts/`](reusable-prompts/) as notepads or custom commands
+2. **Set Up AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
+3. **Use Reusable Prompts**: Use the markdown in [`.cursor/commands/`](.cursor/commands/) for Cursor slash commands, or copy them into your tool's custom-command location
 4. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development
 
 ## The AAID Workflow
