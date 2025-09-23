@@ -21,6 +21,7 @@ _Professional TDD for AI-Augmented Software Development_
   - [Stage 4: The TDD Cycle](#stage-4-tdd-cycle)
 - [Continuing the TDD Cycle](#continuing-tdd-cycle)
 - [Conclusion: The Augmented Advantage](#conclusion)
+- [Example Implementation](#example-implementation)
 - [Appendices (Optional)](#appendices)
   - [Appendix A: Unit Testing and Acceptance Testing](#appendix-a)
   - [Appendix B: Helpful Commands (Reusable Prompts)](#appendix-b)
@@ -600,6 +601,8 @@ export class TodoService {
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | AI agent must `AWAIT USER REVIEW` before proceeding to REFACTOR.<br><br>**During GREEN phase review, evaluate:**<br>🟢 The code is the simplest possible solution to make the test pass<br>🟢 No unnecessary abstractions or future-proofing<br>🟢 Code structure follows project patterns |
 
+---
+
 ### 🧼 REFACTOR Phase
 
 | ❕  | This phase is the main reason developers won't be replaced any time soon |
@@ -704,8 +707,6 @@ export class TodoService {
 
 **_Congratulations_,** you made it through all the `AAID` steps! While the workflow might seem overwhelming at first, with practice it becomes habit, and the speed increases accordingly.
 
----
-
 <a id="continuing-tdd-cycle"></a>
 
 ## Continuing the Stage 4: TDD Cycle
@@ -739,8 +740,6 @@ The tests gradually shape the implementation, ensuring every line of production 
 
 You use these tests to prove the exact code the AI must write. Vibe-coding features without a failing test to guide it creates buggy code you can't control.
 
----
-
 <a id="conclusion"></a>
 
 ## Conclusion: The Augmented Advantage
@@ -754,6 +753,12 @@ This completely avoids the dangers of vibe coding. `AAID` helps you as a profess
 And as the `AAID` loop becomes muscle memory, you will catch regressions early and ship faster.
 
 That's the augmented advantage.
+
+<a id="example-implementation"></a>
+
+## Example Implementation
+
+For a concrete example of code built with `AAID`, explore this [TicTacToe CLI demo](https://github.com/dawid-dahl-umain/augmented-ai-development-demo). It demonstrates a minimal hexagonal architecture with clear separation between domain logic and adapters. Comprehensive test coverage is also included as a consequence of TDD; both unit tests and BDD-style acceptance tests, mapped directly from specs.
 
 ---
 
@@ -874,6 +879,8 @@ Notice how unit tests directly test the class with mocks, while acceptance tests
 | **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration Testing in the `AAID` context uses real managed resources (your database, cache, file systems) but mocks unmanaged dependencies (external APIs like Stripe, SendGrid). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify. |
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
+
+> For a code example of user stories and their BDD scenarios mapping directly to Acceptance Test executable specefications, see the [TicTacToe demo's executable specifications](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/executable-specs/cli.acceptance.spec.ts).
 
 ---
 
