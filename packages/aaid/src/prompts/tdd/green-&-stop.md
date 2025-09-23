@@ -1,1 +1,0 @@
-../../../../../reusable-prompts/tdd/green-&-stop.md

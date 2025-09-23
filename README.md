@@ -44,26 +44,6 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continous Delive
 └── rules/             # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
 ```
 
-## Use via npm package
-
-- **Install**
-
-```bash
-npm install aaid
-```
-
-- **Usage**
-
-```ts
-import { prompts, rules } from "aaid";
-
-// Prompts by category
-const analyze = prompts.investigationAndProblemSolving.analyzeAndStop;
-
-// Rules
-const aaidRules = rules.aaidDevelopmentRules;
-```
-
 ## Core Components
 
 ### 🎯 **Main Guide**

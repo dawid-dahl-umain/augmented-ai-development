@@ -1,1 +1,0 @@
-../../../../../reusable-prompts/misc/gherkin-guard.md

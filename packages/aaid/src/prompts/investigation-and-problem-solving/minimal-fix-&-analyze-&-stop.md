@@ -1,1 +1,0 @@
-../../../../../reusable-prompts/investigation-and-problem-solving/minimal-fix-&-analyze-&-stop.md
