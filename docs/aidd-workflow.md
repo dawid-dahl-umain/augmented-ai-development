@@ -758,7 +758,11 @@ That's the augmented advantage.
 
 ## Example Implementation
 
-For a concrete example of code built with `AAID`, explore this [TicTacToe CLI demo](https://github.com/dawid-dahl-umain/augmented-ai-development-demo). It demonstrates a minimal hexagonal architecture with clear separation between domain logic and adapters. Comprehensive test coverage is also included as a consequence of TDD; both unit tests and BDD-style acceptance tests, mapped directly from specs.
+For a concrete example of code built with `AAID`, explore this [TicTacToe CLI demo](https://github.com/dawid-dahl-umain/augmented-ai-development-demo).
+
+It demonstrates a minimal hexagonal architecture with clear separation between domain logic and adapters, following `AAID` principles.
+
+Comprehensive test coverage is also included as a consequence of TDD; both unit tests and BDD-style acceptance tests, mapped directly from specs.
 
 ---
 
