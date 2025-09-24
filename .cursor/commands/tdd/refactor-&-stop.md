@@ -28,5 +28,4 @@ Enter REFACTOR phase as defined in the AAID rules file.
 **Next Phase:** After approval, automatically continue to RED for next test if more specs/scenarios remain. If all covered, feature complete.
 ```
 
-- STOP and AWAIT USER REVIEW
 - If rules file missing, STOP and request it

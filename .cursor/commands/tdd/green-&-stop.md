@@ -24,5 +24,4 @@ Enter GREEN phase as defined in the AAID rules file:
 **Next Phase:** REFACTOR (mandatory after approval - NEVER skip to next test)
 ```
 
-- STOP and AWAIT USER REVIEW
 - If rules file missing, STOP and request it

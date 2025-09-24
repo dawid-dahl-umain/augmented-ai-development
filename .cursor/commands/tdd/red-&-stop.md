@@ -50,5 +50,4 @@ Enter RED phase as defined in the AAID rules file:
 **On Error:** If test passes unexpectedly, **STOP** and report (violates TDD, risks false positives)
 **Next Phase:** GREEN (mandatory after approval)
 
-- STOP and AWAIT USER REVIEW
 - If rules file missing, STOP and request it
