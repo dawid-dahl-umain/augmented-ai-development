@@ -1,7 +1,6 @@
 .DS_Store
 .env
 
-
 # Local AI docs (ignored)
 ai-docs/
 
