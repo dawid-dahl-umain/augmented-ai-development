@@ -10,9 +10,9 @@ _Professional TDD for AI-Augmented Software Development_
 - [The Business Case: What Performance Research Shows](#the-business-case)
 - [Who This Guide Is For](#who-this-guide-is-for)
 - [Built on Proven Foundations](#built-on-proven-foundations)
-- [Works with Any AI Tool](#works-with-any-ai-tool)
 - [Developer Mindset](#developer-mindset)
 - [Prerequisite: Product Discovery & Specification Phase](#prerequisite)
+- [Getting Started](#getting-started)
 - [AAID Workflow Diagram](#workflow-diagram)
 - [AAID Development Stages](#development-stages)
   - [Stage 1: Context Providing](#stage-1-context)
@@ -101,18 +101,6 @@ Unlike most other AI-driven workflows, `AAID` doesn't try to reinvent product di
 
 These battle-tested practices become your foundation that guides AI-assisted development.
 
-<a id="works-with-any-ai-tool"></a>
-
-## Works with Any AI Tool
-
-The workflow applies to any AI-assisted environment - **Cursor**, **Claude Code**, **Gemini CLI**, etc. The principles are the same; only the mechanics differ.
-
-For example, the reusable prompts from [Appendix B](#appendix-b) can be used as custom slash commands in:
-
-- Cursor (`.cursor/commands`) [[link](https://cursor.com/docs/agent/chat/commands)]
-- Claude Code (`.claude/commands`) [[link](https://docs.claude.com/en/docs/claude-code/slash-commands#custom-slash-commands)]
-- Gemini CLI (`.gemini/commands`) [[link](https://cloud.google.com/blog/topics/developers-practitioners/gemini-cli-custom-slash-commands)]
-
 <a id="developer-mindset"></a>
 
 ## Developer Mindset
@@ -127,7 +115,7 @@ Without this understanding, you're just _hoping_ things will work, which is sure
 
 2: **🪜 Incremental steps**
 
-This mentality is what really sets this AI workflow apart from others. Here, instead of letting the AI go off and produce a lot of dangerous garbage code, you make sure to remain in control by iterating in small, focused steps.
+This mentality is what really sets this AI workflow apart from others. Here, instead of letting the AI go off for minutes or even hours and produce a lot of dangerous garbage code, you make sure to remain in control by iterating in **small**, **focused** steps.
 
 One test at a time. One feature at a time. One refactor at a time.
 
@@ -148,12 +136,14 @@ Before development begins, professional teams complete a product specification p
 Using techniques like Impact Mapping, Event Storming, and Story Mapping, teams establish specifications that represent the fundamental business needs that must be satisfied. The resulting specifications can include:
 
 - User stories with BDD examples, organized into epics
-  - Or a [Story Map](https://jpattonassociates.com/wp-content/uploads/2015/03/story_mapping.pdf) containing the user stories + BDD examples
+  - Or a [Story Map](https://jpattonassociates.com/wp-content/uploads/2015/03/story_mapping.pdf) containing the user stories + BDD examples ← (the `AAID` recommendation)
 - PRD (Product Requirements Document)
 - Ubiquitous language documentation. (A common language shared among stakeholders, developers, and anyone taking part in the project)
 - Any additional project-specific requirements
 
 The exact combination varies by project.
+
+These this specification package will then be used—almost religiously—to serve as the objective foundation for the `AAID` workflow, aligning development with the actual needs of the business.
 
 | ⚙️                                                                                                                                                                              |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -161,9 +151,9 @@ The exact combination varies by project.
 
 ### From Specification to Development
 
-Here's how a typical user story with BDD examples can look. This spec will then be used to serve as the objective foundation for the `AAID` workflow, aligning development with the needs of the business.
+Here's how a typical user story with BDD examples can look.
 
-_Take note of how all these BDD examples only describe the behavior of the system. They say nothing of how to implement them technically._
+_Take note of how all these BDD examples only describe the **behavior** of the system. Importantly, they say nothing of how to implement them technically._
 
 **User Story Example:**
 
@@ -196,21 +186,54 @@ Scenario: Restore an archived todo
   Then "Review code" should be in active todos
 ```
 
-`AAID` is not about this product discovery and specification refinement step; it assumes you have the specs ready. When you do, this guide will show you how to transform the specs → tests and code ready for production.
+This article is not about this product discovery and specification refinement step; it assumes you have the specs ready. When you do, it will guide you towards how to transform the specs → tests and code ready for production.
+
+<a id="getting-started"></a>
+
+## Getting Started
+
+Setting up `AAID` takes just three steps:
+
+### **1: Add the workflow rules**
+
+Save the [`AAID` rules from Appendix C](#appendix-c) to your project:
+
+- **Cursor**: `.cursor/rules/aaid.mdc`
+- **Claude Code**: `CLAUDE.md` in project root
+- **Gemini CLI**: `GEMINI.md` in project root
+
+### **2: Add reusable commands (optional but recommended)**
+
+Copy the [command files from Appendix B](#appendix-b) to your project:
+
+- **Cursor**: `.cursor/commands/` (Markdown format)
+- **Claude Code**: `.claude/commands/` (Markdown format)
+- **Gemini CLI**: `.gemini/commands/` (TOML format - needs conversion)
+
+### **3: Have the `AAID` workflow diagram ready**
+
+AI agents sometimes make mistakes and unfortunately may not always follow instructions. If/when that happens, since you follow the [`AAID` mindset](#developer-mindset), you can manually steer it back on track with the workflow diagram as your guide.
+
+### **Liftoff into `AAID` space 🚀**
+
+That’s it, there's no more magic to it than that. The rules enforce a disciplined TDD workflow, and the commands speed up your development. Now you're ready for `AAID` Stage 1!
+
+| 💡  | **Demo repo**: For a working example with all files pre-configured for Cursor, check the [TicTacToe demo repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo). |
+| --- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 
 <a id="workflow-diagram"></a>
 
 ## AAID Workflow Diagram
 
-Now that you have your specs from the product specification phase (like the user story above), we are ready to start building!
+Now that you have your specs from the product specification phase (like the user story above), and the AI environment set up, we are ready to start building!
 
-This diagram presents the formal workflow; detailed explanations for each step follow in the **AAID Development Stages** section below.
+This diagram presents the formal workflow; detailed explanations for each step follow in the **`AAID` Development Stages** section below.
 
 ![AAID workflow diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2ulywojfy11fkmzx9ujk.png)
 
 The diagram shows three distinct development paths, distinguished by colored arrows:
 
-- **Blue arrows**: Common workflow and domain/business logic (including shared TDD stages)
+- **Blue arrows**: Shared workflow stages and the domain/business logic path this article focuses on, as opposed to the technical and presentation paths.
 - **Orange arrows**: Technical implementation specific branches (see [Appendix D](#appendix-d))
 - **Purple arrows**: Presentation/UI specific branches (no TDD - see [Appendix D](#appendix-d))
 
@@ -238,12 +261,10 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 **Steps:**
 
-1. **Add High-Level Context** (trigger `/project-context` and include the relevant context in the same message)
+1. **Add High-Level Context** (trigger `/project-context` and include the relevant context in the same message as arguments to the command)
 
-   - Project README, architecture docs, package.json, etc
+   - Project's README, architecture docs, package.json, config files, etc. Whatever you find important to your project from a high level.
    - Overall system design and patterns
-   - `AAID` Testing strategy documentation
-   - Technical patterns and adapter implementations (if applicable)
    - **AI Research**: Use `/research-&-stop` to let AI proactively search codebase patterns and relevant documentation
 
    | 🤖                                                                                                                                                     |
@@ -253,8 +274,8 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 2. **Determine What You're Building**
    Choose your development type early to load the right context:
    - **Domain/Business Logic**: Core behavior delivering business value
-   - **Technical Implementation**: Adapters, infrastructure, integration (see [Appendix D](#appendix-d))
-   - **Presentation/UI**: Visual styling, layouts, pure presentation (see [Appendix D](#appendix-d))
+   - **Technical Implementation**: Adapters, infrastructure, integrations, initializations (see [Appendix D](#appendix-d))
+   - **Presentation/UI**: Visual styling, animations, audio (see [Appendix D](#appendix-d))
 3. **Add Specification Context** (specific to your development type)
 
    - **For Domain/Business**: User stories with BDD scenarios, PRD sections
@@ -267,13 +288,13 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 4. **Add Relevant Code Context** (specific to your development type)
 
-   - **For Domain/Business**: Domain dependencies, tests, similar features
-   - **For Technical**: Existing adapters, infrastructure patterns, integration points
-   - **For Presentation**: Components, design system, CSS framework
+   - **For Domain/Business**: Domain dependencies, tests, similar features, pure function utils for similar logic
+   - **For Technical**: Existing adapters, infrastructure patterns, utils, integration points
+   - **For Presentation**: Components, design system, CSS framework, presentation-related config files
 
-   | 🤖                                                                                                                                                                                                                                                                                                                                                                                     |
-   | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-   | Together with automated checks like linting & formatting, and your AI IDE/CLI's configuration, this step will ensure the AI stays consistent with the style of your codebase.<br><br>Together with your architecture and testing strategy documentation that should've been added in step 1, this step will ensure the AI knows how to depend on or, while testing, mock related code. |
+   | 🤖                                                                                                                                                                                                                                                                                            |
+   | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+   | Along with automated checks like linting and formatting, plus any personal AI IDE/CLI instructions you use, this step keeps the AI consistent with your codebase’s style and conventions. It also helps it technically understand how the various parts of the codebase depend on each other. |
 
 <a id="stage-2-planning"></a>
 
@@ -281,19 +302,19 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 ![Stage 2 - Planning](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p6e7p5fqz66bxejm3cv4.jpg)
 
-With the AI agent now informed of your specific development context from Stage 1, collaborate to understand the feature at a **high level** before diving into implementation. This is _not_ about prescribing implementation details—those will emerge through TDD for domain and technical work, or through design implementation for presentation work. Instead, it's about making sure you and the AI are aligned on scope and approach.
+With the AI agent now informed of your specific project's context from Stage 1, collaborate to understand the feature at a **high level** before diving into implementation. This is _not_ about prescribing implementation details; those will emerge through TDD for domain and technical work, or through design implementation for presentation/UI work. Instead, it's about making sure you and the AI are **aligned** on scope and approach.
 
 #### Planning vs TDD Discovery
 
-For domain and technical work, the planning stage provides a roadmap of _what_ to build and _which tests_ to write. TDD will still discover _how_ to build it through the red/green/refactor cycle. For presentation work, planning outlines validation criteria rather than tests.
+For domain and technical work, the planning stage provides a roadmap of **_what_** to build and roughly which tests to write. TDD will still discover **_how_** to build it through the 🔴 **Red** • 🟢 **Green** • 🧼 **Refactor** cycle. For presentation/UI work, planning outlines validation criteria rather than tests.
 
 **What Planning IS:**
 
 - Understanding which parts of the system are involved
-- Creating a test roadmap (what to test, in what order) for domain/technical work
-- Creating validation criteria for presentation work
+- Creating a test roadmap (roughly what to test, and in what order) for domain/technical work
+- Creating validation criteria for presentation/UI work
 - Recognizing existing patterns to follow
-- Mapping out the feature's boundaries and key interfaces
+- Mapping out the feature's boundaries and finding related key interfaces/ports
 - Identifying external dependencies to mock (for testable work)
 
 **What Planning IS NOT:**
@@ -301,13 +322,14 @@ For domain and technical work, the planning stage provides a roadmap of _what_ t
 - Designing specific classes or methods
 - Defining data structures
 - Prescribing implementation details
+- Creating complete interfaces/ports up front
 - Making architectural decisions tests haven't forced yet
 
 Think of it like navigation: Planning sets the destination, TDD finds the path.
 
-| ☝️                                                                                                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| If you and the AI have different ideas of what is supposed to be built, many times using AI can actually slow progress down rather than speed it up. The AI planning stage eliminates this issue. |
+| ☝️                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| If you and the AI have different ideas of what is supposed to be built, many times using AI can actually slow progress down rather than speed it up. This AI planning stage helps eliminate this issue. |
 
 **Steps:**
 
@@ -328,18 +350,18 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 3. **Request Appropriate Roadmap**
    Based on your Stage 1 choice:
 
-   - For **domain/business logic**: trigger `/ai-roadmap-template` → `/ai-roadmaps`
-   - For **technical implementation**: trigger `/ai-technical-roadmap-template` → `/ai-roadmaps/technical`
-   - **For presentation/UI**: trigger `/ai-presentation-roadmap-template` → `/ai-roadmaps/presentation`
    - Generate a high-level roadmap before any coding
+   - For **domain/business logic**: trigger `/ai-roadmap-template`
+   - For **technical implementation**: trigger `/ai-technical-roadmap-template`
+   - **For presentation/UI**: trigger `/ai-presentation-roadmap-template`
    - Focus on test/validation scenarios and their logical sequence
    - Keep at "mermaid diagram" level of abstraction
    - An actual mermaid diagram can be generated if applicable
 
-4. **Review and Refine**
-   - Carefully review the roadmap to ensure alignment with business needs
-   - Check that it addresses all the specifications (business, technical, or presentation requirements)
-   - Ensure it respects existing project patterns and boundaries
+4. **Review and Refine Roadmap**
+   - Review the roadmap to make sure it addresses **every** specification (business, technical, or presentation requirements)
+   - Use it to ensure you and the AI agent are aligned
+   - Make sure it respects existing project patterns and boundaries
    - For domain/technical: Verify the test sequence builds incrementally from simple to complex
    - For presentation: Verify validation criteria are clear and measurable
    - Iterate with the AI if adjustments are needed
@@ -350,19 +372,19 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 >
 > In addition, with such checkboxes, you must manually re-verify everything after future code changes, to prevent **regressions**.
 >
-> That's why you don't use checkbox-planning in `AAID`. Instead, for domain and technical work, you express completion criteria as good old **automated tests**. For presentation work, you define clear validation criteria. Tests aren't added as an afterthought, they're treated as first-class citizens.
+> That's why you don't use checkbox/task-planning in `AAID`. Instead, for domain and technical work, you express completion criteria as good old **automated tests**. Tests aren't added as an afterthought, they're treated as first-class citizens.
 >
 > Automated tests = **objective** and **re-runnable** verification, eliminating both aforementioned problems of **trust** and **regression**.
 
 If the roadmap looks good, now is when disciplined development actually starts!
 
-| 🔀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Path Divergence**: After roadmap approval, the workflow splits into three paths:<br><br>• **Domain/Business Logic** → Continue to Stage 3 (TDD Development)<br>• **Technical Implementation (Non-Observable)** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI (Observable Technical)** → Proceeds to implementation and validation without TDD<br><br>See [Appendix D](#appendix-d) or the [Workflow Diagram](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/aaid-workflow-diagram.mermaid) for more information on these three categories. |
+| 🔀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Path Divergence**: After roadmap approval, the workflow splits into three paths:<br><br>• **Domain/Business Logic** → Continue to Stage 3 (TDD Development)<br>• **Technical Implementation (Non-Observable)** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI (Observable Technical)** → Proceed to implementation and validation without TDD<br><br>See [Appendix D](#appendix-d) or the [Workflow Diagram](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/aaid-workflow-diagram.mermaid) for more information on these three categories. |
 
-| 💻                                                                                                                                                                                                                                                                                                                                                                                       |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! Frontend behavioral logic (form validation, state management, data transformations) uses TDD just like backend. Only pure presentation aspects (colors, spacing, animations, screen reader announcements) skip TDD for manual validation. See [Appendix D](#appendix-d) for detailed examples. |
+| 💻                                                                                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Important for Frontend Developers**: `AAID` absolutely applies to frontend development! Frontend behavioral logic (form validation, state management, data transformations, etc) uses TDD just like backend. Only pure presentation/UI aspects (colors, audio, spacing, animations, some accessibility concerns) skip TDD for manual validation. See [Appendix D](#appendix-d) for detailed examples. |
 
 <a id="stage-3-tdd-begins"></a>
 
@@ -373,9 +395,14 @@ If the roadmap looks good, now is when disciplined development actually starts!
 Choose one of these two approaches for implementing your tests when starting work on a new feature:
 
 **Option 1: Test List Approach**
-Collaborate with the AI to create the main test cases (unimplemented) upfront as a roadmap. It is okay to add more tests later as you think of them.
+
+Collaborate with the AI to create a list of (unimplemented) tests derived from the specs; breaking down each behavior into granular, testable steps.
 
 Use the Roadmap from "**Stage 2: Planning**" directly or as inspiration for the test list.
+
+The test list is a living document. Following Kent Beck's TDD approach, this list isn't carved in stone. Add new tests as you discover/think of new edge cases, remove tests that become redundant, or modify tests as your understanding evolves. The list is a tool to guide development, not a contract you must fulfill exactly as written.
+
+> This TDD practice is in contrast to [acceptance testing](#appendix-a), where tests **must** map 1:1 to the project specs (usually BDD scenarios).
 
 ```jsx
 describe("User archives completed todos", () => {
@@ -390,6 +417,7 @@ describe("User archives completed todos", () => {
 | It is extremely important that the tests are not yet implemented at this stage. This is because TDD's iterative cycle prevents you from baking implementation assumptions into your tests. Writing all tests upfront risks testing your preconceptions rather than actual behavior requirements. |
 
 **Option 2: Single Test Approach**
+
 Start with the simplest test and then build incrementally:
 
 ```jsx
@@ -406,16 +434,15 @@ describe("User archives completed todos", () => {
 
 ![Stage 4 - TDD Cycle](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fh7jmwwb59z02lqqxt3u.jpg)
 
-| 🤖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **TDD Commands Enforce the Three Laws**: The reusable TDD commands (`/red-&-stop`, `/green-&-stop`, `/refactor-&-stop`) enforce Robert C. Martin's Three Laws of TDD by putting the AI into a disciplined _mode_.<br><br>• **RED mode**: Write a minimal failing test.<br>• **GREEN mode**: Write the simplest code to pass.<br>• **REFACTOR mode**: Improve code while keeping tests green.<br><br>The AAID [rules file](#appendix-c) often handles phase discipline automatically, but these commands provide explicit control when needed. Re-issue them with your own feedback to guide the AI within each phase. |
+| 🤖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **The Three Laws of TDD**: The reusable TDD commands (`/red-&-stop`, `/green-&-stop`, `/refactor-&-stop`) enforce Robert C. Martin's Three Laws of TDD through the disciplined **RED** - **GREEN** - **REFACTOR** cycle:<br><br>• **RED**: Write a minimal failing test (enforces Laws 1 & 2: no production code without failing test; minimal test to fail)<br>• **GREEN**: Write the simplest code to pass (enforces Law 3: minimal production code to pass)<br>• **REFACTOR**: Improve code while keeping tests green<br><br>In practice, the `AAID` [rules file](#appendix-c) often handles phase discipline automatically, but these commands offer explicit control when needed. Re-issue with feedback to guide the AI. |
 
 For each test, follow this disciplined 3-phase cycle:
 
 🔴 **RED Phase** →
 🟢 **GREEN Phase** →
 🧼 **REFACTOR Phase** →
-
 **Next test** → _(cycle repeats)_
 
 > **Note**: Each phase follows the same internal pattern:
@@ -502,9 +529,9 @@ describe("addTodo", () => {
 });
 ```
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AI agent must `AWAIT USER REVIEW` before proceeding to GREEN.<br><br>**During RED phase review, evaluate:**<br>🔴 Tests behavior (what the system does), not implementation (how it does it)<br>🔴 In the test phase you design the API of what you are building; its user interface. So—does it feel nice to use?<br>🔴 Is the test hard to understand or set up? That could be a sign you need to rethink your approach. Clean code always starts with a clean test<br>🔴 Clear test name describing the requirement<br>🔴 Proper Given/When/Then structure<br>🔴 Mock external dependencies to isolate the unit; test should run in milliseconds |
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| AI agent must `AWAIT USER REVIEW` before proceeding to GREEN.<br><br>**During RED phase review, evaluate:**<br>🔴 Tests behavior (what the system does), not implementation (how it does it)<br>🔴 In the test phase you design the API of what you are building; its user interface. So—does it feel nice to use?<br>🔴 Is the test hard to understand or set up? That could be a sign you need to rethink your approach. **Clean code starts with a clean test**<br>🔴 Clear test name describing the requirement<br>🔴 Proper Given/When/Then structure<br>🔴 Mock external dependencies to isolate the unit; test should run in milliseconds |
 
 **Optional: example RED Phase follow-up prompt:**
 
@@ -513,10 +540,10 @@ describe("addTodo", () => {
 
 - Create todo service class instead of function
 - Inject repository
-- Start with "completed" attribute only
+- Update test to check "completed" attribute only
 ```
 
-_Often follow-ups like these are not needed because of Stage 1.3: Add Relevant Code Context, and 2.3 Request Feature Roadmap_
+_Often follow-ups like these are not needed because of Stage 1.4: Add Relevant Code Context, and 2.3 Request Feature Roadmap_
 
 **Test after RED review:**
 
@@ -551,12 +578,9 @@ describe("TodoService", () => {
 
 **→ Collaborate with AI to write code** (`/green-&-stop`)
 
-- Write only enough to make the test pass
+- Write the simplest code to make the test pass
+- Keep implementation naïve/hardcoded until tests "[triangulate](https://tdd.mooc.fi/1-tdd/#triangulation)" (multiple tests force abstraction/generalization)
 - No extra logic for untested scenarios
-
-| ☝️                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Why simplest first?** One test can only verify one thing, so complex code means untested parts. If your over-engineered solution breaks, you're debugging the test failure AND untested logic simultaneously. Simple code gets you stable fast and forces each new feature to get its own test, keeping everything verified. |
 
 **→ Run tests to verify success**
 
@@ -568,6 +592,10 @@ describe("TodoService", () => {
 - If tests fail: AI stops and reports which ones failed
 - Choose debugging approach (often using [investigation & problem solving commands](#appendix-b-investigation-commands) like `/debug-&-stop`)
 - AI implements your chosen solution, then stops for review
+
+| ☝️                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Why simplest first?** One test can only verify one thing, so complex code means untested parts. If your over-engineered solution breaks, you're debugging the test failure AND untested logic simultaneously. Simple code gets you stable fast and forces each new feature to get its own test, keeping everything verified. |
 
 **Example GREEN phase prompt:**
 
@@ -595,22 +623,22 @@ export class TodoService {
   constructor(private repository: unknown) {} // 'unknown' is fine - no test demands otherwise
 
   addTodo(text: string): Todo {
-    // Simplest code to pass the test
+    // Simplest naïve/hardcoded implementation to pass the test
     return { text: "", completed: false };
   }
 }
 ```
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| AI agent must `AWAIT USER REVIEW` before proceeding to REFACTOR.<br><br>**During GREEN phase review, evaluate:**<br>🟢 The code is the simplest possible solution to make the test pass<br>🟢 No unnecessary abstractions or future-proofing<br>🟢 Code structure follows project patterns |
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                                                                                                                |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| AI agent must `AWAIT USER REVIEW` before proceeding to REFACTOR.<br><br>**During GREEN phase review, evaluate:**<br>🟢 The code is the simplest possible solution to make the test pass<br>🟢 If tests triangulate (multiple examples reveal a pattern), verify code generalizes<br>🟢 No unnecessary abstractions or future-proofing if tests do not demand it<br>🟢 Code structure follows project patterns |
 
 ---
 
 ### 🧼 REFACTOR Phase
 
-| ❕  | This phase is the main reason developers won't be replaced any time soon |
-| --- | ------------------------------------------------------------------------ |
+| ❕  | This phase is one of the main reasons developers won't be replaced any time soon |
+| --- | -------------------------------------------------------------------------------- |
 
 **→ Collaborate with AI to refactor** (`/refactor-&-stop`)
 
@@ -633,11 +661,11 @@ export class TodoService {
 ```
 @refactor-&-stop
 
-// Note: The AI may suggest minimal refactoring since you only have one test.
+// Note to reader: The AI may suggest minimal refactoring since you only have one test.
 // But you can guide it toward patterns that improve current code quality.
 
 - Extract Todo model class
-- Put interface there
+- Put interface in same file
 - Model should be immutable
 ```
 
@@ -693,12 +721,14 @@ export class TodoService {
 - Remove all comments
 ```
 
-_Often these prompts aren't needed due to the reusable Commands, AI workflow instructions, and context provided earlier._
+_Often these prompts aren't needed due to the [AI workflow instructions](#appendix-c) and context provided earlier._
 
 **Code after REFACTOR review:**
 
 ```tsx
 // services/todo.service.ts
+
+import { type Todo, TodoModel } from "../models/todo.model";
 
 export class TodoService {
   constructor(private readonly repository: unknown) {}
@@ -727,9 +757,9 @@ After completing the first cycle, you'd repeat the process with the next test th
 - Forces: Repository to have a `save` method
 - Forces: `this.repository.save({ text, completed: false })`
 
-**Fourth cycle** might test: `'should return persisted todo with ID'`
+**Fourth cycle** might test: `'should be able to find the persisted todo after creating it'`
 
-- Forces: Return value from repository.save with ID included
+- Forces: Repository.save must provide identifying information (an ID)
 
 Each cycle follows the same disciplined flow:
 
@@ -740,9 +770,7 @@ Each cycle follows the same disciplined flow:
 🧼 **REFACTOR** →
 ⏸️ **Final review**
 
-The tests gradually shape the implementation, ensuring every line of production code exists only because a test demanded it.
-
-You use these tests to prove the exact code the AI must write. Vibe-coding features without a failing test to guide it creates buggy code you can't control.
+The tests gradually shape the implementation, ensuring every line of production code exists only because a test demanded it. This eliminates dead code and hidden bugs: if it's not tested, it doesn't exist.
 
 <a id="conclusion"></a>
 
@@ -756,13 +784,15 @@ This completely avoids the dangers of vibe coding. `AAID` helps you as a profess
 
 And as the `AAID` loop becomes muscle memory, you will catch regressions early and ship faster.
 
-That's the augmented advantage.
+**That's the augmented advantage.**
 
 <a id="example-implementation"></a>
 
 ## Example Implementation
 
-For a concrete example of code built with `AAID`, explore this [TicTacToe CLI demo](https://github.com/dawid-dahl-umain/augmented-ai-development-demo).
+For a concrete example of code generated with `AAID`, explore this [TicTacToe CLI demo](https://github.com/dawid-dahl-umain/augmented-ai-development-demo).
+
+> **100% of the code was generated by an AI agent.**
 
 It demonstrates a minimal hexagonal architecture with clear separation between domain logic and adapters, following `AAID` principles.
 
@@ -788,18 +818,18 @@ This article on `AAID` focuses on TDD (Test-Driven Development) for **Unit Testi
 
 **Acceptance Testing**, on the other hand, verifies that your software aligns with business goals and is actually _done_. It serves as an executable definition-of-done.
 
-> AI can help when writing Acceptance Tests, but you do not necessarily use `AAID` for this purpose.
-
 Understanding how these two testing strategies complement each other is crucial for professional developers, as both are invaluable parts of writing production-grade software.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acceptance Testing is similar to E2E testing; both test through the system boundaries.<br><br>The key difference: AT mocks external dependencies you don't control (third-party APIs, etc) while keeping internal dependencies you do control (your database, etc) real. E2E usually mocks nothing and runs everything together.<br><br>Problem with E2E: Tests fail due to external factors (third-party outages, network issues) rather than your code. Acceptance Testing isolates your system so failures indicate real business logic problems. |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acceptance Testing is similar to E2E testing; both test the full app flow, via the system boundaries.<br><br>The key difference: AT mocks external dependencies you don't control (third-party APIs, etc) while keeping internal dependencies you do control (your database, etc) real. E2E usually mocks nothing and runs everything together.<br><br>Problem with E2E: Tests fail due to external factors (third-party outages, network issues) rather than your code. Acceptance Testing isolates your system so failures indicate real business logic problems, or technical issues that you are responsible for. |
 
 The two kinds of tests answer different questions:
 
 - **TDD (Unit Tests)**: "_Is my code technically correct?_"
 - **ATDD (Acceptance Tests)**: "_Is my system releasable after this change?_"
+
+So in short: `AAID` builds the solution, Acceptance Tests confirm it’s the right solution.
 
 ### Key Differences
 
@@ -843,12 +873,12 @@ describe("TodoService", () => {
 - Test in a production-like environment through system boundaries
 - Mock unmanaged external dependencies (like third-party APIs)
   - Don't mock managed external dependencies (like app's database)
-- Test suite will run in minutes (slower than unit tests)
+- Test suite will run slower than unit tests
 - Maps 1:1 to user stories/acceptance criteria
 - Verify the system is ready for release
-- Stakeholder-focused (though developers implement)
+- Stakeholder-focused (though developers + AI implement)
 
-Example of what an acceptance test looks like (using the [Four-Layer](https://dojoconsortium.org/assets/ATDD%20-%20How%20to%20Guide.pdf) model pioneered by Dave Farley):
+Example of what an acceptance test looks like (using the [Four-Layer](https://dojoconsortium.org/assets/ATDD%20-%20How%20to%20Guide.pdf) model pioneered by [Dave Farley](https://courses.cd.training/)):
 
 | Layer                             | Description                             |
 | --------------------------------- | --------------------------------------- |
@@ -959,7 +989,7 @@ Enter RED phase as defined in the AAID rules file:
 
 ### Investigation & Problem Solving Commands
 
-_Used throughout various AAID stages for research and debugging_
+_Used throughout various `AAID` stages for research and debugging_
 
 These commands help when you need additional context (Stage 2: Planning) or encounter issues during the TDD cycle (Stage 4: "Handle potential issues" step).
 
@@ -986,7 +1016,7 @@ _Utility commands for common development tasks_
 | `/git-commit`    | Create clean commit messages following project guidelines          | Version control | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/misc/git-commit.md)    |
 | `/gherkin-guard` | Enforce consistent Gherkin-style Given/When/Then comments in tests | Test formatting | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/misc/gherkin-guard.md) |
 
-These are just examples of AAID commands. Create your own or modify these to match your workflow. The key is using reusable prompts to greatly augment your development speed.
+These are just examples of `AAID` commands. Create your own or modify these to match your workflow. The key is using reusable prompts to greatly augment your development speed.
 
 ---
 
@@ -996,7 +1026,7 @@ These are just examples of AAID commands. Create your own or modify these to mat
 
 ![Appendix C](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/34gja5j2umhsllvz3i7a.png)
 
-Configure your AI environment to understand the AAID workflow. These are simple text instructions - no special AAID app or tool is required. The workflow rules get loaded by your AI tool (via `.cursor/rules`, `CLAUDE.md`, or similar instruction files), focusing on workflow state management rather than project specifics.
+Configure your AI environment to understand the `AAID` workflow. These are simple text instructions - no special `AAID` app or tool is required. The workflow rules get loaded by your AI tool (via `.cursor/rules`, `CLAUDE.md`, or similar instruction files), focusing on workflow state management rather than project specifics.
 
 ### Why Minimal AI Workflow Instructions?
 
@@ -1011,7 +1041,7 @@ These AI workflow rules/instructions get loaded for **every prompt**, so keep th
 
 ### AAID AI Workflow Rules/Instructions
 
-_This is the official AAID workflow rules. But feel free to customise it._
+_This is the official `AAID` workflow rules. But feel free to customise it._
 
 ```markdown
 ---
@@ -1150,13 +1180,14 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
 
 **Instructions:**
 
-1. Write ABSOLUTE MINIMUM code to pass current test
-   - Hardcode values if test doesn't require more
+1. Write ABSOLUTE MINIMUM code to pass current test(s)
+   - Start with naïve code or hardcoding/faking (e.g., return "Hello")
+   - Continue hardcoding until tests force asbtraction/generalization
+   - When tests "triangulate" (multiple examples pointing to a pattern), generalize
    - NO untested edge cases, validation, or future features
-   - If test expects "Hello", return "Hello" (not a variable)
-   - If test expects specific calculation, do only that calculation
-   - Premature generalization is over-engineering
-2. When multiple tests exist, "minimum" means code that passes ALL tests
+   - Simplified example: Test 1 expects 2+2=4? Return 4. Test 2 expects 3+3=6? Return 6.
+     Test 3 expects 1+5=6? Now you need actual addition logic.
+2. "Minimum" means: simplest code that passes ALL existing tests
 3. Verify ALL tests pass (current + existing)
 4. Run tests after EVERY code change
 
