@@ -43,7 +43,7 @@ _Professional TDD for AI-Augmented Software Development_
 
 **You're not being replaced. You're being augmented.**
 
-This separates professional software development from "vibe coding." While vibe coders blindly accept AI output and ship buggy, untested code they can't understand, `AAID` practitioners use TDD (Test-Driven Development) to ensure reliable agentic assistance.
+This separates professional software development from "vibe coding." While vibe coders blindly accept AI output and ship buggy, untested code they can't understand, `AAID` practitioners use proper TDD (Test-Driven Development) to ensure reliable agentic assistance.
 
 <a id="the-business-case"></a>
 
@@ -51,7 +51,7 @@ This separates professional software development from "vibe coding." While vibe 
 
 [DORA](https://dora.dev/) (Google Cloud's **DevOps Research and Assessment**) highlights the proven TDD principle `AAID` relies on: developer-owned testing drives performance [[1]](https://dora.dev/capabilities/test-automation/). At the same time, a 25% increase in AI adoption correlates with a 7.2% drop in delivery stability and 1.5% decrease in throughput, while 39% of developers report little to no trust in AI-generated code [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report).
 
-`AAID` solves this. The TDD discipline forces every AI-generated line through comprehensive testing and mandatory reviews, capturing AI's productivity gains (increased **documentation quality**, **code quality**, **review and generation speed** [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)) without the stability loss.
+`AAID` solves this. The TDD discipline forces every AI-generated line through comprehensive testing and mandatory reviews, capturing AI's productivity gains (increased **documentation quality**, **code quality**, **review** and **generation speed** [[2]](https://cloud.google.com/blog/products/devops-sre/announcing-the-2024-dora-report)) without the stability loss.
 
 DORA proves speed and stability aren't trade-offs [[3]](https://dora.dev/guides/dora-metrics-four-keys/). With `AAID`, speed comes from AI augmentation supported by the safety net of tests, stability from disciplined testing. You get both together, not one at the expense of the other.
 
@@ -107,7 +107,11 @@ These battle-tested practices become your foundation that guides AI-assisted dev
 
 The workflow applies to any AI-assisted environment - **Cursor**, **Claude Code**, **Gemini CLI**, etc. The principles are the same; only the mechanics differ.
 
-For example, the reusable prompt Commands you'll learn about in [Appendix B](#appendix-b), use **Commands** in Cursor [[link](https://cursor.com/docs/agent/chat/commands)] (stored under `.cursor/commands/`) or as **custom slash commands** in Claude Code/Gemini CLI [[link](https://docs.claude.com/en/docs/claude-code/slash-commands#custom-slash-commands)].
+For example, the reusable prompts from [Appendix B](#appendix-b) can be used as custom slash commands in:
+
+- Cursor (`.cursor/commands`) [[link](https://cursor.com/docs/agent/chat/commands)]
+- Claude Code (`.claude/commands`) [[link](https://docs.claude.com/en/docs/claude-code/slash-commands#custom-slash-commands)]
+- Gemini CLI (`.gemini/commands`) [[link](https://cloud.google.com/blog/topics/developers-practitioners/gemini-cli-custom-slash-commands)]
 
 <a id="developer-mindset"></a>
 
@@ -214,7 +218,7 @@ The diagram shows three distinct development paths, distinguished by colored arr
 | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Click [this link](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/aaid-workflow-diagram.mermaid) to **view** the full diagram. |
 
-> If the diagram is not rendered on mobile, paste the mermaid code into a [mermaid editor](https://mermaid.live).
+> If the diagram is not rendered on mobile, copy/paste the mermaid code into a [mermaid editor](https://mermaid.live).
 
 <a id="development-stages"></a>
 
@@ -228,9 +232,9 @@ The diagram shows three distinct development paths, distinguished by colored arr
 
 Before any AI interaction, establish comprehensive context. The AI needs to understand the project landscape to generate relevant code.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on commands**: Throughout this guide, you'll see references like `/project-context`. These are pre-written **reusable** **prompts** that you trigger with the `/` prefix. Commands do not auto-attach files, so include any context in the same message (for example `/project-context @README.md @docs/testing.md`). The repo stores them in Cursor's `.cursor/commands/`, and you can copy the same markdown into other tools' custom-command setups (e.g., `CLAUDE.md`).<br><br>**You use these commands to augment your implementation speed.**<br><br>Find their implementations in [Appendix B](#appendix-b). |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Note on commands**: Throughout this guide, you'll see references like `/project-context`. These are pre-written **reusable** **prompts** that you trigger with the `/` prefix. The repo stores them in Cursor's `.cursor/commands/`, and you can copy the same markdown into other tools' custom-command setups (e.g., `CLAUDE.md`).<br><br>**You use these commands to augment your implementation speed.**<br><br>Find their implementations in [Appendix B](#appendix-b). |
 
 **Steps:**
 
@@ -894,52 +898,30 @@ In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing th
 
 ![Appendix B](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bi3pb8m680ooad039qq0.png)
 
-These reusable prompt commands speed up your AAID workflow. Use them as Cursor Commands (via `.cursor/commands/`), custom slash commands in Claude Code/Gemini CLI, or your AI tool's equivalent. Feel free to customize them for your needs.
+These reusable prompt commands speed up your `AAID` workflow. Feel free to customize them for your needs.
 
 <a id="appendix-b-setup-commands"></a>
 
 ### Setup & Planning Commands
 
-_Used in Stage 1: Context Providing and Stage 2: Planning_
+_Used in Stage **1: Context Providing** and **Stage 2: Planning**_
 
-| Command                             | Description                                                                                                      | Stage   | Link                                                                                                                                                                                       |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `/project-context`                  | Establishes comprehensive project understanding with architecture, testing strategy, and code style              | Stage 1 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/project-context.md)                  |
-| `/ai-roadmap-template`              | Creates high-level roadmap for domain/business logic features that guides TDD without prescribing implementation | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-roadmap-template.md)              |
-| `/ai-technical-roadmap-template`    | Creates roadmap for technical implementation (adapters, infrastructure) - see [Appendix D](#appendix-d)          | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)    |
-| `/ai-presentation-roadmap-template` | Creates roadmap for observable technical elements (pure UI/sensory) - see [Appendix D](#appendix-d)              | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-presentation-roadmap-template.md) |
+| Command                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                     | Stage   | Link                                                                                                                                                                                       |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `/project-context`                  | Establishes comprehensive project understanding with architecture, testing strategy, code style, etc<br><br> _**Note on context**: Since Commands in Cursor cannot currently directly reference files with `@` symbols inside the command files themselves, you'll need to include any necessary context when invoking the command. For example:_ `/project-context @README.md @docs/architecture.md`. _The command will then operate on the provided context._ | Stage 1 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/fe646f901276a9cb54fb54d189c50c9aa499b3b7/reusable-prompts/setup-and-planning/project-context.md)                  |
+| `/ai-roadmap-template`              | Creates high-level roadmap for domain/business logic features that guides TDD without prescribing implementation                                                                                                                                                                                                                                                                                                                                                | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-roadmap-template.md)              |
+| `/ai-technical-roadmap-template`    | Creates roadmap for technical implementation (adapters, infrastructure) - see [Appendix D](#appendix-d)                                                                                                                                                                                                                                                                                                                                                         | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)    |
+| `/ai-presentation-roadmap-template` | Creates roadmap for observable technical elements (pure UI/sensory) - see [Appendix D](#appendix-d)                                                                                                                                                                                                                                                                                                                                                             | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/aebd9e8285865efe336b822cd32f0a8999963177/reusable-prompts/setup-and-planning/ai-presentation-roadmap-template.md) |
 
 | ☝️                                                                                                                                                                                                   |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Planning Tools**: Some tools have dedicated planning mechanics (e.g., Claude Code's [Plan Mode](https://claudelog.com/mechanics/plan-mode/)). Combine these with roadmap commands when beneficial. |
 
-**Example: /project-context**
-
-```
-# Project Context
-
-## General
-@README.md @package.json @tsconfig.json @db.schema
-
-## Architecture
-@docs/architecture.md
-
-## Testing Strategy
-@docs/testing.md
-
-## Code Style
-@docs/code-style.md
-
-// Adjust for your project
-
-Summarize what you learned and confirm when ready.
-```
-
 <a id="appendix-b-tdd-commands"></a>
 
 ### TDD Development Commands
 
-_Used in Stage 4: The TDD Cycle_
+_Used in **Stage 4: The TDD Cycle**_
 
 These commands embed the Three Laws of TDD:
 
