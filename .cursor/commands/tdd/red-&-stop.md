@@ -43,11 +43,4 @@ Enter RED phase as defined in the AAID rules file:
 **Next Phase:** GREEN (mandatory after approval)
 ```
 
-3. Run test and verify failure
-4. Run tests after EVERY code change
-
-**On Success:** Present test and result, then **STOP AND AWAIT USER REVIEW**
-**On Error:** If test passes unexpectedly, **STOP** and report (violates TDD, risks false positives)
-**Next Phase:** GREEN (mandatory after approval)
-
 - If rules file missing, STOP and request it
