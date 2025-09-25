@@ -1,6 +1,6 @@
 Run the script, but if it fails, analyze, report back then STOP.
 
-I repeat: DO NOT CHANGE ANY CODE AFTER THE SCRIPT:
+I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
 
 1. Run script
 2. Analyze the result
