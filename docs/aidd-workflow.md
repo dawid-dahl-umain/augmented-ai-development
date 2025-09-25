@@ -928,7 +928,7 @@ In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing th
 
 ![Appendix B](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bi3pb8m680ooad039qq0.png)
 
-These reusable prompt commands speed up your `AAID` workflow. Feel free to customize them for your needs.
+These reusable prompt commands speed up your `AAID` workflow.
 
 <a id="appendix-b-setup-commands"></a>
 
@@ -967,23 +967,11 @@ Each command enforces these laws at the appropriate phase by referencing the [AA
 | `/green-&-stop`    | Enter GREEN phase: Write simplest passing code, then STOP for review      | 🟢 GREEN    | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/tdd/green-%26-stop.md)    |
 | `/refactor-&-stop` | Enter REFACTOR phase: Improve code with tests green, then STOP for review | 🧼 REFACTOR | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/tdd/refactor-%26-stop.md) |
 
-**In practice:** Since the rules file is automatically loaded by your IDE/CLI, you often won't need these commands; the AI will follow the workflow from the rules alone. The commands remain useful as explicit phase triggers when needed.
+**In practice:** Since the rules file is automatically loaded by your IDE/CLI, you often won't need these commands; the AI will often follow the workflow from the rules alone. That said, the commands remain useful as explicit phase triggers when needed.
 
 | ☝️                                                                                                                                                                                                                                                                                                                               |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **Legacy Code**: These commands assume greenfield TDD. For legacy code, create variants for writing characterization tests (documenting existing behavior) and finding seams (testable injection points). See [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/). |
-
-**Example: @red-&-stop**
-
-```
-Enter RED phase as defined in the AAID rules file:
-
-<!-- Rules file should have been automatically injected by IDE/CLI -->
-
-- Enforce RED phase rules and execute phase instructions
-- STOP and AWAIT USER REVIEW
-- If rules file missing, STOP and request it
-```
 
 <a id="appendix-b-investigation-commands"></a>
 
@@ -993,17 +981,17 @@ _Used throughout various `AAID` stages for research and debugging_
 
 These commands help when you need additional context (Stage 2: Planning) or encounter issues during the TDD cycle (Stage 4: "Handle potential issues" step).
 
-| Command                         | Description                                                                   | Primary Use         | Link                                                                                                                                              |
-| ------------------------------- | ----------------------------------------------------------------------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `/analyze-&-stop`               | Diagnose specific problems, errors, or failures without making changes        | Debugging failures  | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/analyze-%26-stop.md)                 |
-| `/analyze-command-&-stop`       | Run a specific command and analyze results without making changes             | Command diagnostics | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/analyze-command-%26-stop.md)         |
-| `/debug-&-stop`                 | Add debug logging and analyze results to understand issues                    | Deep debugging      | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/debug-%26-stop.md)                   |
-| `/minimal-fix-&-analyze-&-stop` | Implement the simplest fix, verify results, and analyze outcome               | Quick fixes         | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/minimal-fix-%26-analyze-%26-stop.md) |
-| `/research-&-stop`              | Comprehensive investigation and context gathering (use for broad exploration) | Context gathering   | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/research-%26-stop.md)                |
+| Command                         | Description                                                                   | Primary Use        | Link                                                                                                                                              |
+| ------------------------------- | ----------------------------------------------------------------------------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/analyze-&-stop`               | Diagnose specific problems, errors, or failures without making changes        | Debugging failures | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/analyze-%26-stop.md)                 |
+| `/analyze-script-&-stop`        | Run a specific script and analyze results without making changes              | Script diagnostics | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/analyze-script-%26-stop.md)          |
+| `/debug-&-stop`                 | Add debug logging and analyze results to understand issues                    | Deep debugging     | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/debug-%26-stop.md)                   |
+| `/minimal-fix-&-analyze-&-stop` | Implement the simplest fix, verify results, and analyze outcome               | Quick fixes        | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/minimal-fix-%26-analyze-%26-stop.md) |
+| `/research-&-stop`              | Comprehensive investigation and context gathering (use for broad exploration) | Context gathering  | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/investigation/research-%26-stop.md)                |
 
-| ☝️                                                                                                   |
-| ---------------------------------------------------------------------------------------------------- |
-| The user discusses or simply types out the command, for example: "`/analyze-command-&-stop test:db`" |
+| ☝️                                                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Triggering "/analyze-script-&-stop"**: The user discusses or simply types the the script after the command name, for example: "`/analyze-script-&-stop test:db`" |
 
 <a id="appendix-b-misc-commands"></a>
 
@@ -1026,18 +1014,11 @@ These are just examples of `AAID` commands. Create your own or modify these to m
 
 ![Appendix C](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/34gja5j2umhsllvz3i7a.png)
 
-Configure your AI environment to understand the `AAID` workflow. These are simple text instructions - no special `AAID` app or tool is required. The workflow rules get loaded by your AI tool (via `.cursor/rules`, `CLAUDE.md`, or similar instruction files), focusing on workflow state management rather than project specifics.
+Configure your AI environment to understand the `AAID` workflow. These are simple text instructions, no special `AAID` app or tool is required.
 
-### Why Minimal AI Workflow Instructions?
-
-These AI workflow rules/instructions get loaded for **every prompt**, so keep them minimal:
-
-- **What belongs here:** The `AAID` workflow rules, and other general custom instructions for the AI such as tonality
-- **What doesn't:** Project-specific code (load those once in Stage 1: Context Providing instead for every new agent session)
-
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on AI instruction following accuracy**: At the time of writing, current AIs are good, but not perfect, at following instructions and rules such as the **AAID AI Workflow Rules**. Sometimes you may need to remind the AI if it for example forgets a TDD phase, or moves to Green without stopping for user review at Red.<br><br>As LLMs improve over time, you'll need to worry less about this. |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on AI instruction following accuracy**: At the time of writing, current AIs are good, but not at all perfect, at following instructions and rules such as the **AAID AI Workflow Rules**. Sometimes you may need to remind the AI if it for example forgets a TDD phase, or moves directly to GREEN without stopping for user review at RED.<br><br>As LLMs improve over time, you'll need to worry less about this. |
 
 ### AAID AI Workflow Rules/Instructions
 
@@ -1070,8 +1051,8 @@ The complete AAID workflow follows this order:
    - User provides project context, specifications, and relevant code
    - AI reads and acknowledges understanding
 2. **Stage 2: Planning** (normal conversation mode, optional)
-   - Discuss feature approach and create roadmap with test scenarios
-   - Determine work type: domain/business logic vs technical implementation
+   - Discuss feature approach and create "Roadmap" (a planning file) with test scenarios
+   - Determine work type: domain/business logic vs technical implementation vs presentation/UI
    - AI helps plan but doesn't write code yet
 3. **Stage 3: TDD Starts** (transition to TDD mode)
    - User explicitly initiates TDD
@@ -1099,22 +1080,25 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 - User asks general programming questions
 - User explicitly indicates working on something else
 
-## Domain vs Technical Implementation
+## Development Categories
 
-When in AAID TDD mode, the workflow applies to both:
+When in AAID mode, the workflow applies differently based on category:
 
-- **Domain/Business Logic**: BDD-driven features using unit tests with mocks (default focus)
-- **Technical Implementation**: Adapters, infrastructure, styling using appropriate test strategies
+- **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
+- **Technical Implementation**: Adapters and infrastructure using integration/contract tests
+- **Presentation/UI**: Pure visual styling and sensory feedback - NO TDD, validation only
 
-The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
+The TDD phases (RED/GREEN/REFACTOR) apply only to Domain and Technical Implementation work:
 
 - **Domain work** uses Feature Roadmaps and unit tests as described in these AAID instructions (or acceptance tests if user specifically requests for it)
-- **Technical work** uses Technical Roadmaps with tests based on dependency:
+- **Technical Implementation work** uses Technical Roadmaps with tests based on dependency:
   - Integration tests for managed dependencies (your database, cache, queues)
   - Contract tests for unmanaged dependencies (external APIs like Stripe, SendGrid)
-  - Manual validation for pure visual styling
-- If user mentions "adapter", "repository", "controller", "infrastructure", "css" → likely technical
-- Ask user to clarify if unclear which type of work is being done
+- **Presentation/UI work** skips TDD entirely - proceeds directly to implementation with manual validation, visual regression, accessibility audits
+
+If user mentions "adapter", "repository", "controller", "infrastructure" → Technical Implementation
+If user mentions "css", "styling", "animation", "visual design", "colors", "spacing" → Presentation/UI (no TDD)
+Ask user to clarify if unclear which type of work is being done
 
 ## Phase Recognition (When in TDD Mode)
 
@@ -1139,7 +1123,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
 1. Write the SMALLEST test that will fail for the next requirement
    - If test list exists: Un-skip the next test and implement its body
    - If single test approach: Write a new test for the next scenario
-   - Follow test sequence from roadmap/specs if provided
+   - Follow test sequence from Roadmap/specs if provided
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
@@ -1205,6 +1189,7 @@ The TDD phases (RED/GREEN/REFACTOR) remain the same. The difference is:
 
 1. Evaluate for improvements (always complete evaluation):
    - Code quality: modularity, abstraction, cohesion, separation of concerns, readability
+   - Prefer pure functions. Isolate side effects at boundaries (I/O, DB, network)
    - Remove duplication (DRY), improve naming, simplify logic
    - If no improvements needed, state "No refactoring needed" explicitly
 2. When refactoring changes the design/API:
@@ -1227,7 +1212,7 @@ When user initiates TDD mode:
 
 User chooses approach (ask which they prefer if not clear):
 
-1. **Test List**: Create list of unimplemented tests (skipped - e.g., `it.skip`) based on Roadmap plan file (if available)
+1. **Test List**: Create list of unimplemented tests (skipped - e.g. `it.skip`) based on Roadmap plan file (if available)
 2. **Single Test**: Start with one single unimplemented empty/skipped test for simplest scenario based on Roadmap plan file (if available)
 
 In all cases:

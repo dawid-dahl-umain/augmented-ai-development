@@ -6,18 +6,18 @@ This article on `AAID` focuses on TDD (Test-Driven Development) for **Unit Testi
 
 **Acceptance Testing**, on the other hand, verifies that your software aligns with business goals and is actually _done_. It serves as an executable definition-of-done.
 
-> AI can help when writing Acceptance Tests, but you do not necessarily use `AAID` for this purpose.
-
 Understanding how these two testing strategies complement each other is crucial for professional developers, as both are invaluable parts of writing production-grade software.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acceptance Testing is similar to E2E testing; both test through the system boundaries.<br><br>The key difference: AT mocks external dependencies you don't control (third-party APIs, etc) while keeping internal dependencies you do control (your database, etc) real. E2E usually mocks nothing and runs everything together.<br><br>Problem with E2E: Tests fail due to external factors (third-party outages, network issues) rather than your code. Acceptance Testing isolates your system so failures indicate real business logic problems. |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Acceptance Testing is similar to E2E testing; both test the full app flow, via the system boundaries.<br><br>The key difference: AT mocks external dependencies you don't control (third-party APIs, etc) while keeping internal dependencies you do control (your database, etc) real. E2E usually mocks nothing and runs everything together.<br><br>Problem with E2E: Tests fail due to external factors (third-party outages, network issues) rather than your code. Acceptance Testing isolates your system so failures indicate real business logic problems, or technical issues that you are responsible for. |
 
 The two kinds of tests answer different questions:
 
 - **TDD (Unit Tests)**: "_Is my code technically correct?_"
 - **ATDD (Acceptance Tests)**: "_Is my system releasable after this change?_"
+
+So in short: `AAID` builds the solution, Acceptance Tests confirm it’s the right solution.
 
 ## Key Differences
 
@@ -61,10 +61,10 @@ describe("TodoService", () => {
 - Test in a production-like environment through system boundaries
 - Mock unmanaged external dependencies (like third-party APIs)
   - Don't mock managed external dependencies (like app's database)
-- Test suite will run in minutes (slower than unit tests)
+- Test suite will run slower than unit tests
 - Maps 1:1 to user stories/acceptance criteria
 - Verify the system is ready for release
-- Stakeholder-focused (though developers implement)
+- Stakeholder-focused (though developers + AI implement)
 
 Example of what an acceptance test looks like (using the [Four-Layer](https://dojoconsortium.org/assets/ATDD%20-%20How%20to%20Guide.pdf) model pioneered by Dave Farley):
 
