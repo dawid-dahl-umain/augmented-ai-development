@@ -1,7 +1,5 @@
 Debug and research any relevant files for context, report back then STOP.
 
-I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
-
 1. Add debug logs
 2. Research any relevant files for context
    a. Optional: use the web tool for documentation

@@ -76,18 +76,20 @@ Example of what an acceptance test looks like (using the [Four-Layer](https://do
 | 4. System Under Test (SUT)        | Production-like application environment |
 
 ```tsx
+import { user, todo } from "../dsl";
+
 describe("User archives completed todos", () => {
   it("should archive a completed todo", async () => {
     // Given
-    await dsl.user.startsWithNewAccount();
-    await dsl.user.hasCompletedTodo("Buy milk");
+    await user.startsWithNewAccount();
+    await user.hasCompletedTodo("Buy milk");
 
     // When
-    await dsl.todo.archive("Buy milk");
+    await todo.archive("Buy milk");
 
     // Then
-    dsl.todo.confirmInArchive("Buy milk");
-    dsl.todo.confirmNotInActive("Buy milk");
+    todo.confirmInArchive("Buy milk");
+    todo.confirmNotInActive("Buy milk");
   });
 });
 ```

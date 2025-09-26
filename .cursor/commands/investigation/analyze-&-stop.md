@@ -1,7 +1,5 @@
 Analyze the issue, scan relevant files, optionally consult docs, summarize next steps. Stop.
 
-I repeat: DO NOT CHANGE ANY CODE AFTER THE COMMAND:
-
 1. Analyze issue or task at hand
 2. Research any relevant files for context
    a. Optional: use the web tool for documentation
