@@ -92,8 +92,8 @@ Each phase includes specific commands, review checkpoints, and quality gates to 
 > The diagram shows three distinct development paths, distinguished by colored arrows:
 >
 > - **Blue arrows**: Common workflow and Domain/Business Logic (including shared TDD stages)
-> - **Orange arrows**: Technical Implementation specific branches (see [Appendix D](./appendices/appendix-d-handling-technical-implementation-details.md))
-> - **Purple arrows**: Presentation/UI specific branches (no TDD - see [Appendix D](./appendices/appendix-d-handling-technical-implementation-details.md))
+> - **Orange arrows**: Technical Implementation specific branches (see [Appendix D](./appendices/appendix-d/handling-technical-implementation-details.md))
+> - **Purple arrows**: Presentation/UI specific branches (no TDD - see [Appendix D](./appendices/appendix-d/handling-technical-implementation-details.md))
 
 ## Who This Is For
 

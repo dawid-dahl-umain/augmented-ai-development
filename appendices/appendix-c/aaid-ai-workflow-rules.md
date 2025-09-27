@@ -12,7 +12,7 @@ Configure your AI environment to understand the `AAID` workflow. These are simpl
 
 _This is the official `AAID` workflow rules. But feel free to customise it._
 
-[AAID AI Workflow Rules/Instructions](../rules/aaid/aaid-development-rules.mdc)
+[AAID AI Workflow Rules/Instructions](../../rules/aaid/aaid-development-rules.mdc)
 
 ## Usage Guide
 
