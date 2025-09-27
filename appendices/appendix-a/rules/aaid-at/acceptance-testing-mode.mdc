@@ -1,0 +1,84 @@
+---
+description: Acceptance Testing Mode overrides standard AAID instructions for acceptance-testing-blueprint
+globs:
+  - acceptance-test/**
+alwaysApply: false
+---
+
+# AI Acceptance Testing Mode Rules
+
+When this mode is active, ignore the default AAID/TDD rules for matching acceptance-testing files.
+
+## Mode Recognition
+
+**Acceptance Testing mode is ACTIVE when:**
+
+- User explicitly requests acceptance testing, ATDD, transforming BDD scenarios, or work with the Four-Layer Model
+- User provides BDD scenarios and asks for executable specifications, DSL layers, or protocol drivers
+- Work happens inside `acceptance-test/**` and touches Layer 1–3 artifacts (executable specs, DSL, drivers, stubs)
+
+**Acceptance Testing mode is NOT active when:**
+
+- User is only sharing context or documentation without requesting acceptance testing work
+- User is following AAID unit-test/TDD tasks outside acceptance testing scope
+- User focuses solely on presentation changes or unrelated infrastructure tasks
+
+## Acceptance Testing Workflow Sequence
+
+1. **Stage 1: Context Providing** (normal assistance)
+   - Gather project/feature context, BDD scenarios, architecture notes
+2. **Stage 2: Planning & Analysis** (normal assistance)
+   - Extract domain concepts, choose protocol driver type, outline isolation strategy
+3. **Stage 3: Four-Layer Cycle Begins** (acceptance testing mode)
+   - Follow Phase 1 → Phase 2 → Phase 3 → Phase 4 with review after each phase
+4. **Stage 4: Next Scenario or Complete**
+   - If more BDD scenarios remain, repeat Stage 3; otherwise confirm completion
+
+## Four-Layer Workflow
+
+Stop for review after every phase. Remember the current phase between messages.
+
+### 🔴 Phase 1 · Executable Spec & DSL (spec must fail)
+
+- Map each BDD line to exactly one DSL call
+- Use only `// Given`, `// When`, `// Then`, `// And`, `// But` comments
+- Implement DSL methods with natural language and alias every identifier via `DslContext`
+- Provide `Params` helpers if absent
+- Output: failing spec plus DSL layer skeleton → stop for review
+
+### 🔍 Phase 2 · Protocol Driver Strategy
+
+- Document SUT boundary, driver type (UI/API/CLI/etc), concluding events to poll, external stubs, atomic operations
+- Output: concise driver strategy note → stop for review
+
+### 🟢 Phase 3 · Protocol Driver Implementation
+
+- Implement driver methods matching DSL names exactly, ensuring atomic success/failure and polling (no sleeps)
+- Stub only unmanaged third-party systems
+- Output: specs passing through the driver (or report failures) → stop for review
+
+### 🧼 Phase 4 · Refine & Validate Isolation
+
+- Verify system, functional, and temporal isolation
+- Keep DSL natural language, remove duplication, ensure layer separation
+- Output: polished four-layer solution with tests green → stop for final review
+
+## Critical Rules
+
+- Test layer only calls DSL; DSL holds business wording without assertions; drivers contain technical logic and assertions
+- DSL names mirror BDD wording (`hasCompletedTodo`, `archives`, etc.)
+- Always alias identifiers so test can run in parallel; never use raw values
+- Driver operations return boolean success and hide multi-step flows internally
+- Rely on polling with timeouts; no arbitrary delays
+
+## Domain Concept Extraction
+
+- Nouns → DSL objects (`dsl.user`, `dsl.todo`, ...)
+- Verbs → DSL actions (`hasCompletedTodo`, `archives`)
+- Assertions → DSL verifications (`shouldBeInArchive`, `shouldShowError`)
+
+## State & Error Handling
+
+- Track current phase and covered scenarios
+- If Phase 1 spec passes unexpectedly, investigate missing DSL checks
+- If isolation breaks, revisit aliasing or stub strategy before advancing

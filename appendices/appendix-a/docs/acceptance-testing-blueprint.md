@@ -1,78 +1,164 @@
 # AI-Augmented Acceptance Testing Blueprint
 
-_Four-Layer Model Implementation with AI Workflow_
+_Four-Layer Model Implementation with AI-Assisted Workflow_
 
 ## Table of Contents
 
-- [What This Blueprint Provides](#what-this-blueprint-provides)
-- [Core Concepts You Need to Know](#core-concepts)
+- [Prerequisites & Overview](#prerequisites-overview)
+- [Core Concepts](#core-concepts)
   - [What is Acceptance Testing?](#what-is-acceptance-testing)
   - [Behavior-Driven Development (BDD)](#bdd)
+  - [The Three Levels of Test Isolation](#test-isolation)
 - [The Four-Layer Model Architecture](#four-layer-architecture)
+  - [Layer Overview](#layer-overview)
+  - [Layer Responsibilities](#layer-responsibilities)
 - [AI-Augmented Workflow](#ai-workflow)
+  - [Workflow Philosophy](#workflow-philosophy)
   - [Workflow Diagram](#workflow-diagram)
   - [Stage 1: Context Providing](#stage-1-context)
   - [Stage 2: Planning & Analysis](#stage-2-planning)
   - [Stage 3: Four-Layer Test Cycle](#stage-3-cycle)
+    - [Phase 1: Generate Executable Spec & DSL](#phase-1)
+    - [Phase 2: Research Protocol Driver Strategy](#phase-2)
+    - [Phase 3: Implement Protocol Driver & SUT Connection](#phase-3)
+    - [Phase 4: Refactor All Layers & Validate Isolation](#phase-4)
 - [Implementation Guide](#implementation-guide)
   - [Project Structure](#project-structure)
+  - [Executable Specifications](#executable-specs)
   - [Core DSL Utilities](#core-utilities)
   - [Domain-Specific DSL Classes](#dsl-classes)
   - [Protocol Drivers](#protocol-drivers)
   - [External System Stubs](#external-stubs)
-  - [Executable Specifications](#executable-specs)
-- [The Three Levels of Test Isolation](#test-isolation)
 - [Critical Implementation Rules](#critical-rules)
-- [Common Anti-Patterns to Avoid](#anti-patterns)
+- [Common Anti-Patterns](#anti-patterns)
 - [Validation Checklist](#validation-checklist)
 - [Quick Reference](#quick-reference)
+- [Protocol Driver Strategy Roadmap Template](#driver-strategy-roadmap)
 
-## What This Blueprint Provides {#what-this-blueprint-provides}
+---
 
-This blueprint combines Dave Farley's Four-Layer Model for acceptance testing with a disciplined AI-augmented workflow. It enables you to:
+<a id="prerequisites-overview"></a>
 
-1. **Transform BDD scenarios into executable specifications** using AI assistance
-2. **Maintain clear separation of concerns** across four distinct layers
-3. **Achieve comprehensive test isolation** (SUT, functional, and temporal)
-4. **Create maintainable tests** that survive implementation changes
-5. **Follow a disciplined workflow** with review checkpoints at each phase
+## Prerequisites & Overview
 
-The AI workflow ensures every generated component is reviewed and validated, preventing the common pitfall of blindly accepting AI output.
+This blueprint combines Dave Farley's Four-Layer Model for acceptance testing with a disciplined AI-augmented workflow adopting `AAID` (Augmented AI Development) principles.
 
-## Core Concepts You Need to Know {#core-concepts}
+**Prerequisites:**
 
-### What is Acceptance Testing? {#what-is-acceptance-testing}
+- BDD scenarios already defined (Given-When-Then format)
+- Ubiquitous Language established with stakeholders
+- Basic understanding of test automation concepts
 
-**Acceptance Testing** verifies that a system meets business requirements from an external user's perspective. When done well, acceptance tests:
+**What This Blueprint Provides:**
 
-- **Define behavior**: They specify WHAT the system should do, not HOW it does it
-- **Use business language**: Written in terms the business understands, not technical jargon
-- **Provide automated verification**: A user story is complete ONLY when its acceptance tests pass
-- **Create living documentation**: The tests document the system's actual behavior
-- **Form an executable specification**: The tests ARE the specification, written in code
+1. Transform BDD scenarios into executable specifications using AI assistance
+2. Maintain clear separation of concerns across [four distinct layers](#four-layer-architecture)
+3. Achieve comprehensive test isolation (system-level, functional, and temporal)
+4. Create maintainable tests that survive implementation changes
+5. Follow a disciplined workflow with review checkpoints at each phase
 
-| ☝️                                                                                                                                                                                                                                                                                                                                            |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Acceptance Testing is similar to E2E testing; both test the full app flow via system boundaries. The key difference: AT mocks external dependencies you don't control (third-party APIs) while keeping internal dependencies you do control (your database) real. This isolation ensures test failures indicate real business logic problems. |
+**`AAID` Workflow Philosophy:**
 
-### Behavior-Driven Development (BDD) {#bdd}
+- 🧠 **You maintain control**: Review and understand every generated component
+- 🪜 **Incremental progress**: Small, focused steps with validation between phases
+- 🦾 **AI as augmentation**: The AI generates code, you architect and validate
 
-BDD is fundamentally about **communication and collaboration** between business stakeholders, developers, and testers. It creates a shared understanding through:
+---
+
+<a id="core-concepts"></a>
+
+## Core Concepts
+
+<a id="what-is-acceptance-testing"></a>
+
+### What is Acceptance Testing?
+
+**Acceptance Testing** verifies that a system meets business requirements from an external user's perspective. It serves as an automated, objective Definition of Done.
+
+**Key Characteristics:**
+
+- **Defines behavior**: Specifies WHAT the system does, not HOW
+- **Uses business language**: Written in terms stakeholders understand
+- **Provides automated verification**: User story is complete only when acceptance tests pass
+- **Creates living documentation**: Tests document actual system behavior
+- **Forms executable specifications**: Tests ARE the specification in code
+
+**Acceptance Testing vs E2E Testing:**
+
+| Aspect                    | Acceptance Testing          | E2E Testing             |
+| ------------------------- | --------------------------- | ----------------------- |
+| **Scope**                 | Tests via system boundaries | Tests entire deployment |
+| **External Dependencies** | Stubs third-party systems   | Uses real systems       |
+| **Internal Dependencies** | Uses real database/cache    | Uses real everything    |
+| **Failure Indicates**     | Business logic problems     | Could be anything       |
+| **Speed**                 | Fast enough for CI/CD       | Often too slow          |
+| **Reliability**           | Deterministic               | Can be flaky            |
+
+<a id="bdd"></a>
+
+### Behavior-Driven Development (BDD)
+
+BDD creates shared understanding through **communication and collaboration** between business stakeholders, developers, and testers.
+
+**Core Elements:**
 
 - **Common language**: Everyone uses the same vocabulary (Ubiquitous Language)
 - **Concrete examples**: Abstract requirements become specific scenarios
-- **Collaborative sessions**: Teams work together to define behavior before coding
+- **Collaborative sessions**: Teams define behavior together before coding
 
-The **Given-When-Then** format (Gherkin) structures requirements:
+**Given-When-Then Format (Gherkin):**
 
 ```gherkin
-Given the user has a completed todo "Buy milk"
-When they archive "Buy milk"
-Then "Buy milk" should be in archived todos
-And "Buy milk" should not be in active todos
+Given the user has a completed todo "Buy milk"     # Initial context
+When they archive "Buy milk"                       # Action taken
+Then "Buy milk" should be in archived todos        # Expected outcome
+And "Buy milk" should not be in active todos       # Additional outcome
 ```
 
-## The Four-Layer Model Architecture {#four-layer-architecture}
+<a id="test-isolation"></a>
+
+### The Three Levels of Test Isolation
+
+Per Dave Farley's definition, three levels of isolation are essential for reliable and fast acceptance testing:
+
+#### 1. System-Level Isolation
+
+**Be very specific about the boundaries of your system-under-test:**
+
+- Test right at the boundary of your system using its normal interfaces directly
+- Use stubs ONLY for external third-party dependencies to collect data for assertions or inject data to invoke behaviors
+- Consider Contract Testing for external dependencies. Mock during development, toggle to real calls before big releases to ensure contract holds
+- **Critical**: Never stub your own database, cache, or internal services: they're part of your system
+
+#### 2. Functional Isolation
+
+**Use natural boundaries within a multi-user system to isolate test cases:**
+
+- Each test creates new accounts, products, marketplaces (whatever represents natural functional boundaries)
+- Share the startup costs of a large complex system
+- Run many tests together, in parallel, without them disturbing one another
+- Example: Testing an e-commerce site - each test begins by registering a new account and creating new products for sale
+- After test run is over, your system will contain a lot of junk data. That's okay! Discard old test SUT and start fresh next test run
+
+#### 3. Temporal Isolation
+
+**Run the same test repeatedly and get the same results:**
+
+- Combines with functional isolation technique above
+- Uses proxy-naming technique: test infrastructure creates an alias for names
+- Within test scope, test uses its chosen name (e.g., "Buy milk")
+- Test infrastructure maps to unique name it chose (e.g., "Buy milk1")
+- Allows same test to run over and over in the same running system
+
+---
+
+<a id="four-layer-architecture"></a>
+
+## The Four-Layer Model Architecture
+
+<a id="layer-overview"></a>
+
+### Layer Overview
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -80,52 +166,102 @@ And "Buy milk" should not be in active todos
 │    "WHAT the system does in business terms"     │
 └─────────────────────────────────────────────────┘
                         │
+                        ▼
 ┌─────────────────────────────────────────────────┐
 │    Layer 2: Domain-Specific Language (DSL)      │
 │    "Business vocabulary as code methods"        │
 └─────────────────────────────────────────────────┘
                         │
+                        ▼
 ┌─────────────────────────────────────────────────┐
 │    Layer 3: Protocol Drivers & Stubs            │
 │    "HOW to technically interact with system"    │
 └─────────────────────────────────────────────────┘
                         │
+                        ▼
 ┌─────────────────────────────────────────────────┐
 │    Layer 4: System Under Test (SUT)             │
 │    "The actual application being tested"        │
 └─────────────────────────────────────────────────┘
 ```
 
+<a id="layer-responsibilities"></a>
+
 ### Layer Responsibilities
 
-**Layer 1: Test Cases**
+#### Layer 1: Test Cases (Executable Specifications)
 
-- Express acceptance criteria in business language
-- Use Given-When-Then structure
-- Never reference technical implementation
+**Purpose:** Express acceptance criteria in business language
 
-**Layer 2: DSL**
+**Characteristics:**
 
-- Provide business-readable methods
-- Implement functional and temporal isolation via aliasing
-- Manage test data generation with sensible defaults
+- Uses Given-When-Then structure
+- Focuses on single outcomes
+- Never references technical implementation
+- Maps 1:1 to BDD scenarios
 
-**Layer 3: Protocol Drivers**
+#### Layer 2: Domain-Specific Language (DSL)
 
-- Handle all technical interaction with SUT
-- Ensure atomic operations
-- Implement SUT isolation (stub third-party systems)
+**Purpose:** Bridge between business language and technical implementation
 
-**Layer 4: SUT**
+**Key Features:**
+
+- **Natural language methods**: Match BDD scenarios exactly
+- **Parameter handling**: Uses sensible defaults and optional parameters
+- **Automatic aliasing**: Implements functional and temporal isolation transparently
+- **Pure translation layer**: NO assertions, NO failures, NO business or verification logic
+- **Simply calls Protocol Driver**: Transforms business language to driver calls
+
+#### Layer 3: Protocol Drivers & Stubs
+
+**Purpose:** Handle all technical interaction with system AND all verification logic
+
+**Protocol Drivers:**
+
+- Translate abstract commands from DSL into concrete interactions with system's interfaces
+- Separate driver per communication channel (e.g., UI, API, CLI)
+- Handle specifics of communication protocol (HTTP requests, browser automation, message queues)
+- Contains ALL assertions and failures: This is where pass/fail decisions are made
+- Uses test framework's fail mechanism directly: e.g., `expect.fail()` in Vitest
+- Each operation should be atomic and reliable
+
+**External System Stubs:**
+
+- Isolate the SUT from ONLY external third-party dependencies (payment gateways, third-party APIs)
+- Never stub internal systems you control (your database, cache, message queues)
+- Allow tests to define specific responses
+- Ensure tests are predictable and reliable
+
+#### Layer 4: System Under Test (SUT)
+
+**Purpose:** The actual application being tested
+
+**Configuration:**
 
 - Deploy as in production
-- Accept test data from parallel tests
+- Include your database, cache, and internal services; everything you are directly responsible for (as opposed to third-party external APIs)
+- Optimize for fast startup
+- Accept concurrent test data
 
-## AI-Augmented Workflow {#ai-workflow}
+---
 
-The AI workflow adapts AAID principles for acceptance testing, maintaining disciplined phases with review checkpoints.
+<a id="ai-workflow"></a>
 
-### Workflow Diagram {#workflow-diagram}
+## AI-Augmented Workflow
+
+<a id="workflow-philosophy"></a>
+
+### Workflow Philosophy
+
+This workflow adapts `AAID` (Augmented AI Development) principles for acceptance testing:
+
+1. 🧠 - **Don't check your brain at the door**: Understand every generated line
+2. 🪜 - **Incremental steps**: One phase at a time, with reviews between
+3. 🦾 - **AI as augmentation**: You architect, AI generates, you review
+
+<a id="workflow-diagram"></a>
+
+### Workflow Diagram
 
 ```mermaid
 graph TD
@@ -247,205 +383,285 @@ graph TD
     style Complete fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
 ```
 
-### Stage 1: Context Providing {#stage-1-context}
+<a id="stage-1-context"></a>
+
+### Stage 1: Context Providing
 
 Before any AI interaction, establish comprehensive context:
 
-1. **Add Project Context**
+**1. Add Project Context**
 
-   - Existing acceptance test structure and patterns
-   - DSL conventions already in use
-   - Protocol driver implementations
-   - Test framework setup
+- Existing acceptance test structure and patterns
+- DSL conventions already in use
+- Protocol driver implementations
+- Test framework setup
 
-2. **Add BDD Scenarios**
+**2. Add BDD Scenarios**
 
-   - User stories with Given-When-Then scenarios
-   - Ubiquitous Language glossary
-   - Business rules and constraints
+- User stories with Given-When-Then scenarios
+- Ubiquitous Language glossary
+- Business rules and constraints
 
-3. **Add Technical Context**
-   - System architecture overview
-   - Available entry points (API, UI, CLI)
-   - Third-party integrations requiring stubs
+**3. Add Technical Context**
 
-| 🤖                                                                                                      |
+- System architecture overview
+- Available entry points (API, UI, CLI)
+- Third-party integrations requiring stubs (NOT internal systems)
+
+| 🤖 AI Understanding                                                                                     |
 | ------------------------------------------------------------------------------------------------------- |
 | The AI now understands your testing landscape and can generate consistent, appropriate test components. |
 
-### Stage 2: Planning & Analysis {#stage-2-planning}
+<a id="stage-2-planning"></a>
 
-Collaborate with AI to analyze BDD scenarios:
+### Stage 2: Planning & Analysis
 
-1. **Extract Domain Concepts**
+Collaborate with AI to analyze BDD scenarios and plan implementation:
 
-   - Identify nouns (become DSL objects): `user`, `todo`, `archive`
-   - Identify verbs (become DSL methods): `hasCompletedTodo`, `archives`
-   - Identify assertions: `shouldBeInArchive`, `shouldNotBeInActive`
+**1. Extract Domain Concepts from BDD Scenarios**
 
-2. **Choose Protocol Driver Type**
+Analyze your BDD scenarios to identify the domain concepts that will become DSL elements:
 
-   - UI testing: Playwright, Selenium
-   - API testing: HTTP clients
-   - CLI testing: Process spawning
-   - Message testing: Queue clients
+- **Domain Objects** (nouns from Ubiquitous Language → DSL objects):
+  - Examples: `user`, `todo`, `archive`, `payment`
+- **Domain Actions** (verbs → DSL methods):
+  - Examples: `hasCompletedTodo`, `archives`, `restores`, `submits`
+- **Domain Assertions** (confirmations → DSL validation methods):
+  - Examples: `confirmInArchive`, `confirmNotInActive`, `confirmErrorMessage`
 
-3. **Plan Isolation Strategy**
-   - Which data needs aliasing for functional isolation
-   - Which external systems need stubbing for SUT isolation
-   - How to achieve temporal isolation for repeated runs
+> For assertions, always use the word "confirm" to avoid developer-specific language. E.g. `dsl.order.confirmSubmitted` not `dsl.order.assertSubmitted`.
 
-| 🤖                                                                                   |
+**Transformation Pattern:**
+
+```
+BDD:  Given the user has a completed todo "Buy milk"
+DSL:  await dsl.user.hasCompletedTodo({ name: "Buy milk" })
+
+BDD:  When they archive "Buy milk"
+DSL:  await dsl.user.archives({ todo: "Buy milk" })
+
+BDD:  Then "Buy milk" should be in archived todos
+DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
+
+BDD:  And "Buy milk" should not be in active todos
+DSL:  await dsl.todo.confirmNotInActive({ name: "Buy milk" })
+```
+
+Notice how:
+
+- The DSL reads like natural language matching the BDD
+- Actions are on the actor (`user.archives`)
+- Assertions (using the word "confirm") are on the subject (`todo.confirmInArchive`)
+- Parameters use business language from scenarios
+
+**2. Choose Protocol Driver Type**
+
+Based on your system's interfaces:
+
+- **UI testing**: Playwright, Selenium
+- **API testing**: HTTP clients
+- **CLI testing**: Process spawning
+- **Message testing**: Queue clients
+
+**3. Create Protocol Driver Strategy Roadmap**
+
+Use the [template](#driver-strategy-roadmap) to make sure you and the AI are aligned on how to implement the Acceptance Test suite:
+
+- Protocol type
+- Connection strategy
+- Which external third-party systems need stubbing (system-level isolation)
+- Which data needs aliasing (functional isolation)
+- How to achieve temporal isolation (repeated runs)
+
+| 🤖 AI Alignment                                                                      |
 | ------------------------------------------------------------------------------------ |
 | AI and developer are now aligned on the testing approach and layer responsibilities. |
 
-### Stage 3: Four-Layer Test Cycle {#stage-3-cycle}
+<a id="stage-3-cycle"></a>
+
+### Stage 3: Four-Layer Test Cycle
 
 The cycle follows four phases, each with mandatory review:
+
+<a id="phase-1"></a>
 
 #### 🔴 Phase 1: Generate Executable Spec & DSL
 
 **AI generates:**
 
-- Executable specification matching BDD scenarios
+- Executable specification matching BDD scenarios exactly
 - DSL layer with natural language methods
 - Functional/temporal isolation via aliasing
 
 **Example generation:**
 
 ```typescript
-// Executable Spec
+// Executable Spec - 1:1 mapping to BDD
 it("should archive a completed todo", async () => {
   // Given
   await dsl.user.hasCompletedTodo({ name: "Buy milk" });
+
   // When
   await dsl.user.archives({ todo: "Buy milk" });
+
   // Then
-  await dsl.todo.shouldBeInArchive({ name: "Buy milk" });
+  await dsl.todo.confirmInArchive({ name: "Buy milk" });
+
+  // And
+  await dsl.todo.confirmNotInActive({ name: "Buy milk" });
 });
 
-// DSL Method
+// DSL Method - Pure translation, NO business or verification logic
 async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
   const params = new Params(this.context, args);
   const name = params.Alias("name");  // Implements isolation
-  // 1:1 mapping to driver method...
+  const description = params.Optional("description", "");
+
+  await this.driver.hasCompletedTodo(name, description);
 }
 ```
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| AI agent must `AWAIT USER REVIEW` before proceeding to Phase 2.<br><br>**During Phase 1 review, evaluate:**<br>🔴 Natural language DSL methods that match BDD scenarios exactly<br>🔴 Proper aliasing implementation for all identifiers<br>🔴 Only Gherkin comments in executable specs<br>🔴 1:1 mapping between BDD lines and DSL calls |
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Phase 1 Review Checklist:**<br>🔴 Natural language DSL methods match BDD scenarios<br>🔴 Proper aliasing for all identifiers<br>🔴 Only Gherkin comments in executable specs<br>🔴 Each BDD line maps to one DSL call |
+
+<a id="phase-2"></a>
 
 #### 🔍 Phase 2: Research Protocol Driver Strategy
 
-**AI analyzes and creates a Protocol Driver Strategy Roadmap** (see [template](#driver-strategy-roadmap)):
+**AI analyzes and creates a strategy roadmap:**
 
-- How to connect to the SUT (UI, API, CLI, etc.)
-- Which concluding events to poll for
-- What external systems need stubbing
-- Atomic operation boundaries
+- How tests will achieve three levels of isolation
+- System boundaries and connection approach
+- External third-party dependencies to stub (never internal systems)
+- Key alignment points
 
-**Example roadmap excerpt:**
+**Example strategy excerpt (shortened for readability):**
 
 ```markdown
+# Acceptance Testing Strategy: Todo Archive Feature
+
 ## Connection Strategy
 
-- Protocol: UI via Playwright
-- Entry Points: /todos page for CRUD operations
-- Authentication: Test user pre-seeded
+- **Protocol Type**: UI with Playwright
+- **Entry Points**: /todos, /todos/archived
 
-## Atomic Operations Design
+## Isolation Strategy
 
-- hasCompletedTodo: Create + mark complete (single atomic operation)
-- archives: Click archive + wait for DOM removal
-- restores: Navigate to archive + restore + verify in active
+- **System-Level**: Stub EmailService and AnalyticsAPI (third-party only)
+- **Functional & Temporal**: User accounts provide natural boundaries,
+  DslContext handles aliasing automatically
 
-## External System Stubs
-
-- PaymentGateway: Stub for premium features
-- EmailService: Stub for notifications
+[See complete roadmap template below for full structure]
 ```
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AI agent must `AWAIT USER REVIEW` before proceeding to Phase 3.<br><br>**During Phase 2 review, evaluate:**<br>🔍 Connection strategy appropriate for SUT<br>🔍 Atomic operations properly scoped<br>🔍 Only third-party systems identified for stubbing<br>🔍 Polling strategy for concluding events defined |
+> 📋 **Note**: This is a shortened version. See the [complete roadmap template](#driver-strategy-roadmap) for the full structure and all sections to include.
+
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Phase 2 Review Checklist:**<br>🔍 Clear understanding of system boundaries<br>🔍 External dependencies identified for stubbing<br>🔍 Isolation strategy defined for all three levels<br>🔍 Connection strategy documented |
+
+<a id="phase-3"></a>
 
 #### 🟢 Phase 3: Implement Protocol Driver & SUT Connection
 
 **AI implements:**
 
 - Protocol driver with atomic operations
+- All assertions and failure logic
 - Polling mechanisms for concluding events
-- External system stubs
+- External system stubs (only third-party)
 - Connection to actual SUT
 
 **Example implementation:**
 
 ```typescript
-// protocol-driver/ui.user.driver.ts
+// Protocol Driver - Contains ALL assertions and failures
 export class UIUserDriver {
-  // 1:1 mapping - driver method name matches DSL method name
-  async hasCompletedTodo(name: string, desc: string): Promise<boolean> {
+  // Method name preferably matches DSL method name exactly
+
+  async hasCompletedTodo(name: string, desc: string): Promise<void> {
     try {
       await this.page.goto("/todos");
       await this.page.fill('[data-testid="new-todo-name"]', name);
       await this.page.click('[data-testid="add-todo"]');
 
-      // Poll for concluding event
-      await this.waitForElement(`[data-testid="todo-${name}"]`);
+      // Wait for todo to appear
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`);
 
       await this.page.click(
         `[data-testid="todo-${name}"] [data-testid="complete"]`
       );
 
-      // Poll for completion state change
-      await this.waitForCondition(async () => {
-        const completed = await this.page.getAttribute(
-          `[data-testid="todo-${name}"]`,
-          "data-completed"
-        );
-        return completed === "true";
-      });
+      // Verify completion state
+      const isCompleted = await this.page
+        .locator(`[data-testid="todo-${name}"]`)
+        .getAttribute("data-completed");
 
-      return true;
+      // ASSERTION happens here in the driver
+      if (isCompleted !== "true") {
+        expect.fail(`Failed to create completed todo '${name}'`);
+      }
     } catch (error) {
-      return false; // Atomic: all-or-nothing
+      expect.fail(
+        `Unable to create completed todo '${name}': ${error.message}`
+      );
     }
   }
 
-  // 1:1 mapping continues for all methods
-  async archives(name: string): Promise<boolean> {
-    // Implementation...
+  async archives(name: string): Promise<void> {
+    try {
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="archive"]`
+      );
+
+      // Wait for todo to disappear from active list
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
+        state: "hidden",
+        timeout: 5000,
+      });
+    } catch (error) {
+      expect.fail(`Failed to archive todo '${name}': ${error.message}`);
+    }
   }
 }
 ```
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AI agent must `AWAIT USER REVIEW` before proceeding to Phase 4.<br><br>**During Phase 3 review, evaluate:**<br>🟢 Tests passing with implemented drivers<br>🟢 Each driver operation is atomic (all-or-nothing)<br>🟢 Polling used instead of sleep/delays<br>🟢 Only external third-party systems stubbed |
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                              |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Phase 3 Review Checklist:**<br>🟢 Tests passing with implemented drivers<br>🟢 Protocol driver successfully connects to SUT<br>🟢 Only external third-party systems stubbed<br>🟢 Driver contains all assertions/failures |
+
+<a id="phase-4"></a>
 
 #### 🧼 Phase 4: Refactor All Layers & Validate Isolation
 
-**AI refactors:**
+**AI refactors and validates:**
 
 - Polish all four layers for clarity
 - Verify three isolation levels work
 - Ensure 1:1 BDD mapping maintained
 - Remove duplication across layers
+- Cleanup AI-generated comments
 
-**Validation checks:**
+**Validation tests:**
 
 - Run tests in parallel (functional isolation)
 - Run same test twice (temporal isolation)
 - Verify only third-party systems stubbed (system-level isolation)
 
-| ⏸️ **STOP: AWAIT FINAL REVIEW**                                                                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| AI agent must `AWAIT USER REVIEW` before proceeding to next scenario.<br><br>**During Phase 4 final review, evaluate:**<br>🧼 All three isolation levels verified (system-level, functional, temporal)<br>🧼 Natural language maintained throughout DSL<br>🧼 1:1 mapping between DSL and driver methods preserved<br>🧼 No mixing of concerns between layers<br>🧼 Tests can run in parallel without interference |
+| ⏸️ **STOP: AWAIT FINAL REVIEW**                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Phase 4 Review Checklist:**<br>🧼 All three isolation levels working correctly<br>🧼 Natural language maintained throughout DSL<br>🧼 Clear separation between layers<br>🧼 Tests run in parallel without interference |
 
-## Implementation Guide {#implementation-guide}
+---
 
-### Project Structure {#project-structure}
+<a id="implementation-guide"></a>
+
+## Implementation Guide
+
+<a id="project-structure"></a>
+
+### Project Structure
 
 ```
 acceptance-test/
@@ -455,8 +671,6 @@ acceptance-test/
 │   ├── utils/
 │   │   ├── DslContext.ts     # Manages aliases & sequences
 │   │   └── Params.ts         # Parameter parsing helper
-│   ├── base/
-│   │   └── BaseDSL.ts       # Base class for all DSLs
 │   ├── index.ts              # Main DSL exports
 │   └── [concept].dsl.ts      # Domain concepts
 ├── protocol-driver/          # Layer 3: System interaction
@@ -467,210 +681,9 @@ acceptance-test/
     └── setup.ts
 ```
 
-### Core DSL Utilities {#core-utilities}
+<a id="executable-specs"></a>
 
-These utilities provide both functional and temporal isolation:
-
-```typescript
-// dsl/utils/DslContext.ts
-
-export class DslContext {
-  private static globalSequenceNumbers = new Map<string, number>();
-  private sequenceNumbers = new Map<string, number>();
-  private aliases = new Map<string, string>();
-
-  /**
-   * Create or retrieve a unique alias for a name
-   * Implements BOTH Functional and Temporal Isolation:
-   * - Functional: Unique data per test prevents interference
-   * - Temporal: Same test runs repeatedly with consistent results
-   */
-  public alias(name: string): string {
-    if (!this.aliases.has(name)) {
-      const sequenceNo = this.seqForName(
-        name,
-        1,
-        DslContext.globalSequenceNumbers
-      );
-      this.aliases.set(name, `${name}${sequenceNo}`);
-    }
-    return this.aliases.get(name)!;
-  }
-
-  public reset(): void {
-    this.sequenceNumbers.clear();
-    this.aliases.clear();
-    // globalSequenceNumbers NOT cleared (cross-test uniqueness)
-  }
-
-  // Additional helper methods...
-}
-```
-
-```typescript
-// dsl/utils/Params.ts
-
-export class Params<T> {
-  constructor(private readonly context: DslContext, private readonly args: T) {}
-
-  /**
-   * Get aliased version of parameter value
-   * Critical for both Functional and Temporal Isolation
-   */
-  public Alias(name: keyof T): string {
-    const value = this.args[name];
-    if (value === undefined || value === null) {
-      throw new Error(`No '${String(name)}' supplied for alias`);
-    }
-    return this.context.alias(String(value));
-  }
-
-  // Additional helper methods...
-}
-```
-
-### Domain-Specific DSL Classes {#dsl-classes}
-
-DSL methods should read like natural language, with **exact 1:1 mapping** to driver methods:
-
-```typescript
-// dsl/user.dsl.ts
-
-export class UserDSL extends BaseDSL {
-  private driver: UIUserDriver;
-
-  constructor(context: DslContext) {
-    super(context);
-    this.driver = new UIUserDriver(global.page);
-  }
-
-  // Named to match "Given the user has a completed todo"
-  async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("name"); // Aliasing for isolation
-    const description = params.Optional("description", "");
-
-    // 1:1 mapping - DSL method name matches driver method name exactly
-    const success = await this.driver.hasCompletedTodo(name, description);
-    if (!success) {
-      this.fail(`Failed to create completed todo '${name}'`);
-    }
-  }
-
-  // Named to match "When they archive"
-  async archives(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("todo");
-
-    // 1:1 mapping - DSL archives() calls driver archives()
-    const success = await this.driver.archives(name);
-    if (!success) {
-      this.fail(`Failed to archive todo '${name}'`);
-    }
-  }
-
-  // Named to match "When they attempt to archive"
-  async attemptsToArchive(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("todo");
-
-    // 1:1 mapping - even for "attempt" variations
-    await this.driver.attemptsToArchive(name);
-    // Note: No failure check - attempts may not succeed
-  }
-}
-```
-
-### Protocol Drivers {#protocol-drivers}
-
-Protocol Drivers handle SUT isolation, atomicity, and concurrency:
-
-```typescript
-// protocol-driver/ui.user.driver.ts
-
-export class UIUserDriver {
-  constructor(private page: Page) {}
-
-  /**
-   * Atomic operation: Create todo and mark as completed
-   * Handles all technical details and waits for concluding events
-   */
-  async hasCompletedTodo(name: string, description: string): Promise<boolean> {
-    try {
-      await this.page.goto("/todos");
-      await this.page.fill('[data-testid="new-todo-name"]', name);
-      await this.page.click('[data-testid="add-todo"]');
-
-      // Poll for concluding event - todo appears
-      await this.waitForElement(`[data-testid="todo-${name}"]`);
-
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="complete"]`
-      );
-
-      // Poll for completion state change
-      await this.waitForCondition(async () => {
-        const isCompleted = await this.page
-          .locator(`[data-testid="todo-${name}"]`)
-          .getAttribute("data-completed");
-        return isCompleted === "true";
-      });
-
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  private async waitForCondition(
-    condition: () => Promise<boolean>,
-    timeout: number = 5000
-  ): Promise<void> {
-    const startTime = Date.now();
-    while (Date.now() - startTime < timeout) {
-      if (await condition()) return;
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-    throw new Error("Condition not met within timeout");
-  }
-}
-```
-
-### External System Stubs {#external-stubs}
-
-Implement SUT Isolation - stub ONLY third-party systems:
-
-```typescript
-// protocol-driver/stubs/payment-gateway.stub.ts
-
-export class PaymentGatewayStub {
-  private responses = new Map<string, any>();
-
-  async setupSuccessResponse(transactionId: string): Promise<void> {
-    this.responses.set(transactionId, {
-      status: "success",
-      transactionId,
-      timestamp: Date.now(),
-    });
-  }
-
-  async processPayment(transactionId: string): Promise<any> {
-    return (
-      this.responses.get(transactionId) || {
-        status: "success",
-        transactionId,
-        timestamp: Date.now(),
-      }
-    );
-  }
-
-  async reset(): Promise<void> {
-    this.responses.clear();
-  }
-}
-```
-
-### Executable Specifications {#executable-specs}
+### Executable Specifications
 
 Transform BDD scenarios with natural language DSL:
 
@@ -682,7 +695,7 @@ import { dsl } from "../dsl";
 
 describe("Feature: User archives completed todos", () => {
   beforeEach(() => {
-    dsl.reset();
+    dsl.reset(); // Critical for isolation
   });
 
   it("should archive a completed todo", async () => {
@@ -693,88 +706,464 @@ describe("Feature: User archives completed todos", () => {
     await dsl.user.archives({ todo: "Buy milk" });
 
     // Then
-    await dsl.todo.shouldBeInArchive({ name: "Buy milk" });
+    await dsl.todo.confirmInArchive({ name: "Buy milk" });
 
     // And
-    await dsl.todo.shouldNotBeInActive({ name: "Buy milk" });
+    await dsl.todo.confirmNotInActive({ name: "Buy milk" });
+  });
+
+  it("should not archive an incomplete todo", async () => {
+    // Given
+    await dsl.user.hasIncompleteTodo({ name: "Walk dog" });
+
+    // When
+    await dsl.user.attemptsToArchive({ todo: "Walk dog" });
+
+    // Then
+    await dsl.todo.confirmErrorMessage();
+
+    // And
+    await dsl.todo.confirmInActive({ name: "Walk dog" });
+  });
+
+  it("should restore an archived todo", async () => {
+    // Given
+    await dsl.user.hasArchivedTodo({ name: "Review code" });
+
+    // When
+    await dsl.user.restores({ todo: "Review code" });
+
+    // Then
+    await dsl.todo.confirmInActive({ name: "Review code" });
   });
 });
 ```
 
-## The Three Levels of Test Isolation {#test-isolation}
+<a id="core-utilities"></a>
 
-Test isolation is vital for reliable test results. Based on Dave Farley's approach, there are three levels:
+### Core DSL Utilities
 
-### 1. System-Level Isolation
+The core utilities (`DslContext` and `Params`) provide automatic functional and temporal isolation through proxy-naming.
 
-**Control system boundaries precisely** - test right at the boundary of your system:
+> **Full Implementation**: See example implementations in TypeScript of `DslContext` and `Params` with tests at [github.com/dawid-dahl-umain/aaid-at-demo](https://github.com/dawid-dahl-umain/aaid-at-demo/tree/main/src/dsl)
 
-- Use normal interfaces directly (API, UI, CLI)
-- Stub external dependencies you don't control (third-party APIs)
-- NEVER stub internal systems you do control (your database)
-- Ensures sufficient control for edge cases and deterministic behavior
+#### DslContext - Manages Test Isolation
 
-### 2. Functional Isolation
+```typescript
+// dsl/utils/DslContext.ts
 
-**Use natural boundaries to isolate test cases** from one another:
+export class DslContext {
+  // Creates unique aliases for functional & temporal isolation
+  // "Buy milk" becomes "Buy milk1" consistently within test
+  public alias(name: string): string {
+    /* ... */
+  }
 
-- Each test creates new accounts, products, todos (whatever represents boundaries)
-- Share startup costs of complex system
-- Run many tests in parallel without interference
-- No cleanup needed - system ends with test data
+  // Generates sequential unique values for a name
+  public sequenceNumberForName(name: string, start?: number): string {
+    /* ... */
+  }
 
-### 3. Temporal Isolation
+  // Resets test-local state between tests
+  public reset(): void {
+    /* ... */
+  }
+}
+```
 
-**Run same test repeatedly with same results** without tearing down system:
+#### Params - Type-Safe Parameter Handling
 
-- Combines with functional isolation via proxy-naming (aliasing)
-- Test uses chosen name ("Buy milk")
-- Infrastructure maps to unique alias ("Buy milk1")
-- `Params.Alias()` implements this automatically
+```typescript
+// dsl/utils/Params.ts
 
-## Critical Implementation Rules {#critical-rules}
+export class Params<T extends Record<string, any>> {
+  // Type-safe parameter handling with automatic aliasing
+  public Optional<K extends keyof T>(name: K, defaultValue: T[K]): T[K] {
+    /* ... */
+  }
+  public Alias(name: keyof T): string {
+    /* ... */
+  }
+  public OptionalAlias(name: keyof T, defaultValue: string): string {
+    /* ... */
+  }
+  public OptionalSequence(name: keyof T, start?: number): string {
+    /* ... */
+  }
+}
+```
 
-### DSL Design Principles
+<a id="dsl-classes"></a>
 
-- **Natural Language**: Methods match BDD scenarios exactly
-- **Business Readable**: `hasCompletedTodo` not `createCompleted`
-- **Object Parameters**: Type-safe objects for all parameters
-- **Automatic Aliasing**: Implements isolation transparently
-- **Sensible Defaults**: Optional parameters with business defaults
+### Domain-Specific DSL Classes
 
-### Protocol Driver Guidelines
+DSL methods must read like natural language, matching the BDD scenarios. They contain NO business or verification logic - just isolation handling and driver calls:
 
-- **Atomic Operations**: Each method completely succeeds or fails
-- **Hide Complex Flows**: `hasAuthorisedAccount` = register + login
-- **Poll for Events**: Never use sleep/delay
-- **Handle SUT Isolation**: Stub only third-party systems
+```typescript
+// dsl/user.dsl.ts
+
+import { DslContext } from "./utils/DslContext";
+import { Params } from "./utils/Params";
+import { UIUserDriver } from "../protocol-driver/ui.user.driver";
+
+interface TodoParams {
+  name?: string;
+  description?: string;
+}
+
+interface ArchiveParams {
+  todo?: string;
+}
+
+export class UserDSL {
+  private driver: UIUserDriver;
+
+  constructor(private context: DslContext, driver: UIUserDriver) {
+    this.driver = driver;
+  }
+
+  // Named to match BDD: "Given the user has a completed todo"
+  async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("name"); // Always alias for isolation
+    const description = params.Optional("description", "");
+
+    await this.driver.hasCompletedTodo(name, description);
+  }
+
+  // Named to match BDD: "When they archive"
+  async archives(args: ArchiveParams): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("todo");
+
+    await this.driver.archives(name);
+  }
+
+  // Named to match BDD: "When they attempt to archive"
+  async attemptsToArchive(args: ArchiveParams): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("todo");
+
+    await this.driver.attemptsToArchive(name);
+  }
+}
+```
+
+```typescript
+// dsl/todo.dsl.ts
+
+export class TodoDSL {
+  private driver: UITodoDriver;
+
+  constructor(private context: DslContext, driver: UITodoDriver) {
+    this.driver = driver;
+  }
+
+  // Named to match BDD: "Then X should be in archived todos"
+  async confirmInArchive(args: { name?: string }): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("name");
+
+    await this.driver.confirmInArchive(name);
+  }
+
+  // Named to match BDD: "And X should not be in active todos"
+  async confirmNotInActive(args: { name?: string }): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("name");
+
+    await this.driver.confirmNotInActive(name);
+  }
+}
+```
+
+```typescript
+// dsl/index.ts - Main export
+
+import { DslContext } from "./utils/DslContext";
+import { UserDSL } from "./user.dsl";
+import { TodoDSL } from "./todo.dsl";
+import { UIUserDriver } from "../protocol-driver/ui.user.driver";
+import { UITodoDriver } from "../protocol-driver/ui.todo.driver";
+
+class DSL {
+  private context: DslContext;
+  public user: UserDSL;
+  public todo: TodoDSL;
+
+  constructor() {
+    this.context = new DslContext();
+
+    // In reality, drivers would connect to real SUT
+    // For demo, using global.page from Playwright
+    const userDriver = new UIUserDriver(global.page);
+    const todoDriver = new UITodoDriver(global.page);
+
+    this.user = new UserDSL(this.context, userDriver);
+    this.todo = new TodoDSL(this.context, todoDriver);
+  }
+
+  reset(): void {
+    this.context.reset();
+  }
+}
+
+// Export singleton instance
+export const dsl = new DSL();
+```
+
+<a id="protocol-drivers"></a>
+
+### Protocol Drivers
+
+Protocol Drivers handle the technical interaction with the system AND all pass/fail logic:
+
+```typescript
+// protocol-driver/ui.user.driver.ts
+
+import { Page } from "@playwright/test";
+import { expect } from "vitest";
+
+export class UIUserDriver {
+  constructor(private page: Page) {}
+
+  /**
+   * Create todo and mark as completed
+   * This represents a complete user action from business perspective
+   */
+  async hasCompletedTodo(name: string, description: string): Promise<void> {
+    try {
+      await this.page.goto("/todos");
+      await this.page.fill('[data-testid="new-todo-name"]', name);
+      if (description) {
+        await this.page.fill('[data-testid="new-todo-desc"]', description);
+      }
+      await this.page.click('[data-testid="add-todo"]');
+
+      // Wait for todo to appear
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`);
+
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="complete"]`
+      );
+
+      // Verify completion state
+      const isCompleted = await this.page
+        .locator(`[data-testid="todo-${name}"]`)
+        .getAttribute("data-completed");
+
+      if (isCompleted !== "true") {
+        expect.fail(`Todo '${name}' was not marked as completed`);
+      }
+    } catch (error) {
+      if (error.message.includes("expect.fail")) throw error;
+      expect.fail(
+        `Unable to create completed todo '${name}': ${error.message}`
+      );
+    }
+  }
+
+  async archives(name: string): Promise<void> {
+    try {
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="archive"]`
+      );
+
+      // Wait for todo to disappear from active list
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
+        state: "hidden",
+        timeout: 5000,
+      });
+    } catch (error) {
+      expect.fail(`Failed to archive todo '${name}': ${error.message}`);
+    }
+  }
+
+  async attemptsToArchive(name: string): Promise<void> {
+    // Note: This doesn't fail even if archive doesn't succeed
+    // because we're testing the attempt, not the success
+    try {
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="archive"]`
+      );
+      // Give it a moment to process
+      await this.page.waitForTimeout(500);
+    } catch (error) {
+      // Clicking the button failed - that's a real problem
+      expect.fail(`Could not attempt to archive '${name}': ${error.message}`);
+    }
+  }
+}
+```
+
+```typescript
+// protocol-driver/ui.todo.driver.ts - Assertion methods
+
+import { Page } from "@playwright/test";
+import { expect } from "vitest";
+
+export class UITodoDriver {
+  constructor(private page: Page) {}
+
+  async confirmInArchive(name: string): Promise<void> {
+    await this.page.goto("/todos/archived");
+    const count = await this.page.locator(`text="${name}"`).count();
+
+    if (count === 0) {
+      expect.fail(`Todo '${name}' not found in archive`);
+    }
+  }
+
+  async confirmNotInActive(name: string): Promise<void> {
+    await this.page.goto("/todos");
+    const count = await this.page
+      .locator(`[data-testid="todo-${name}"]`)
+      .count();
+
+    if (count > 0) {
+      expect.fail(`Todo '${name}' should not be in active todos but was found`);
+    }
+  }
+
+  async confirmErrorMessage(): Promise<void> {
+    const errorVisible = await this.page
+      .locator('[data-testid="error-message"]')
+      .isVisible();
+
+    if (!errorVisible) {
+      expect.fail("Expected error message was not displayed");
+    }
+  }
+}
+```
+
+<a id="external-stubs"></a>
+
+### External System Stubs
+
+Implement system-level isolation - stub ONLY third-party systems:
+
+```typescript
+// protocol-driver/stubs/email-service.stub.ts
+
+export class EmailServiceStub {
+  private sentEmails = new Map<string, any[]>();
+
+  async setupSuccessResponse(): Promise<void> {
+    // Configure stub to return success for any email send
+  }
+
+  async setupFailureResponse(reason: string): Promise<void> {
+    // Configure stub to fail with specific reason
+  }
+
+  async sendEmail(to: string, subject: string, body: string): Promise<void> {
+    const emails = this.sentEmails.get(to) || [];
+    emails.push({ subject, body, timestamp: Date.now() });
+    this.sentEmails.set(to, emails);
+  }
+
+  async getEmailsSentTo(address: string): Promise<any[]> {
+    return this.sentEmails.get(address) || [];
+  }
+
+  async reset(): Promise<void> {
+    this.sentEmails.clear();
+  }
+}
+```
+
+> **Note**: We only stub external third-party systems (payment gateways, email services, analytics). Never stub your own database, cache, or internal services - they're part of your system under test.
+
+---
+
+<a id="critical-rules"></a>
+
+## Critical Implementation Rules
 
 ### Executable Specification Rules
 
-- **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`
-- **NO explanatory comments**: DSL should be self-explanatory
-- **1:1 BDD mapping**: Each BDD line = exactly one DSL call
+1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
+2. **NO explanatory comments**: DSL should be self-explanatory
+3. **BDD mapping**: Each BDD line maps to a DSL call
+4. **Business readable**: Non-technical people should understand
 
-## Common Anti-Patterns to Avoid {#anti-patterns}
+### DSL Design Principles
+
+1. **Natural Language**: Methods match BDD scenarios exactly
+2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
+3. **Pure Translation**: Transform business language to driver calls
+4. **Object Parameters**: Type-safe objects for flexibility
+5. **Automatic Aliasing**: Implements isolation transparently
+6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
+
+### Protocol Driver Guidelines
+
+1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
+2. **Atomic Operations**: Each method either fully succeeds or fails clearly
+3. **Hide Complex Flows**: `hasAuthorisedAccount` may involve register + login
+4. **Handle System Boundaries**: Interact with SUT through its normal interfaces
+5. **Clear Error Messages**: Include context in failure messages
+6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
+7. **Never stub internal systems**: Your database, cache, queues are part of your system
+
+---
+
+<a id="anti-patterns"></a>
+
+## Common Don'ts
+
+### ❌ Assertions in DSL Layer
+
+```typescript
+// BAD: DSL contains logic and assertions
+async hasCompletedTodo(args) {
+  // ...
+  if (!success) {
+    this.fail("Failed to create todo");  // WRONG!
+  }
+}
+
+// GOOD: DSL just calls driver
+async hasCompletedTodo(args) {
+  // ...
+  await this.driver.hasCompletedTodo(name, description);
+}
+```
+
+### ❌ Protocol Driver Returns Boolean
+
+```typescript
+// BAD: Driver returns success/failure
+async createTodo(name: string): Promise<boolean> {
+  try {
+    // ...
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+// GOOD: Driver handles assertions directly
+async createTodo(name: string): Promise<void> {
+  try {
+    // ...
+  } catch (error) {
+    expect.fail(`Failed to create todo '${name}': ${error.message}`);
+  }
+}
+```
 
 ### ❌ Testing Implementation Details
 
 ```typescript
 // BAD: Tests UI structure
 await page.click("#submit-button");
+await expect(page.locator(".success-toast")).toBeVisible();
 
 // GOOD: Tests behavior
 await dsl.user.submitsForm();
-```
-
-### ❌ Programmer-Style DSL Methods
-
-```typescript
-// BAD: Technical naming
-await dsl.todo.create({ completed: true });
-
-// GOOD: Natural language
-await dsl.user.hasCompletedTodo({ name: "Buy milk" });
+await dsl.form.confirmSuccessMessage();
 ```
 
 ### ❌ Mocking Internal Systems
@@ -783,44 +1172,51 @@ await dsl.user.hasCompletedTodo({ name: "Buy milk" });
 // BAD: Mocking your own database
 const mockDatabase = mock("./database");
 
-// GOOD: Only mock third-party systems
-const paymentGatewayStub = new PaymentGatewayStub();
+// GOOD: Only mock third-party systems you don't control
+const emailServiceStub = new EmailServiceStub();
 ```
 
-### ❌ Skipping DSL Layer
+---
 
-```typescript
-// BAD: Direct driver usage in tests
-await driver.createTodo("Buy milk");
+<a id="validation-checklist"></a>
 
-// GOOD: Always through DSL
-await dsl.user.hasCompletedTodo({ name: "Buy milk" });
-```
-
-## Validation Checklist {#validation-checklist}
+## Validation Checklist
 
 ### AI Workflow
 
 - [ ] Context provided (Stage 1)
-- [ ] Domain concepts extracted (Stage 2)
+- [ ] Domain concepts extracted from BDD scenarios (Stage 2)
+- [ ] Protocol Driver Strategy documented with connection details
 - [ ] Each phase reviewed before proceeding
 - [ ] All four layers implemented
 
 ### Layer Separation
 
 - [ ] Test Cases use only DSL methods
-- [ ] DSL handles all isolation
-- [ ] Drivers handle technical details
-- [ ] Each layer has single responsibility
+- [ ] DSL contains NO logic or assertions - just parameter handling / test isolation strategies
+- [ ] All assertions and failures in Protocol Drivers
+- [ ] Each layer have clear responsibilities
+
+### Test Isolation (Dave Farley's Three Levels)
+
+- [ ] System-level: Testing at system boundaries, stubbing ONLY external third-party dependencies
+- [ ] Functional: Each test creates unique data using natural boundaries
+- [ ] Temporal: Proxy-naming aliases enable repeated test runs
 
 ### Test Quality
 
-- [ ] DSL reads like natural language
-- [ ] Only Gherkin comments present
-- [ ] Tests run in parallel
-- [ ] All three isolation levels work
+- [ ] DSL reads like natural language from BDD
+- [ ] _Only_ Gherkin keyword comments in executable specs
+- [ ] Each BDD line maps to a DSL call
+- [ ] Clear failure messages from Protocol Drivers
+- [ ] Tests run in parallel without interference
+- [ ] Internal systems (database, cache) NOT stubbed
 
-## Quick Reference {#quick-reference}
+---
+
+<a id="quick-reference"></a>
+
+## Quick Reference
 
 ### AI Workflow Phases
 
@@ -831,58 +1227,48 @@ await dsl.user.hasCompletedTodo({ name: "Buy milk" });
 🧼 Phase 4: Refactor All Layers & Validate → Review
 ```
 
-### BDD to DSL Transformation
+### Layer Responsibilities
 
 ```typescript
-BDD:  Given the user has a completed todo "Buy milk"
-DSL:  await dsl.user.hasCompletedTodo({ name: 'Buy milk' })
+Test Case:  Uses DSL methods only
+DSL:        Test isolation handling, call driver.method()
+Driver:     Technical interaction + expect.fail()
+SUT:        Your actual system
 ```
 
-### Key Classes
+### The Three Levels of Isolation (Dave Farley)
 
 ```typescript
-DslContext:   Manages aliases for isolation
-Params<T>:    Type-safe parameters with aliasing
-BaseDSL:      Abstract base with fail() method
-Driver:       Atomic operations with polling
+System-Level: Stub ONLY external third-party dependencies
+Functional:   Each test creates unique data (new accounts/todos)
+Temporal:     Proxy-naming aliases ("Buy milk" → "Buy milk1")
 ```
 
-### Key Patterns
+### Core Principles
 
-```typescript
-// Isolation (Dave Farley's three levels)
-System-Level:  Stub only third-party systems
-Functional:    Each test creates unique data ("Buy milk" in test 1)
-Temporal:      Aliasing enables repeat runs ("Buy milk" → "Buy milk1")
+- **Natural Language DSL**: Methods read like BDD scenarios
+- **Clear Layer Separation**: Each layer has ONE job
+- **Assertions in Drivers**: ALL pass/fail logic in Protocol Drivers
+- **External Stubs Only**: Never stub your own database/cache
+- **Parallel Execution**: Enabled by functional isolation
 
-// Technical Practices
-Polling:       waitForCondition() not sleep()
-Atomicity:     Each method fully succeeds or fails
-1:1 Mapping:   DSL method names = Driver method names
-```
+---
 
-## Summary
+<a id="driver-strategy-roadmap"></a>
 
-This blueprint combines Dave Farley's Four-Layer Model with a disciplined AI workflow to create acceptance tests that:
+## Protocol Driver Strategy Roadmap Template
 
-- **Survive refactoring** through clear layer separation
-- **Run in parallel** with comprehensive isolation
-- **Read like requirements** using natural language DSL
-- **Provide confidence** through automated business verification
-- **Stay maintainable** with AI assistance and human review
-
-The AI workflow ensures quality through mandatory review checkpoints, preventing blind acceptance of generated code while accelerating development through intelligent automation.
-
-## Protocol Driver Strategy Roadmap Template {#driver-strategy-roadmap}
-
-Use this template in Phase 2 to plan the protocol driver implementation:
+Use this template in Phase 2 to plan how tests will interact with the system:
 
 ```markdown
-# Protocol Driver Strategy Roadmap: [Feature Name]
+# Acceptance Testing Strategy: [Feature Name]
 
-## Overview
+## System Understanding
 
-[Brief description of how acceptance tests will connect to the SUT]
+**What are we testing?**
+
+- Business capability: [What user need does this serve?]
+- User perspective: [Who uses this and what are they trying to achieve?]
 
 ## Connection Strategy
 
@@ -891,52 +1277,84 @@ Use this template in Phase 2 to plan the protocol driver implementation:
 - **Entry Points**: [Specific URLs/endpoints/commands]
 - **Authentication**: [How tests authenticate if needed]
 
-## Atomic Operations Design
+## Test Isolation Strategy
 
-[For each DSL method, define the atomic boundary]
+### System-Level Isolation
 
-- methodName: [List of actions that must complete together]
-- methodName: [Actions forming single atomic operation]
+- **System boundaries**: [Where does our system start/end?]
+- **External dependencies to stub** (third-party only):
+  - [Service name]: [Why we need to control it]
+- **NOT stubbing**: [Our database, cache, queues - they're part of our system]
 
-## Concluding Events to Poll
+### Functional & Temporal Isolation
 
-[What signals operation completion]
-
-- DOM changes: [Specific selectors appearing/disappearing]
-- API responses: [Status codes, response fields]
-- Database state: [Records created/updated]
-- Message queues: [Messages published/consumed]
-
-## External System Stubs
-
-[Only third-party systems you don't control]
-
-- SystemName: [Why it needs stubbing, what responses to simulate]
-- SystemName: [Stub strategy]
-
-## Internal Systems (DO NOT STUB)
-
-[Your own systems that tests will use directly]
-
-- Database: Real test database
-- Cache: Real test cache
-- Message queues: Real test queues
-
-## Error Scenarios
-
-[How driver handles failures]
-
-- Network timeouts: [Return false after X seconds]
-- Invalid responses: [Return false, don't throw]
-- Partial completion: [Rollback or mark failed]
-
-## Timing & Performance
-
-- Polling intervals: [100ms default]
-- Timeout values: [5000ms default]
-- Retry strategy: [Poll, don't retry operations]
+- **Natural boundaries**: [User accounts/products/workspaces/orders?]
+- **Aliasing strategy**: Standard DslContext/Params utilities handle all aliasing automatically
+- **What gets aliased**: [User names, product IDs, order numbers, etc]
 
 ## Notes
 
-[Important considerations for implementation]
+[Important considerations or open questions for implementation]
 ```
+
+### Example Generated Roadmap
+
+Here's an example of how the AI should fill out this roadmap for a todo archive feature:
+
+```markdown
+# Acceptance Testing Strategy: Todo Archive Feature
+
+## System Understanding
+
+**What are we testing?**
+
+- Business capability: Users can archive completed todos to keep their active list focused
+- User perspective: Users want to declutter their workspace while preserving completed work
+
+## Connection Strategy
+
+- **Protocol Type**: UI
+- **Framework/Tools**: Playwright
+- **Entry Points**:
+  - Main app: http://localhost:3000/todos
+  - Archive view: http://localhost:3000/todos/archived
+- **Authentication**: Tests create and log in with new user per test
+
+## Test Isolation Strategy
+
+### System-Level Isolation
+
+- **System boundaries**: Todo web application (frontend + backend + database)
+- **External dependencies to stub** (third-party only):
+  - EmailService: Need deterministic behavior for archive notifications
+  - AnalyticsAPI: External tracking service we don't control
+- **NOT stubbing**: PostgreSQL database, Redis cache (part of our system)
+
+### Functional & Temporal Isolation
+
+- **Natural boundaries**: User accounts
+- **Aliasing strategy**: Standard DslContext/Params utilities handle all aliasing automatically
+- **What gets aliased**:
+  - User emails: "alice@test.com" → "alice@test.com1"
+  - Todo titles: "Buy milk" → "Buy milk1"
+  - Archive names: "Q1 Archive" → "Q1 Archive1"
+
+## Notes
+
+- Archive retention policy doesn't affect test behavior
+- Email notification stubbing needs careful sequencing for batch operations
+```
+
+This roadmap ensures alignment on the testing approach before implementation begins.
+
+## Summary
+
+This blueprint combines Dave Farley's Four-Layer Model with a disciplined AI workflow to create acceptance tests that:
+
+- **Survive refactoring** through clear layer separation
+- **Run in parallel** with comprehensive isolation (system-level, functional, temporal)
+- **Read like requirements** using natural language DSL
+- **Provide confidence** through automated business verification
+- **Stay maintainable** with AI assistance and human review
+
+The AI augmentation accelerates development while mandatory review checkpoints ensure quality. The result is an automated Definition of Done using tests that business people can read, developers can maintain, and that reliably verify the system meets requirements.
