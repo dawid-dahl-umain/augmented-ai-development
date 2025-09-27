@@ -24,12 +24,13 @@ BDD is fundamentally about **communication and collaboration** between business 
 - **Concrete examples**: Abstract requirements become specific scenarios
 - **Collaborative sessions**: Teams work together to define behavior before coding
 
-The **Given-When-Then** format (Gherkin) is just one tool BDD uses to structure these conversations:
+The **Given-When-Then** format (Gherkin) is an important tool BDD uses to structure the requirements the conversations yield:
 
 - **Given**: The initial context or state
 - **When**: The action or event that occurs
 - **Then**: The expected outcome or result
 - **And**: Additional steps in any section
+- **But**: Exceptions or negative outcomes
 
 Example BDD scenario:
 
@@ -40,9 +41,9 @@ Then "Buy milk" should be in archived todos
 And "Buy milk" should not be in active todos
 ```
 
-### The Four-Layer Model Explained
+## The Four-Layer Model Architecture
 
-The Four-Layer Model separates concerns to make tests maintainable:
+### Layer Responsibilities Overview
 
 ```
 ┌─────────────────────────────────────────────────┐
@@ -56,17 +57,47 @@ The Four-Layer Model separates concerns to make tests maintainable:
 └─────────────────────────────────────────────────┘
                         │
 ┌─────────────────────────────────────────────────┐
-│    Layer 3: Protocol Drivers & Stubs           │
+│    Layer 3: Protocol Drivers & Stubs            │
 │    "HOW to technically interact with system"    │
 └─────────────────────────────────────────────────┘
                         │
 ┌─────────────────────────────────────────────────┐
-│    Layer 4: System Under Test (SUT)            │
+│    Layer 4: System Under Test (SUT)             │
 │    "The actual application being tested"        │
 └─────────────────────────────────────────────────┘
 ```
 
-Each layer has a specific responsibility and should NEVER mix concerns from other layers.
+### Detailed Layer Responsibilities
+
+#### Layer 1: Test Cases (Executable Specifications)
+
+- Express acceptance criteria in business language
+- Use Given-When-Then structure
+- Focus on single outcomes
+- Never reference technical implementation
+
+#### Layer 2: DSL
+
+- Acts as intermediary between test cases and system implementation
+- Provide business-readable methods
+- Manage test data generation
+- Provide sensible defaults
+- **Implement Functional Isolation**: Create unique test data per test to prevent interference
+- **Implement Temporal Isolation**: Enable same test to run repeatedly with consistent results via aliasing
+
+#### Layer 3: Protocol Drivers
+
+- Handle all technical interaction with SUT
+  > Create separate driver for each communication channel (HTTP API, UI via e.g. `Playwright`, messaging, etc.)
+- Contain all assertions
+- Ensure Atomicity: Each step fully succeeds or fails
+- **Implement SUT Isolation**: Stub third-party external systems
+
+#### Layer 4: SUT
+
+- Deploy exactly as in production
+- Optimize for testability (fast startup)
+- Accept test data from all parallel tests
 
 ## Implementation Guide
 
@@ -98,35 +129,37 @@ Given a user story with BDD scenarios, extract:
 
 1. **Domain Concepts** (nouns that become DSL objects):
 
-   - These often come from the **Ubiquitous Language** glossary established during BDD collaboration sessions
-   - Examples: `todo`, `user`, `archive`, `payment`
+   - These come from the **Ubiquitous Language** glossary established during BDD collaboration
+   - Examples: `user`, `todo`, `archive`, `payment`
 
 2. **Domain Actions** (verbs that become DSL methods):
 
-   - `create`, `archive`, `restore`, `submit`
+   - Name them to match the BDD language, not programmer conventions
+   - `hasCompletedTodo`, `archives`, `restores` (not `createCompleted`)
 
 3. **Domain Assertions** (confirmations that become DSL methods):
-   - `confirmInArchive`, `confirmNotInActive`, `confirmErrorMessage`
+   - `shouldBeInArchive`, `shouldNotBeInActive`, `shouldShowError`
 
-**Transformation Pattern:**
+**Transformation Pattern - Match Natural Language:**
 
 ```
 BDD:  Given the user has a completed todo "Buy milk"
-DSL:  await dsl.todo.createCompleted({ name: "Buy milk" })
+DSL:  await dsl.user.hasCompletedTodo({ name: "Buy milk" })
 
 BDD:  When they archive "Buy milk"
-DSL:  await dsl.todo.archive({ name: "Buy milk" })
+DSL:  await dsl.user.archives({ todo: "Buy milk" })
 
 BDD:  Then "Buy milk" should be in archived todos
-DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
+DSL:  await dsl.todo.shouldBeInArchive({ name: "Buy milk" })
 ```
 
 ### Step 3: Implement Core DSL Utilities
 
-These utilities provide the foundation for test isolation and data uniqueness:
+These utilities provide both Functional and Temporal isolation:
 
 ```typescript
 // dsl/utils/DslContext.ts
+
 export class DslContext {
   private static globalSequenceNumbers = new Map<string, number>();
   private sequenceNumbers = new Map<string, number>();
@@ -134,6 +167,7 @@ export class DslContext {
 
   /**
    * Generate a sequence number for a given name within this test
+   * Provides unique identifiers within test scope
    */
   public sequenceNumberForName(name: string, start: number = 1): string {
     return this.seqForName(name, start, this.sequenceNumbers);
@@ -141,7 +175,10 @@ export class DslContext {
 
   /**
    * Create or retrieve a unique alias for a name
-   * "Buy milk" becomes "Buy milk1", "Buy milk2", etc.
+   * Implements BOTH Functional and Temporal Isolation:
+   * - Functional: Unique data per test prevents interference
+   * - Temporal: Same test runs repeatedly with consistent results
+   * "Buy milk" becomes "Buy milk1", maps consistently within test run
    */
   public alias(name: string): string {
     if (!this.aliases.has(name)) {
@@ -167,6 +204,9 @@ export class DslContext {
 
   /**
    * Reset test-specific data but preserve global sequences
+   * Maintains both Functional and Temporal Isolation:
+   * - Fresh aliases per test run (temporal)
+   * - Global uniqueness across tests (functional)
    */
   public reset(): void {
     this.sequenceNumbers.clear();
@@ -174,8 +214,11 @@ export class DslContext {
     // globalSequenceNumbers are NOT cleared (cross-test uniqueness)
   }
 }
+```
 
+```typescript
 // dsl/utils/Params.ts
+
 export class Params<T> {
   constructor(private readonly context: DslContext, private readonly args: T) {}
 
@@ -188,6 +231,7 @@ export class Params<T> {
 
   /**
    * Get aliased version of parameter value
+   * Critical for both Functional and Temporal Isolation
    */
   public Alias(name: keyof T): string {
     const value = this.args[name];
@@ -216,8 +260,11 @@ export class Params<T> {
     return this.context.sequenceNumberForName(name, start);
   }
 }
+```
 
+```typescript
 // dsl/base/BaseDSL.ts
+
 import { expect } from "vitest";
 
 export abstract class BaseDSL {
@@ -234,131 +281,147 @@ export abstract class BaseDSL {
 
 ### Step 4: Create Domain-Specific DSL Classes
 
-For each domain concept, create a DSL class that extends BaseDSL:
+DSL methods should read like natural language, matching BDD scenarios:
 
 ```typescript
-// dsl/todo.dsl.ts
+// dsl/user.dsl.ts
+
 import { BaseDSL } from "./base/BaseDSL";
 import { DslContext } from "./utils/DslContext";
 import { Params } from "./utils/Params";
-import { UITodoDriver } from "../protocol-driver/ui.todo.driver";
+import { UIUserDriver } from "../protocol-driver/ui.user.driver";
 
 interface TodoParams {
   name?: string;
-  completed?: boolean;
   description?: string;
 }
 
 interface ArchiveParams {
-  name?: string;
+  todo?: string;
 }
 
-interface ErrorParams {
-  message?: string;
+export class UserDSL extends BaseDSL {
+  private driver: UIUserDriver;
+
+  constructor(context: DslContext) {
+    super(context);
+    this.driver = new UIUserDriver(global.page);
+  }
+
+  // Named to match "Given the user has a completed todo"
+  async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("name");
+    const description = params.Optional("description", "");
+
+    const success = await this.driver.hasCompletedTodo(name, description);
+    if (!success) {
+      this.fail(`Failed to create completed todo '${name}'`);
+    }
+  }
+
+  // Named to match "Given the user has an incomplete todo"
+  async hasIncompleteTodo(args: TodoParams = {}): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("name");
+    const description = params.Optional("description", "");
+
+    const success = await this.driver.hasIncompleteTodo(name, description);
+    if (!success) {
+      this.fail(`Failed to create incomplete todo '${name}'`);
+    }
+  }
+
+  // Named to match "When they archive"
+  async archives(args: ArchiveParams): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("todo");
+
+    const success = await this.driver.archives(name);
+    if (!success) {
+      this.fail(`Failed to archive todo '${name}'`);
+    }
+  }
+
+  // Named to match "When they attempt to archive"
+  async attemptsToArchive(args: ArchiveParams): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("todo");
+
+    await this.driver.attemptsToArchive(name);
+  }
+
+  // Named to match "When they restore"
+  async restores(args: ArchiveParams): Promise<void> {
+    const params = new Params(this.context, args);
+    const name = params.Alias("todo");
+
+    const success = await this.driver.restores(name);
+    if (!success) {
+      this.fail(`Failed to restore todo '${name}'`);
+    }
+  }
 }
+```
+
+```typescript
+// dsl/todo.dsl.ts - For assertions
+
+import { BaseDSL } from "./base/BaseDSL";
+import { DslContext } from "./utils/DslContext";
+import { Params } from "./utils/Params";
+import { UITodoDriver } from "../protocol-driver/ui.todo.driver";
 
 export class TodoDSL extends BaseDSL {
   private driver: UITodoDriver;
 
   constructor(context: DslContext) {
     super(context);
-    // Direct instantiation, no interface needed
     this.driver = new UITodoDriver(global.page);
   }
 
-  async createCompleted(args: TodoParams = {}): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("name");
-    const completed = params.Optional("completed", true);
-    const description = params.Optional("description", "");
-
-    const success = await this.driver.createCompleted(
-      name,
-      completed,
-      description
-    );
-    if (!success) {
-      this.fail(`Failed to create completed todo '${name}'`);
-    }
-  }
-
-  async createIncomplete(args: TodoParams = {}): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("name");
-    const description = params.Optional("description", "");
-
-    const success = await this.driver.createIncomplete(name, description);
-    if (!success) {
-      this.fail(`Failed to create incomplete todo '${name}'`);
-    }
-  }
-
-  async archive(args: ArchiveParams): Promise<void> {
+  // Named to match "Then X should be in archived todos"
+  async shouldBeInArchive(args: { name?: string }): Promise<void> {
     const params = new Params(this.context, args);
     const name = params.Alias("name");
 
-    const success = await this.driver.archive(name);
-    if (!success) {
-      this.fail(`Failed to archive todo '${name}'`);
-    }
-  }
-
-  async attemptArchive(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("name");
-
-    // This method expects possible failure, so we don't check success
-    await this.driver.attemptArchive(name);
-  }
-
-  async restore(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("name");
-
-    const success = await this.driver.restore(name);
-    if (!success) {
-      this.fail(`Failed to restore todo '${name}'`);
-    }
-  }
-
-  async confirmInArchive(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.Alias("name");
-
-    const isInArchive = await this.driver.confirmInArchive(name);
+    const isInArchive = await this.driver.shouldBeInArchive(name);
     if (!isInArchive) {
       this.fail(`Todo '${name}' not found in archive`);
     }
   }
 
-  async confirmNotInActive(args: ArchiveParams): Promise<void> {
+  // Named to match "And X should not be in active todos"
+  async shouldNotBeInActive(args: { name?: string }): Promise<void> {
     const params = new Params(this.context, args);
     const name = params.Alias("name");
 
-    const isInActive = await this.driver.confirmNotInActive(name);
+    const isInActive = await this.driver.shouldNotBeInActive(name);
     if (isInActive) {
       this.fail(`Todo '${name}' should not be in active todos`);
     }
   }
 
-  async confirmInActive(args: ArchiveParams): Promise<void> {
+  // Named to match "And X should be in active todos"
+  async shouldBeInActive(args: { name?: string }): Promise<void> {
     const params = new Params(this.context, args);
     const name = params.Alias("name");
 
-    const isInActive = await this.driver.confirmInActive(name);
+    const isInActive = await this.driver.shouldBeInActive(name);
     if (!isInActive) {
-      this.fail(`Todo '${name}' not found in active todos`);
+      this.fail(`Todo '${name}' should be in active todos`);
     }
   }
 
-  async confirmErrorMessage(args: ErrorParams = {}): Promise<void> {
+  // Named to match "Then they should see an error message"
+  async shouldShowError(args: { message?: string } = {}): Promise<void> {
     const params = new Params(this.context, args);
     const expectedMessage = params.Optional(
       "message",
       "Cannot archive incomplete todo"
     );
 
-    const actualMessage = await this.driver.confirmErrorMessage();
+    const actualMessage = await this.driver.shouldShowError();
     if (actualMessage !== expectedMessage) {
       this.fail(
         `Expected error: '${expectedMessage}', got: '${actualMessage}'`
@@ -372,19 +435,20 @@ export class TodoDSL extends BaseDSL {
 
 ```typescript
 // dsl/index.ts
+
 import { DslContext } from "./utils/DslContext";
-import { TodoDSL } from "./todo.dsl";
 import { UserDSL } from "./user.dsl";
+import { TodoDSL } from "./todo.dsl";
 
 class DSL {
   private context: DslContext;
-  public todo: TodoDSL;
   public user: UserDSL;
+  public todo: TodoDSL;
 
   constructor() {
     this.context = new DslContext();
-    this.todo = new TodoDSL(this.context);
     this.user = new UserDSL(this.context);
+    this.todo = new TodoDSL(this.context);
   }
 
   reset(): void {
@@ -398,127 +462,167 @@ export const dsl = new DSL();
 
 ### Step 6: Implement Protocol Drivers
 
-Create drivers for each communication channel with matching method names:
+Protocol Drivers handle SUT isolation, atomicity, and concurrency. Organize by domain concept to match DSL structure:
+
+```typescript
+// protocol-driver/ui.user.driver.ts
+
+import { Page } from "@playwright/test";
+
+export class UIUserDriver {
+  constructor(private page: Page) {}
+
+  /**
+   * Atomic operation: Create todo and mark as completed
+   * Handles all technical details and waits for concluding events
+   */
+  async hasCompletedTodo(name: string, description: string): Promise<boolean> {
+    try {
+      await this.page.goto("/todos");
+      await this.page.fill('[data-testid="new-todo-name"]', name);
+      if (description) {
+        await this.page.fill('[data-testid="new-todo-desc"]', description);
+      }
+      await this.page.click('[data-testid="add-todo"]');
+
+      // Poll for concluding event - todo appears
+      await this.waitForElement(`[data-testid="todo-${name}"]`, 5000);
+
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="complete"]`
+      );
+
+      // Poll for concluding event - completion state changed
+      await this.waitForCondition(
+        async () => {
+          const isCompleted = await this.page
+            .locator(`[data-testid="todo-${name}"]`)
+            .getAttribute("data-completed");
+          return isCompleted === "true";
+        },
+        5000,
+        "Todo did not become completed"
+      );
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async hasIncompleteTodo(name: string, description: string): Promise<boolean> {
+    try {
+      await this.page.goto("/todos");
+      await this.page.fill('[data-testid="new-todo-name"]', name);
+      if (description) {
+        await this.page.fill('[data-testid="new-todo-desc"]', description);
+      }
+      await this.page.click('[data-testid="add-todo"]');
+
+      // Wait for concluding event
+      await this.waitForElement(`[data-testid="todo-${name}"]`, 5000);
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async archives(name: string): Promise<boolean> {
+    try {
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="archive"]`
+      );
+
+      // Wait for concluding event - todo disappears
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
+        state: "hidden",
+        timeout: 5000,
+      });
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async attemptsToArchive(name: string): Promise<boolean> {
+    try {
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="archive"]`
+      );
+      // Brief wait for response, but we expect this might fail
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  async restores(name: string): Promise<boolean> {
+    try {
+      await this.page.goto("/todos/archived");
+      await this.page.click(
+        `[data-testid="todo-${name}"] [data-testid="restore"]`
+      );
+
+      // Wait for concluding event - todo disappears from archive
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
+        state: "hidden",
+        timeout: 5000,
+      });
+
+      return true;
+    } catch (error) {
+      return false;
+    }
+  }
+
+  /**
+   * Poll with timeout - never use sleep/delay
+   */
+  private async waitForCondition(
+    condition: () => Promise<boolean>,
+    timeout: number,
+    errorMessage: string
+  ): Promise<void> {
+    const startTime = Date.now();
+
+    while (Date.now() - startTime < timeout) {
+      if (await condition()) {
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    throw new Error(errorMessage);
+  }
+
+  private async waitForElement(
+    selector: string,
+    timeout: number
+  ): Promise<void> {
+    await this.page.waitForSelector(selector, { timeout });
+  }
+}
+```
 
 ```typescript
 // protocol-driver/ui.todo.driver.ts
+
 import { Page } from "@playwright/test";
 
 export class UITodoDriver {
   constructor(private page: Page) {}
 
-  async createCompleted(
-    name: string,
-    completed: boolean,
-    description: string
-  ): Promise<boolean> {
-    try {
-      await this.page.goto("/todos");
-      await this.page.fill('[data-testid="new-todo-name"]', name);
-      if (description) {
-        await this.page.fill('[data-testid="new-todo-desc"]', description);
-      }
-      await this.page.click('[data-testid="add-todo"]');
-
-      // Wait for concluding event (todo appears)
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
-        timeout: 5000,
-      });
-
-      if (completed) {
-        await this.page.click(
-          `[data-testid="todo-${name}"] [data-testid="complete"]`
-        );
-        // Verify completion state changed
-        const isCompleted = await this.page
-          .locator(`[data-testid="todo-${name}"]`)
-          .getAttribute("data-completed");
-        return isCompleted === "true";
-      }
-
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async createIncomplete(name: string, description: string): Promise<boolean> {
-    try {
-      await this.page.goto("/todos");
-      await this.page.fill('[data-testid="new-todo-name"]', name);
-      if (description) {
-        await this.page.fill('[data-testid="new-todo-desc"]', description);
-      }
-      await this.page.click('[data-testid="add-todo"]');
-
-      // Wait for concluding event (todo appears)
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
-        timeout: 5000,
-      });
-
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async archive(name: string): Promise<boolean> {
-    try {
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="archive"]`
-      );
-
-      // Wait for concluding event (todo disappears from active)
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
-        state: "hidden",
-        timeout: 5000,
-      });
-
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async attemptArchive(name: string): Promise<boolean> {
-    try {
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="archive"]`
-      );
-      // Wait briefly for any response
-      await this.page.waitForTimeout(500);
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async restore(name: string): Promise<boolean> {
-    try {
-      await this.page.goto("/todos/archived");
-      await this.page.click(
-        `[data-testid="archived-${name}"] [data-testid="restore"]`
-      );
-
-      // Wait for concluding event (todo disappears from archive)
-      await this.page.waitForSelector(`[data-testid="archived-${name}"]`, {
-        state: "hidden",
-        timeout: 5000,
-      });
-
-      return true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async confirmInArchive(name: string): Promise<boolean> {
+  // Matching method names for assertions
+  async shouldBeInArchive(name: string): Promise<boolean> {
     await this.page.goto("/todos/archived");
     const count = await this.page.locator(`text="${name}"`).count();
     return count > 0;
   }
 
-  async confirmNotInActive(name: string): Promise<boolean> {
+  async shouldNotBeInActive(name: string): Promise<boolean> {
     await this.page.goto("/todos");
     const count = await this.page
       .locator(`[data-testid="todo-${name}"]`)
@@ -526,7 +630,7 @@ export class UITodoDriver {
     return count === 0;
   }
 
-  async confirmInActive(name: string): Promise<boolean> {
+  async shouldBeInActive(name: string): Promise<boolean> {
     await this.page.goto("/todos");
     const count = await this.page
       .locator(`[data-testid="todo-${name}"]`)
@@ -534,7 +638,7 @@ export class UITodoDriver {
     return count > 0;
   }
 
-  async confirmErrorMessage(): Promise<string | null> {
+  async shouldShowError(): Promise<string | null> {
     const errorElement = await this.page.locator(
       '[data-testid="error-message"]'
     );
@@ -544,94 +648,15 @@ export class UITodoDriver {
     return null;
   }
 }
-
-// protocol-driver/api.todo.driver.ts
-export class APITodoDriver {
-  private lastError: string | null = null;
-
-  constructor(private baseUrl: string) {}
-
-  async createCompleted(
-    name: string,
-    completed: boolean,
-    description: string
-  ): Promise<boolean> {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/todos`, {
-        method: "POST",
-        body: JSON.stringify({ name, completed: true, description }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        return false;
-      }
-
-      // Verify the todo was created
-      const todo = await response.json();
-      return todo.name === name && todo.completed === true;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async createIncomplete(name: string, description: string): Promise<boolean> {
-    try {
-      const response = await fetch(`${this.baseUrl}/api/todos`, {
-        method: "POST",
-        body: JSON.stringify({ name, completed: false, description }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (!response.ok) {
-        return false;
-      }
-
-      // Verify the todo was created
-      const todo = await response.json();
-      return todo.name === name && todo.completed === false;
-    } catch (error) {
-      return false;
-    }
-  }
-
-  async attemptArchive(name: string): Promise<boolean> {
-    try {
-      const response = await fetch(
-        `${this.baseUrl}/api/todos/${name}/archive`,
-        {
-          method: "POST",
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        this.lastError = error.message || "Unknown error";
-        return false;
-      }
-
-      this.lastError = null;
-      return true;
-    } catch (error) {
-      this.lastError = "Network error";
-      return false;
-    }
-  }
-
-  async confirmErrorMessage(): Promise<string | null> {
-    return this.lastError;
-  }
-
-  // ... implement other methods with matching names
-}
 ```
 
 ### Step 7: Create External System Stubs
 
-Only stub external third-party systems you don't control:
+Implement SUT Isolation - stub ONLY third-party systems:
 
 ```typescript
 // protocol-driver/stubs/payment-gateway.stub.ts
+
 export class PaymentGatewayStub {
   private responses = new Map<string, any>();
 
@@ -675,10 +700,11 @@ export class PaymentGatewayStub {
 
 ### Step 8: Write Executable Specifications
 
-Transform BDD scenarios into executable specs with **1:1 mapping**:
+Transform BDD scenarios with natural language DSL:
 
 ```typescript
 // executable-spec/archive-todos.spec.ts
+
 import { describe, it, beforeEach } from "vitest";
 import { dsl } from "../dsl";
 
@@ -689,93 +715,101 @@ describe("Feature: User archives completed todos", () => {
 
   it("should archive a completed todo", async () => {
     // Given
-    await dsl.todo.createCompleted({ name: "Buy milk" });
+    await dsl.user.hasCompletedTodo({ name: "Buy milk" });
 
     // When
-    await dsl.todo.archive({ name: "Buy milk" });
+    await dsl.user.archives({ todo: "Buy milk" });
 
     // Then
-    await dsl.todo.confirmInArchive({ name: "Buy milk" });
+    await dsl.todo.shouldBeInArchive({ name: "Buy milk" });
 
     // And
-    await dsl.todo.confirmNotInActive({ name: "Buy milk" });
+    await dsl.todo.shouldNotBeInActive({ name: "Buy milk" });
   });
 
   it("should not archive an incomplete todo", async () => {
     // Given
-    await dsl.todo.createIncomplete({ name: "Walk dog" });
+    await dsl.user.hasIncompleteTodo({ name: "Walk dog" });
 
     // When
-    await dsl.todo.attemptArchive({ name: "Walk dog" });
+    await dsl.user.attemptsToArchive({ todo: "Walk dog" });
 
     // Then
-    await dsl.todo.confirmErrorMessage();
+    await dsl.todo.shouldShowError();
 
     // And
-    await dsl.todo.confirmInActive({ name: "Walk dog" });
+    await dsl.todo.shouldBeInActive({ name: "Walk dog" });
   });
 
   it("should restore an archived todo", async () => {
     // Given
-    await dsl.todo.createCompleted({ name: "Review code" });
-    await dsl.todo.archive({ name: "Review code" });
+    await dsl.user.hasCompletedTodo({ name: "Review code" });
+    await dsl.user.archives({ todo: "Review code" });
 
     // When
-    await dsl.todo.restore({ name: "Review code" });
+    await dsl.user.restores({ todo: "Review code" });
 
     // Then
-    await dsl.todo.confirmInActive({ name: "Review code" });
+    await dsl.todo.shouldBeInActive({ name: "Review code" });
   });
 });
 ```
 
+## The Three Levels of Test Isolation
+
+Test isolation is vital for reliable test results. Without proper isolation, data from one test can leak and affect another.
+
+### 1. SUT Isolation (System Under Test)
+
+- **Control system boundaries precisely** - test right at the boundary of your system
+- **Stub unmanaged third-party systems** through interfaces (payment gateways, external APIs)
+- **NEVER stub managed internal systems** (your database, your message queues)
+- **Use normal interfaces directly** - don't test through upstream systems
+- Ensures deterministic behavior and sufficient control for edge cases
+- Run contract tests independently to verify stub behavior matches reality
+
+### 2. Functional Isolation
+
+- Each test creates its own unique test data
+- Enables parallelization - all tests run against same SUT simultaneously
+- **Share startup costs** of complex systems while preventing test interference
+- No cleanup needed between tests - SUT ends with test data, that's OK
+
+### 3. Temporal Isolation
+
+- **Run same test repeatedly and get same results** without system teardown
+- Uses **proxy-naming technique** (aliasing) - test uses chosen names, infrastructure maps to unique names
+- Within test scope, test always uses its chosen name ("Buy milk")
+- Infrastructure maps to unique alias ("Buy milk1") per test run
+- `Params.Alias()` implements this: consistent naming within test, unique across runs
+- Combines with functional isolation for maximum test independence
+
 ## Critical Implementation Rules
 
-### 1. Three Levels of Test Isolation
+### DSL Design Principles
 
-#### SUT Isolation (System Under Test)
-
-- **Stub ONLY external third-party systems** (payment gateways, external APIs)
-- **NEVER mock internal systems** (your database, your message queues)
-- Create contract tests to verify stub behavior matches reality
-- Toggle between real/stubbed systems easily for different test runs
-- System should be set up exactly like it would be in Production
-
-#### Functional Isolation
-
-- Each test creates unique data using aliasing
-- "Buy milk" automatically becomes "Buy milk1", "Buy milk2", etc.
-- Tests never share data or state
-
-#### Temporal Isolation
-
-- Global sequence numbers ensure cross-test uniqueness
-- Tests can run in parallel without interference
-- `DslContext.reset()` clears instance data but preserves global sequences
-
-### 2. DSL Design Principles
-
-- **Business Language**: Avoid technical developer speak, e.g. use `confirm` prefix instead of `assert`
+- **Natural Language**: Methods match BDD scenarios, not programmer conventions
+- **Business Readable**: `hasCompletedTodo` not `createCompleted`
 - **Object Parameters**: Type-safe objects for parameters
+- **Automatic Aliasing**: Implements functional and temporal isolation
 - **Sensible Defaults**: Optional parameters with business-appropriate defaults
-- **Automatic Aliasing**: All identifiers are automatically made unique
-- **Fail Fast**: Use test framework's failure mechanism (`expect.fail`)
+- **Direct Driver Usage**: DSL directly instantiates drivers
 
-### 3. Protocol Driver Guidelines
+### Protocol Driver Guidelines
 
 - **Atomic Operations**: Each method completely succeeds or returns false
-- **Hide Complex Flows**: `createAuthorisedAccount` = register + login
-- **Event-Based Waits**: Wait for concluding events, not arbitrary timeouts
-- **Return Success Status**: Return boolean for success/failure
-- **No Interface Layer**: Drivers are concrete classes, not implementations of interfaces
-- **Method Name Matching**: Driver method names should match DSL method names
+- **Hide Complex Flows**: `hasAuthorisedAccount` = register + login
+- **Concurrency Management**: Hide effects of distributed systems
+- **Poll for Events**: Never use sleep/delay, poll with timeouts
+- **Handle SUT Isolation**: Stub only third-party systems
+- **Method Name Matching**: Driver methods match DSL methods
 
-### 4. Executable Specification Rules
+### Executable Specification Rules
 
-- **Business readable**: Non-technical people should understand the test
-- **1:1 BDD mapping**: Each BDD line maps to exactly one DSL call
 - **ONLY Gherkin comments allowed**: `// Given`, `// When`, `// Then`, `// And`
-- **NO explanatory comments**: If you need them, the DSL isn't clear enough
+- **NO explanatory comments**: DSL should be self-explanatory
+- **1:1 BDD mapping**: Each BDD line maps to exactly one DSL call
+- **Business readable**: Non-technical people should understand
 
 ## Common Anti-Patterns to Avoid
 
@@ -787,118 +821,125 @@ await page.click("#submit-button");
 await expect(page.locator(".success-toast")).toBeVisible();
 
 // GOOD: Tests behavior
-await dsl.order.submit();
-await dsl.order.confirmSubmitted();
+await dsl.user.submitsForm();
+await dsl.form.shouldShowSuccess();
 ```
 
-### ❌ Explanatory Comments in Tests
+### ❌ Programmer-Style DSL Methods
 
 ```typescript
-// BAD: Needs explanation
-// When the todo is archived
-await dsl.todo.archive({ name: "Buy milk" }); // Archive the completed todo
+// BAD: Technical naming
+await dsl.todo.create({ completed: true });
 
-// GOOD: Self-explanatory
-// When
-await dsl.todo.archive({ name: "Buy milk" });
+// GOOD: Natural language
+await dsl.user.hasCompletedTodo({ name: "Buy milk" });
 ```
 
 ### ❌ Mocking Internal Systems
 
 ```typescript
 // BAD: Mocking your own database
-const mockDatabase = jest.mock("./database");
+const mockDatabase = mock("./database");
 
-// GOOD: Keep managed dependencies - like the app's database - real, only mock unmanaged dependencies like external APIs
+// GOOD: Only mock third-party systems that you do not control
 const paymentGatewayStub = new PaymentGatewayStub();
+```
+
+### ❌ Shared Test Data
+
+```typescript
+// BAD: Tests share data
+beforeAll(() => {
+  createSharedTestUser("Alice");
+});
+
+// GOOD: Each test creates unique data: enables parallelization
+it("test", () => {
+  await dsl.user.hasAccount({ name: "Alice" }); // Becomes Alice1
+});
 ```
 
 ## Validation Checklist
 
 ### Layer Separation
 
-- [ ] Tests use ONLY DSL methods, never driver methods
-- [ ] DSL uses drivers directly without interface layer
-- [ ] Drivers handle ALL technical details (URLs, selectors, etc.)
-- [ ] Each layer has single responsibility
+- [ ] Test Cases use only DSL methods
+- [ ] DSL handles functional and temporal isolation via aliasing
+- [ ] Protocol Drivers handle SUT isolation and technical details
+- [ ] Each layer has single, clear responsibility
 
 ### Test Quality
 
-- [ ] Tests read like user stories in business language
+- [ ] DSL reads like natural language from BDD scenarios
 - [ ] Only Gherkin keyword comments present
 - [ ] Each BDD line has exactly one DSL call
 - [ ] Tests can run in parallel without interference
 
 ### DSL Implementation
 
-- [ ] Parameters use typed objects
+- [ ] Method names match BDD language, not programmer conventions
 - [ ] All identifiers use automatic aliasing
-- [ ] Methods use `confirm` prefix for assertions
-- [ ] Sensible defaults for all optional parameters
-- [ ] DSL directly instantiates drivers
-- [ ] DSL and driver method names match exactly (unless one has a good reason not to match)
+- [ ] Parameters use typed objects
+- [ ] Sensible business-appropriate defaults
+- [ ] DslContext handles both functional and temporal isolation
 
 ### Driver Implementation
 
-- [ ] Each method is atomic (fully succeeds or fails)
-- [ ] Waits use concluding events, not timeouts
-- [ ] Return boolean for success/failure
-- [ ] No unnecessary interface definitions
+- [ ] Each operation is atomic
+- [ ] Handles concurrency
+- [ ] Only third-party systems are stubbed
 - [ ] Method names match DSL method names
 
-### Isolation & Architecture
+### Isolation Architecture
 
-- [ ] Only external and unmanaged third-party systems are stubbed
-- [ ] Internal systems (database, queues) use real implementations
+- [ ] All three levels of isolation implemented (see [Three Levels of Test Isolation](#the-three-levels-of-test-isolation))
 - [ ] Each test calls `dsl.reset()` in beforeEach
-- [ ] DslContext and Params are separate classes
+- [ ] No shared test data between tests
 
 ## Implementation Workflow
 
-1. **Parse User Story**: Extract Given/When/Then scenarios from requirements
-2. **Identify Domain Language**: List nouns (concepts) and verbs (actions) from Ubiquitous Language
-3. **Build Core Utilities**: Implement DslContext and Params classes for test isolation purposes
-4. **Create DSL Layer**: Build domain-specific classes extending BaseDSL
-5. **Implement Drivers**: Create protocol drivers as concrete classes with matching method names
-6. **Write Executable Specs**: Transform BDD scenarios using DSL
-7. **Add External Stubs**: Stub only third-party systems
-8. **Verify Isolation**: Run tests in parallel to confirm independence
-9. **Integrate CI/CD**: Add to deployment pipeline
+1. **Parse User Story**: Extract Given/When/Then scenarios
+2. **Identify Domain Language**: List concepts from Ubiquitous Language
+3. **Design Natural DSL**: Create methods that read like BDD scenarios
+4. **Build Core Utilities**: Implement DslContext and Params for isolation
+5. **Create DSL Layer**: Build domain classes with business-readable methods
+6. **Implement Drivers**: Handle atomicity, concurrency, and SUT isolation
+7. **Write Executable Specs**: Transform BDD with natural language DSL
+8. **Add External Stubs**: Stub only third-party systems
+9. **Verify Isolation**: Run tests in parallel to confirm independence
+10. **Integrate CI/CD**: Add to deployment pipeline
 
 ## Quick Reference
 
-### BDD to DSL Transformation
+### BDD to Natural Language DSL
 
 ```typescript
-BDD:  Given the user has completed todo "Buy milk"
-DSL:  await dsl.todo.createCompleted({ name: 'Buy milk' })
+BDD:  Given the user has a completed todo "Buy milk"
+DSL:  await dsl.user.hasCompletedTodo({ name: 'Buy milk' })
 
 BDD:  When they archive "Buy milk"
-DSL:  await dsl.todo.archive({ name: 'Buy milk' })
+DSL:  await dsl.user.archives({ todo: 'Buy milk' })
 
 BDD:  Then "Buy milk" should be in archived todos
-DSL:  await dsl.todo.confirmInArchive({ name: 'Buy milk' })
+DSL:  await dsl.todo.shouldBeInArchive({ name: 'Buy milk' })
 ```
 
 ### Key Classes Structure
 
 ```typescript
-DslContext:   Manages aliases and sequences
-Params<T>:    Type-safe parameter handling
+DslContext:   Manages functional and temporal isolation via aliasing
+Params<T>:    Type-safe parameters with aliasing
 BaseDSL:      Abstract base with fail() method
-Driver:       Concrete class (no interface)
+Driver:       Concrete class handling atomicity
 ```
 
-### Key Patterns
+### Isolation Patterns
 
 ```typescript
-Aliasing:     "Buy milk" → "Buy milk1"
-Defaults:     params.Optional('status', 'active')
-Sequences:    params.OptionalSequence('id', 1)
-Assertions:   Use fail() method in DSL
-Isolation:    dsl.reset() before each test
-Parameters:   { name: 'value' } objects
-Naming:       DSL and driver methods match
+Aliasing:     "Buy milk" → "Buy milk1" (functional + temporal isolation)
+Polling:      waitForCondition() not sleep()
+Atomicity:    Each driver method fully succeeds or fails
+Stubbing:     Only third-party systems, not your database
 ```
 
 ## Summary
@@ -906,9 +947,9 @@ Naming:       DSL and driver methods match
 Following this blueprint creates acceptance tests that:
 
 - **Survive refactoring**: Implementation changes don't break tests
-- **Document behavior**: Tests serve as living documentation
-- **Enable parallel execution**: Proper isolation allows concurrent running
-- **Bridge business and tech**: Use language everyone understands
-- **Provide confidence**: Comprehensive coverage with maintainable tests
+- **Run in parallel**: Proper isolation enables full parallelization
+- **Read like requirements**: Natural language DSL matches BDD scenarios
+- **Provide confidence**: Tests prove the system does what business needs
+- **Stay maintainable**: Clear separation of concerns across layers
 
-The goal is to create an automated Definition of Done that proves the system does what the business needs, using tests that are maintainable, understandable, and resilient to change.
+The goal is an automated Definition of Done using tests that business people can read, developers can maintain, and that reliably verify the system meets requirements.
