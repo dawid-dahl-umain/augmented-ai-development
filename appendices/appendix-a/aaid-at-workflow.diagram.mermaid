@@ -1,9 +1,9 @@
 graph TD
     Start["🚀 Acceptance Testing Begins<br/>(BDD Scenarios Ready)"]
     
-    Start --> ContextPhase["📚 Stage 1: CONTEXT PROVIDING<br/>(Project Setup, BDD Scenarios, Existing Patterns)"]
+    Start --> ContextPhase["📚 Stage 1: CONTEXT PROVIDING<br/><br/>(Project Setup, BDD Scenarios, Existing Patterns)"]
     
-    ContextPhase --> PlanningPhase["🎯 Stage 2: PLANNING & ANALYSIS<br/>(Extract Domain Concepts, Choose Protocol Driver Type)"]
+    ContextPhase --> PlanningPhase["🎯 Stage 2: PLANNING & ANALYSIS<br/><br/>(Extract Domain Concepts, Choose Protocol Type)<br/><br/>Output: Protocol Driver Strategy Roadmap"]
     
     PlanningPhase --> FirstCheck{"First Acceptance Test<br/>for this Feature?"}
     FirstCheck -->|Yes| CreateUtils["Create Core Utilities<br/>(DslContext, Params, BaseDSL)"]
@@ -12,11 +12,11 @@ graph TD
     CreateUtils --> ATCycle
     ReuseUtils --> ATCycle
     
-    ATCycle["🔄 Stage 3: FOUR-LAYER TEST CYCLE"]
+    ATCycle["🔄 Stage 3: THREE-PHASE TEST CYCLE"]
     
     %% PHASE 1 - RED-like
     ATCycle --> Phase1["🔴 PHASE 1: Generate Executable Spec & DSL"]
-    Phase1 --> P1_Act["Create Executable Specification & DSL Layer<br/>(Natural Language Methods, Functional/Temporal Isolation)"]
+    Phase1 --> P1_Act["Create Executable Specification & DSL Layer<br/><br/>(Natural Language Methods, Functional/Temporal Isolation)"]
     P1_Act --> P1_Check{"Executable Spec<br/>Fails?"}
     P1_Check -->|No| P1_Fix["Debug: Spec Should Fail<br/>(Not Implemented Yet)"]
     P1_Check -->|Yes| P1_Review
@@ -27,49 +27,38 @@ graph TD
     P1_Approve -->|No| P1_Act
     P1_Approve -->|Yes| Phase2
     
-    %% PHASE 2 - Research
-    Phase2["🔍 PHASE 2: Research Protocol Driver Strategy"]
-    Phase2 --> P2_Act["Analyze How Protocol Driver Connects to System Under Test<br/>(Connection Strategy, External Stubs, Atomic Operations)"]
-    P2_Act --> P2_Check["Executable Spec Still Failing<br/>(Expected - No Implementation)"]
-    P2_Check --> P2_Review
+    %% PHASE 2 - GREEN-like
+    Phase2["🟢 PHASE 2: Implement Protocol Driver & SUT Connection"]
+    Phase2 --> P2_Act["Build Protocol Driver Following Stage 2 Roadmap<br/><br/>(Connection Strategy, Atomic Operations, External Stubs)"]
+    P2_Act --> P2_Check{"Executable Spec<br/>Passes?"}
+    P2_Check -->|No| P2_Fix["Debug Driver Implementation"]
+    P2_Check -->|Yes| P2_Review
+    P2_Fix --> P2_Act
     
-    P2_Review["⏸️ AWAIT USER REVIEW<br/><b>Connection Strategy Approved?</b>"]
+    P2_Review["⏸️ AWAIT USER REVIEW<br/><b>Protocol Driver Working?</b>"]
     P2_Review --> P2_Approve{"Approve?"}
     P2_Approve -->|No| P2_Act
     P2_Approve -->|Yes| Phase3
     
-    %% PHASE 3 - GREEN-like
-    Phase3["🟢 PHASE 3: Implement Protocol Driver & SUT Connection"]
-    Phase3 --> P3_Act["Build Protocol Driver & Connect to System Under Test<br/>(Atomic Operations, Polling, External System Stubs)"]
-    P3_Act --> P3_Check{"Executable Spec<br/>Passes?"}
-    P3_Check -->|No| P3_Fix["Debug Driver Implementation"]
+    %% PHASE 3 - REFACTOR-like
+    Phase3["🧼 PHASE 3: Refactor Layers & Validate Isolation"]
+    Phase3 --> P3_Act["Evaluate & Refactor If Needed<br/><br/>(Polish Layers, Verify Three Isolations, 1:1 BDD Mapping)"]
+    P3_Act --> P3_Check{"Executable Spec<br/>Still Passes?"}
+    P3_Check -->|No| P3_Fix["Fix Regression"]
     P3_Check -->|Yes| P3_Review
     P3_Fix --> P3_Act
     
-    P3_Review["⏸️ AWAIT USER REVIEW<br/><b>Protocol Driver Working?</b>"]
+    P3_Review["⏸️ AWAIT FINAL REVIEW<br/><b>Ready for Next Scenario?</b>"]
     P3_Review --> P3_Approve{"Approve?"}
     P3_Approve -->|No| P3_Act
-    P3_Approve -->|Yes| Phase4
-    
-    %% PHASE 4 - REFACTOR-like
-    Phase4["🧼 PHASE 4: Refactor All Layers & Validate Isolation"]
-    Phase4 --> P4_Act["Polish All Four Layers<br/>(Verify Three Isolations, Natural Language, 1:1 BDD Mapping)"]
-    P4_Act --> P4_Check{"Executable Spec<br/>Still Passes?"}
-    P4_Check -->|No| P4_Fix["Fix Regression"]
-    P4_Check -->|Yes| P4_Review
-    P4_Fix --> P4_Act
-    
-    P4_Review["⏸️ AWAIT FINAL REVIEW<br/><b>Ready for Next Scenario?</b>"]
-    P4_Review --> P4_Approve{"Approve?"}
-    P4_Approve -->|No| P4_Act
-    P4_Approve -->|Yes| NextScenario
+    P3_Approve -->|Yes| NextScenario
     
     %% COMPLETION
     NextScenario{"More BDD<br/>Scenarios?"}
-    NextScenario -->|Yes| NextInstruction["📌 Process Next Scenario<br/><i>Return to Stage 3 with same DSL/Drivers</i>"]
+    NextScenario -->|Yes| NextInstruction["📌 Process Next Scenario<br/><br/><i>Return to Stage 3 with same DSL/Drivers</i>"]
     NextScenario -->|No| Complete
     
-    Complete["✨ Feature Complete<br/>(All BDD Scenarios Passing)"]
+    Complete["✨ Feature Complete<br/><br/>(All BDD Scenarios Passing)"]
     
     %% STYLES - Match AAID colors
     style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
@@ -88,28 +77,21 @@ graph TD
     style P1_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
     style P1_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
     
-    %% Phase 2 - Blue theme (research)
-    style Phase2 fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#000
-    style P2_Act fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
-    style P2_Check fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
+    %% Phase 2 - Green theme
+    style Phase2 fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#000
+    style P2_Act fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
+    style P2_Check fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
+    style P2_Fix fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
     style P2_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
     style P2_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
     
-    %% Phase 3 - Green theme
-    style Phase3 fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#000
-    style P3_Act fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style P3_Check fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style P3_Fix fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
+    %% Phase 3 - Purple theme (refactor)
+    style Phase3 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
+    style P3_Act fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style P3_Check fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
+    style P3_Fix fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
     style P3_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
     style P3_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
-    
-    %% Phase 4 - Purple theme (refactor)
-    style Phase4 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
-    style P4_Act fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style P4_Check fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style P4_Fix fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style P4_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
-    style P4_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
     
     %% Completion
     style NextScenario fill:#f5f5f5,stroke:#666,stroke-width:2px,color:#000

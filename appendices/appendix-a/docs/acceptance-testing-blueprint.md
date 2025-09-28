@@ -17,11 +17,10 @@ _Four-Layer Model Implementation with AI-Assisted Workflow_
   - [Workflow Diagram](#workflow-diagram)
   - [Stage 1: Context Providing](#stage-1-context)
   - [Stage 2: Planning & Analysis](#stage-2-planning)
-  - [Stage 3: Four-Layer Test Cycle](#stage-3-cycle)
+  - [Stage 3: Three-Phase Test Cycle](#stage-3-cycle)
     - [Phase 1: Generate Executable Spec & DSL](#phase-1)
-    - [Phase 2: Research Protocol Driver Strategy](#phase-2)
-    - [Phase 3: Implement Protocol Driver & SUT Connection](#phase-3)
-    - [Phase 4: Refactor All Layers & Validate Isolation](#phase-4)
+    - [Phase 2: Implement Protocol Driver & SUT Connection](#phase-2)
+    - [Phase 3: Refactor Layers & Validate Isolation](#phase-3)
 - [Implementation Guide](#implementation-guide)
   - [Project Structure](#project-structure)
   - [Executable Specifications](#executable-specs)
@@ -34,8 +33,6 @@ _Four-Layer Model Implementation with AI-Assisted Workflow_
 - [Validation Checklist](#validation-checklist)
 - [Quick Reference](#quick-reference)
 - [Protocol Driver Strategy Roadmap Template](#driver-strategy-roadmap)
-
----
 
 <a id="prerequisites-overview"></a>
 
@@ -62,8 +59,6 @@ This blueprint combines Dave Farley's Four-Layer Model for acceptance testing wi
 - 🧠 **You maintain control**: Review and understand every generated component
 - 🪜 **Incremental progress**: Small, focused steps with validation between phases
 - 🦾 **AI as augmentation**: The AI generates code, you architect and validate
-
----
 
 <a id="core-concepts"></a>
 
@@ -149,8 +144,6 @@ Per Dave Farley's definition, three levels of isolation are essential for reliab
 - Within test scope, test uses its chosen name (e.g., "Buy milk")
 - Test infrastructure maps to unique name it chose (e.g., "Buy milk1")
 - Allows same test to run over and over in the same running system
-
----
 
 <a id="four-layer-architecture"></a>
 
@@ -243,8 +236,6 @@ Per Dave Farley's definition, three levels of isolation are essential for reliab
 - Optimize for fast startup
 - Accept concurrent test data
 
----
-
 <a id="ai-workflow"></a>
 
 ## AI-Augmented Workflow
@@ -263,125 +254,22 @@ This workflow adapts `AAID` (Augmented AI Development) principles for acceptance
 
 ### Workflow Diagram
 
-```mermaid
-graph TD
-    Start["🚀 Acceptance Testing Begins<br/>(BDD Scenarios Ready)"]
+With context, specs, and environment in place, we’re ready to start the AI-augmented acceptance testing cycle.  
+This diagram shows the **formal workflow**, with detailed explanations for each step in [Stage 1–3](#ai-workflow).
 
-    Start --> ContextPhase["📚 Stage 1: CONTEXT PROVIDING<br/>(Project Setup, BDD Scenarios, Existing Patterns)"]
+![AAID Acceptance Testing Workflow](assets/Screenshot 2025-09-28 at 09.39.27.webp)
 
-    ContextPhase --> PlanningPhase["🎯 Stage 2: PLANNING & ANALYSIS<br/>(Extract Domain Concepts, Choose Protocol Driver Type)"]
+The diagram distinguishes the three review-driven phases of the workflow, lightly mirroring the RED/GREEN/REFACTOR phases of TDD:
 
-    PlanningPhase --> FirstCheck{"First Acceptance Test<br/>for this Feature?"}
-    FirstCheck -->|Yes| CreateUtils["Create Core Utilities<br/>(DslContext, Params, BaseDSL)"]
-    FirstCheck -->|No| ReuseUtils["Reuse Existing DSL/Drivers"]
+- **🔴 RED (Phase 1)**: Generate Executable Specs & DSL
+- **🟢 GREEN (Phase 2)**: Implement Protocol Driver & Connect SUT
+- **🧼 REFACTOR (Phase 3)**: Refactor Layers & Validate Isolation
 
-    CreateUtils --> ATCycle
-    ReuseUtils --> ATCycle
+| 🔗                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Click [this link](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-a/aaid-at-workflow.diagram.mermaid) to **view** the full diagram. |
 
-    ATCycle["🔄 Stage 3: FOUR-LAYER TEST CYCLE"]
-
-    %% PHASE 1 - RED-like
-    ATCycle --> Phase1["🔴 PHASE 1: Generate Executable Spec & DSL"]
-    Phase1 --> P1_Act["Create Executable Specification & DSL Layer<br/>(Natural Language Methods, Functional/Temporal Isolation)"]
-    P1_Act --> P1_Check{"Executable Spec<br/>Fails?"}
-    P1_Check -->|No| P1_Fix["Debug: Spec Should Fail<br/>(Not Implemented Yet)"]
-    P1_Check -->|Yes| P1_Review
-    P1_Fix --> P1_Act
-
-    P1_Review["⏸️ AWAIT USER REVIEW<br/><b>Executable Spec & DSL Approved?</b>"]
-    P1_Review --> P1_Approve{"Approve?"}
-    P1_Approve -->|No| P1_Act
-    P1_Approve -->|Yes| Phase2
-
-    %% PHASE 2 - Research
-    Phase2["🔍 PHASE 2: Research Protocol Driver Strategy"]
-    Phase2 --> P2_Act["Analyze How Protocol Driver Connects to System Under Test<br/>(Connection Strategy, External Stubs, Atomic Operations)"]
-    P2_Act --> P2_Check["Executable Spec Still Failing<br/>(Expected - No Implementation)"]
-    P2_Check --> P2_Review
-
-    P2_Review["⏸️ AWAIT USER REVIEW<br/><b>Connection Strategy Approved?</b>"]
-    P2_Review --> P2_Approve{"Approve?"}
-    P2_Approve -->|No| P2_Act
-    P2_Approve -->|Yes| Phase3
-
-    %% PHASE 3 - GREEN-like
-    Phase3["🟢 PHASE 3: Implement Protocol Driver & SUT Connection"]
-    Phase3 --> P3_Act["Build Protocol Driver & Connect to System Under Test<br/>(Atomic Operations, Polling, External System Stubs)"]
-    P3_Act --> P3_Check{"Executable Spec<br/>Passes?"}
-    P3_Check -->|No| P3_Fix["Debug Driver Implementation"]
-    P3_Check -->|Yes| P3_Review
-    P3_Fix --> P3_Act
-
-    P3_Review["⏸️ AWAIT USER REVIEW<br/><b>Protocol Driver Working?</b>"]
-    P3_Review --> P3_Approve{"Approve?"}
-    P3_Approve -->|No| P3_Act
-    P3_Approve -->|Yes| Phase4
-
-    %% PHASE 4 - REFACTOR-like
-    Phase4["🧼 PHASE 4: Refactor All Layers & Validate Isolation"]
-    Phase4 --> P4_Act["Polish All Four Layers<br/>(Verify Three Isolations, Natural Language, 1:1 BDD Mapping)"]
-    P4_Act --> P4_Check{"Executable Spec<br/>Still Passes?"}
-    P4_Check -->|No| P4_Fix["Fix Regression"]
-    P4_Check -->|Yes| P4_Review
-    P4_Fix --> P4_Act
-
-    P4_Review["⏸️ AWAIT FINAL REVIEW<br/><b>Ready for Next Scenario?</b>"]
-    P4_Review --> P4_Approve{"Approve?"}
-    P4_Approve -->|No| P4_Act
-    P4_Approve -->|Yes| NextScenario
-
-    %% COMPLETION
-    NextScenario{"More BDD<br/>Scenarios?"}
-    NextScenario -->|Yes| NextInstruction["📌 Process Next Scenario<br/><i>Return to Stage 3 with same DSL/Drivers</i>"]
-    NextScenario -->|No| Complete
-
-    Complete["✨ Feature Complete<br/>(All BDD Scenarios Passing)"]
-
-    %% STYLES - Match AAID colors
-    style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
-    style ContextPhase fill:#1976d2,stroke:#0d47a1,stroke-width:3px,color:#fff
-    style PlanningPhase fill:#f57c00,stroke:#e65100,stroke-width:3px,color:#fff
-    style FirstCheck fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style CreateUtils fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style ReuseUtils fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style ATCycle fill:#7b1fa2,stroke:#4a148c,stroke-width:3px,color:#fff
-
-    %% Phase 1 - Red theme
-    style Phase1 fill:#ffebee,stroke:#d32f2f,stroke-width:3px,color:#000
-    style P1_Act fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-    style P1_Check fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-    style P1_Fix fill:#ffebee,stroke:#d32f2f,stroke-width:2px,color:#000
-    style P1_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
-    style P1_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
-
-    %% Phase 2 - Blue theme (research)
-    style Phase2 fill:#e1f5fe,stroke:#0277bd,stroke-width:3px,color:#000
-    style P2_Act fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
-    style P2_Check fill:#e1f5fe,stroke:#0277bd,stroke-width:2px,color:#000
-    style P2_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
-    style P2_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
-
-    %% Phase 3 - Green theme
-    style Phase3 fill:#c8e6c9,stroke:#388e3c,stroke-width:3px,color:#000
-    style P3_Act fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style P3_Check fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style P3_Fix fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style P3_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
-    style P3_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
-
-    %% Phase 4 - Purple theme (refactor)
-    style Phase4 fill:#f3e5f5,stroke:#7b1fa2,stroke-width:3px,color:#000
-    style P4_Act fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style P4_Check fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style P4_Fix fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style P4_Review fill:#fff9c4,stroke:#f9a825,stroke-width:4px,color:#000
-    style P4_Approve fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
-
-    %% Completion
-    style NextScenario fill:#f5f5f5,stroke:#666,stroke-width:2px,color:#000
-    style NextInstruction fill:#fef9e7,stroke:#f9a825,stroke-width:2px,color:#000
-    style Complete fill:#4caf50,stroke:#2e7d32,stroke-width:3px,color:#fff
-```
+> If the diagram is not rendered on mobile, copy/paste the mermaid code into a [mermaid editor](https://mermaid.live).
 
 <a id="stage-1-context"></a>
 
@@ -416,43 +304,15 @@ Before any AI interaction, establish comprehensive context:
 
 ### Stage 2: Planning & Analysis
 
-Collaborate with AI to analyze BDD scenarios and plan implementation:
+Collaborate with AI to analyze BDD scenarios and plan implementation. The output of this stage is a **Protocol Driver Strategy Roadmap** that represents your shared understanding with the AI about how to implement the acceptance tests.
 
 **1. Extract Domain Concepts from BDD Scenarios**
 
-Analyze your BDD scenarios to identify the domain concepts that will become DSL elements:
+Identify the key domain objects (nouns from Ubiquitous Language) that will become DSL elements:
 
-- **Domain Objects** (nouns from Ubiquitous Language → DSL objects):
-  - Examples: `user`, `todo`, `archive`, `payment`
-- **Domain Actions** (verbs → DSL methods):
-  - Examples: `hasCompletedTodo`, `archives`, `restores`, `submits`
-- **Domain Assertions** (confirmations → DSL validation methods):
-  - Examples: `confirmInArchive`, `confirmNotInActive`, `confirmErrorMessage`
-
-> For assertions, always use the word "confirm" to avoid developer-specific language. E.g. `dsl.order.confirmSubmitted` not `dsl.order.assertSubmitted`.
-
-**Transformation Pattern:**
-
-```
-BDD:  Given the user has a completed todo "Buy milk"
-DSL:  await dsl.user.hasCompletedTodo({ name: "Buy milk" })
-
-BDD:  When they archive "Buy milk"
-DSL:  await dsl.user.archives({ todo: "Buy milk" })
-
-BDD:  Then "Buy milk" should be in archived todos
-DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
-
-BDD:  And "Buy milk" should not be in active todos
-DSL:  await dsl.todo.confirmNotInActive({ name: "Buy milk" })
-```
-
-Notice how:
-
-- The DSL reads like natural language matching the BDD
-- Actions are on the actor (`user.archives`)
-- Assertions (using the word "confirm") are on the subject (`todo.confirmInArchive`)
-- Parameters use business language from scenarios
+- Examples: `user`, `todo`, `archive`, `payment`, `order`, `cart`
+- These become the main DSL objects that group related actions and assertions
+- Each object represents a key concept from your business domain
 
 **2. Choose Protocol Driver Type**
 
@@ -465,13 +325,35 @@ Based on your system's interfaces:
 
 **3. Create Protocol Driver Strategy Roadmap**
 
-Use the [template](#driver-strategy-roadmap) to make sure you and the AI are aligned on how to implement the Acceptance Test suite:
+Use the [template](#driver-strategy-roadmap) to document how tests will interact with the system:
 
-- Protocol type
-- Connection strategy
+- Protocol type and connection strategy
+- How tests will achieve three levels of isolation
+- System boundaries and entry points
 - Which external third-party systems need stubbing (system-level isolation)
 - Which data needs aliasing (functional isolation)
 - How to achieve temporal isolation (repeated runs)
+
+**Example strategy excerpt (shortened for readability):**
+
+```markdown
+# Acceptance Testing Strategy: Todo Archive Feature
+
+## Connection Strategy
+
+- **Protocol Type**: UI with Playwright
+- **Entry Points**: /todos, /todos/archived
+
+## Isolation Strategy
+
+- **System-Level**: Stub EmailService and AnalyticsAPI (third-party only)
+- **Functional & Temporal**: User accounts provide natural boundaries,
+  DslContext handles aliasing automatically
+
+[See complete roadmap template below for full structure]
+```
+
+> 📋 **Note**: This is a shortened version. See the [complete roadmap template](#driver-strategy-roadmap) for the full structure and all sections to include.
 
 | 🤖 AI Alignment                                                                      |
 | ------------------------------------------------------------------------------------ |
@@ -479,9 +361,9 @@ Use the [template](#driver-strategy-roadmap) to make sure you and the AI are ali
 
 <a id="stage-3-cycle"></a>
 
-### Stage 3: Four-Layer Test Cycle
+### Stage 3: Three-Phase Test Cycle
 
-The cycle follows four phases, each with mandatory review:
+The cycle follows three phases lightly mirroring the TDD RED/GREEN/REFACTOR pattern, each with mandatory review:
 
 <a id="phase-1"></a>
 
@@ -527,51 +409,15 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 
 <a id="phase-2"></a>
 
-#### 🔍 Phase 2: Research Protocol Driver Strategy
+#### 🟢 Phase 2: Implement Protocol Driver & SUT Connection
 
-**AI analyzes and creates a strategy roadmap:**
-
-- How tests will achieve three levels of isolation
-- System boundaries and connection approach
-- External third-party dependencies to stub (never internal systems)
-- Key alignment points
-
-**Example strategy excerpt (shortened for readability):**
-
-```markdown
-# Acceptance Testing Strategy: Todo Archive Feature
-
-## Connection Strategy
-
-- **Protocol Type**: UI with Playwright
-- **Entry Points**: /todos, /todos/archived
-
-## Isolation Strategy
-
-- **System-Level**: Stub EmailService and AnalyticsAPI (third-party only)
-- **Functional & Temporal**: User accounts provide natural boundaries,
-  DslContext handles aliasing automatically
-
-[See complete roadmap template below for full structure]
-```
-
-> 📋 **Note**: This is a shortened version. See the [complete roadmap template](#driver-strategy-roadmap) for the full structure and all sections to include.
-
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Phase 2 Review Checklist:**<br>🔍 Clear understanding of system boundaries<br>🔍 External dependencies identified for stubbing<br>🔍 Isolation strategy defined for all three levels<br>🔍 Connection strategy documented |
-
-<a id="phase-3"></a>
-
-#### 🟢 Phase 3: Implement Protocol Driver & SUT Connection
-
-**AI implements:**
+**AI implements based on Stage 2 roadmap:**
 
 - Protocol driver with atomic operations
 - All assertions and failure logic
 - Polling mechanisms for concluding events
 - External system stubs (only third-party)
-- Connection to actual SUT
+- Connection to actual SUT using the strategy defined in the roadmap
 
 **Example implementation:**
 
@@ -629,21 +475,23 @@ export class UIUserDriver {
 
 | ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                              |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Phase 3 Review Checklist:**<br>🟢 Tests passing with implemented drivers<br>🟢 Protocol driver successfully connects to SUT<br>🟢 Only external third-party systems stubbed<br>🟢 Driver contains all assertions/failures |
+| **Phase 2 Review Checklist:**<br>🟢 Tests passing with implemented drivers<br>🟢 Protocol driver successfully connects to SUT<br>🟢 Only external third-party systems stubbed<br>🟢 Driver contains all assertions/failures |
 
-<a id="phase-4"></a>
+<a id="phase-3"></a>
 
-#### 🧼 Phase 4: Refactor All Layers & Validate Isolation
+#### 🧼 Phase 3: Refactor Layers & Validate Isolation
 
-**AI refactors and validates:**
+**AI evaluates and refactors (if needed):**
 
-- Polish all four layers for clarity
-- Verify three isolation levels work
-- Ensure 1:1 BDD mapping maintained
-- Remove duplication across layers
-- Cleanup AI-generated comments
+- Evaluate all four layers for potential improvements
+- If no refactoring needed, explicitly state "No refactoring needed"
+- When improvements identified:
+  - Polish layers for clarity
+  - Remove duplication across layers
+  - Cleanup AI-generated comments
+  - Ensure 1:1 BDD mapping maintained
 
-**Validation tests:**
+**Validation tests (always run):**
 
 - Run tests in parallel (functional isolation)
 - Run same test twice (temporal isolation)
@@ -651,9 +499,7 @@ export class UIUserDriver {
 
 | ⏸️ **STOP: AWAIT FINAL REVIEW**                                                                                                                                                                                          |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Phase 4 Review Checklist:**<br>🧼 All three isolation levels working correctly<br>🧼 Natural language maintained throughout DSL<br>🧼 Clear separation between layers<br>🧼 Tests run in parallel without interference |
-
----
+| **Phase 3 Review Checklist:**<br>🧼 All three isolation levels working correctly<br>🧼 Natural language maintained throughout DSL<br>🧼 Clear separation between layers<br>🧼 Tests run in parallel without interference |
 
 <a id="implementation-guide"></a>
 
@@ -1075,8 +921,6 @@ export class EmailServiceStub {
 
 > **Note**: We only stub external third-party systems (payment gateways, email services, analytics). Never stub your own database, cache, or internal services - they're part of your system under test.
 
----
-
 <a id="critical-rules"></a>
 
 ## Critical Implementation Rules
@@ -1107,11 +951,9 @@ export class EmailServiceStub {
 6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
 7. **Never stub internal systems**: Your database, cache, queues are part of your system
 
----
-
 <a id="anti-patterns"></a>
 
-## Common Don'ts
+## Common "Don't"s
 
 ### ❌ Assertions in DSL Layer
 
@@ -1176,8 +1018,6 @@ const mockDatabase = mock("./database");
 const emailServiceStub = new EmailServiceStub();
 ```
 
----
-
 <a id="validation-checklist"></a>
 
 ## Validation Checklist
@@ -1186,7 +1026,7 @@ const emailServiceStub = new EmailServiceStub();
 
 - [ ] Context provided (Stage 1)
 - [ ] Domain concepts extracted from BDD scenarios (Stage 2)
-- [ ] Protocol Driver Strategy documented with connection details
+- [ ] Protocol Driver Strategy documented with connection details (Stage 2)
 - [ ] Each phase reviewed before proceeding
 - [ ] All four layers implemented
 
@@ -1212,8 +1052,6 @@ const emailServiceStub = new EmailServiceStub();
 - [ ] Tests run in parallel without interference
 - [ ] Internal systems (database, cache) NOT stubbed
 
----
-
 <a id="quick-reference"></a>
 
 ## Quick Reference
@@ -1222,9 +1060,26 @@ const emailServiceStub = new EmailServiceStub();
 
 ```
 🔴 Phase 1: Generate Executable Spec & DSL → Review
-🔍 Phase 2: Research Protocol Driver Strategy → Review
-🟢 Phase 3: Implement Protocol Driver & SUT → Review
-🧼 Phase 4: Refactor All Layers & Validate → Review
+🟢 Phase 2: Implement Protocol Driver & SUT → Review
+🧼 Phase 3: Refactor Layers & Validate → Review
+```
+
+### BDD to DSL Transformation Pattern
+
+- Actions on the actor (`user.archives`)
+- Assertions on the subject (`todo.confirmInArchive`)
+- Actors and subjects are concepts from Ubiquitous Language glossary, established in the Product Discovery phase of project
+- Always use "confirm" for assertions, not "assert", to ensure DSL remains free from developer-centric speech
+
+```
+BDD:  Given the user has a completed todo "Buy milk"
+DSL:  await dsl.user.hasCompletedTodo({ name: "Buy milk" })
+
+BDD:  When they archive "Buy milk"
+DSL:  await dsl.user.archives({ todo: "Buy milk" })
+
+BDD:  Then "Buy milk" should be in archived todos
+DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
 ```
 
 ### Layer Responsibilities
@@ -1252,13 +1107,11 @@ Temporal:     Proxy-naming aliases ("Buy milk" → "Buy milk1")
 - **External Stubs Only**: Never stub your own database/cache
 - **Parallel Execution**: Enabled by functional isolation
 
----
-
 <a id="driver-strategy-roadmap"></a>
 
 ## Protocol Driver Strategy Roadmap Template
 
-Use this template in Phase 2 to plan how tests will interact with the system:
+Use this template in Stage 2 Planning to document how tests will interact with the system:
 
 ```markdown
 # Acceptance Testing Strategy: [Feature Name]
