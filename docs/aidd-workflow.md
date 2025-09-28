@@ -920,9 +920,14 @@ Notice how unit tests directly test the class with mocks, while acceptance tests
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
 
-> For a code example of user stories and their BDD scenarios mapping directly to Acceptance Test executable specefications, see the [TicTacToe demo's executable specifications](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/executable-specs/cli.acceptance.spec.ts).
+### AAID Acceptance Testing Resources
 
----
+| Description                                                          | Link                                                                                                                                                                       |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Companion article covering the full AT workflow                      | [AAID Acceptance Testing Workflow](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)  |
+| Visual workflow diagram of the `AAID` three-phase AT cycle (Mermaid) | [AAID AT workflow](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-a/aaid-at-workflow-diagram.mermaid)                          |
+| Rule file to enable `AAID` AT mode in a project                      | [Acceptance Testing Mode](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-a/rules/aaid-at/acceptance-testing-mode.mdc)          |
+| Demo of executable specifications used in practice                   | [TicTacToe executable specifications](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/executable-specs/cli.acceptance.spec.ts) |
 
 <a id="appendix-b"></a>
 
@@ -1007,8 +1012,6 @@ _Utility commands for common development tasks_
 | `/gherkin-guard` | Enforce consistent Gherkin-style Given/When/Then comments in tests | Test formatting | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/misc/gherkin-guard.md) |
 
 These are just examples of `AAID` commands. Create your own or modify these to match your workflow. The key is using reusable prompts to greatly augment your development speed.
-
----
 
 <a id="appendix-c"></a>
 
@@ -1253,15 +1256,13 @@ Place in `CLAUDE.md` file in your project root (or `~/.claude/CLAUDE.md` for glo
 **For other AI tools:**
 Look for "custom instructions", "custom rules", or "system prompt" settings
 
----
-
 <a id="appendix-d"></a>
 
 ## Appendix D: Handling Technical Implementation Details
 
 ![Appendix D](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pl6x69jvidsn04396hn8.png)
 
-The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d-handling-technical-implementation-details.md).
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d/handling-technical-implementation-details.md).
 
 ![AAID implementation categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/aaid-implementation-categories-s.webp)
 

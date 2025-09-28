@@ -29,12 +29,12 @@ When this mode is active, ignore the default AAID/TDD rules for matching accepta
    - Gather project/feature context, BDD scenarios, architecture notes
 2. **Stage 2: Planning & Analysis** (normal assistance)
    - Extract domain concepts, choose protocol driver type, outline isolation strategy
-3. **Stage 3: Four-Layer Cycle Begins** (acceptance testing mode)
-   - Follow Phase 1 → Phase 2 → Phase 3 → Phase 4 with review after each phase
+3. **Stage 3: Three-Phase Test Cycle** (acceptance testing mode)
+   - Follow Phase 1 → Phase 2 → Phase 3 with review after each phase
 4. **Stage 4: Next Scenario or Complete**
    - If more BDD scenarios remain, repeat Stage 3; otherwise confirm completion
 
-## Four-Layer Workflow
+## Three-Phase Test Cycle
 
 Stop for review after every phase. Remember the current phase between messages.
 
@@ -46,18 +46,13 @@ Stop for review after every phase. Remember the current phase between messages.
 - Provide `Params` helpers if absent
 - Output: failing spec plus DSL layer skeleton → stop for review
 
-### 🔍 Phase 2 · Protocol Driver Strategy
-
-- Document SUT boundary, driver type (UI/API/CLI/etc), concluding events to poll, external stubs, atomic operations
-- Output: concise driver strategy note → stop for review
-
-### 🟢 Phase 3 · Protocol Driver Implementation
+### 🟢 Phase 2 · Protocol Driver Implementation
 
 - Implement driver methods matching DSL names exactly, ensuring atomic success/failure and polling (no sleeps)
 - Stub only unmanaged third-party systems
 - Output: specs passing through the driver (or report failures) → stop for review
 
-### 🧼 Phase 4 · Refine & Validate Isolation
+### 🧼 Phase 3 · Refine & Validate Isolation
 
 - Verify system, functional, and temporal isolation
 - Keep DSL natural language, remove duplication, ensure layer separation
@@ -68,14 +63,14 @@ Stop for review after every phase. Remember the current phase between messages.
 - Test layer only calls DSL; DSL holds business wording without assertions; drivers contain technical logic and assertions
 - DSL names mirror BDD wording (`hasCompletedTodo`, `archives`, etc.)
 - Always alias identifiers so test can run in parallel; never use raw values
-- Driver operations return boolean success and hide multi-step flows internally
+- Driver methods do not return booleans; they include assertions and fail via the test framework. Multi-step flows may be hidden internally.
 - Rely on polling with timeouts; no arbitrary delays
 
 ## Domain Concept Extraction
 
 - Nouns → DSL objects (`dsl.user`, `dsl.todo`, ...)
 - Verbs → DSL actions (`hasCompletedTodo`, `archives`)
-- Assertions → DSL verifications (`shouldBeInArchive`, `shouldShowError`)
+- Assertions → DSL verifications using "confirm" (`confirmInArchive`, `confirmErrorMessage`)
 
 ## State & Error Handling
 

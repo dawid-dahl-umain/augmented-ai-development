@@ -108,8 +108,15 @@ Notice how unit tests directly test the class with mocks, while acceptance tests
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
 
-> For a code example of user stories and their BDD scenarios mapping directly to Acceptance Test executable specefications, see the [TicTacToe demo's executable specifications](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/executable-specs/cli.acceptance.spec.ts).
+## Acceptance Testing Resources
+
+| Description                                        | Link                                                                                                                                                                       |
+| -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Companion article covering the full AT workflow    | [AAID Acceptance Testing Workflow](docs/aaid-acceptance-testing-workflow.md)                                                                                               |
+| Visual workflow of the three-phase cycle (Mermaid) | [AAID AT workflow](aaid-at-workflow.diagram.mermaid)                                                                                                                       |
+| Rule file to enable AT mode in this repo           | [Acceptance Testing Mode](rules/aaid-at/acceptance-testing-mode.mdc)                                                                                                       |
+| Demo executable specifications used in practice    | [TicTacToe executable specifications](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/executable-specs/cli.acceptance.spec.ts) |
 
 ---
 
-⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)
+⬅️ Back to the main guide: [AAID Workflow and Guide](../../docs/aidd-workflow.md)

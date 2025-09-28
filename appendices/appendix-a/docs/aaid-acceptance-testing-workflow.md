@@ -1,6 +1,8 @@
-# AI-Augmented Acceptance Testing Blueprint
+# AAID Acceptance Testing Workflow
 
-_Four-Layer Model Implementation with AI-Assisted Workflow_
+_Professional Acceptance Testing for AI-Augmented Software Development_
+
+![AAID AT Workflow Cover](../../../assets/aaid-at-ai-workflow.webp)
 
 ## Table of Contents
 
@@ -257,7 +259,7 @@ This workflow adapts `AAID` (Augmented AI Development) principles for acceptance
 With context, specs, and environment in place, we’re ready to start the AI-augmented acceptance testing cycle.  
 This diagram shows the **formal workflow**, with detailed explanations for each step in [Stage 1–3](#ai-workflow).
 
-![AAID Acceptance Testing Workflow](assets/Screenshot 2025-09-28 at 09.39.27.webp)
+![AAID Acceptance Testing Workflow](../../../assets/at-ai-workflow-diagram.webp)
 
 The diagram distinguishes the three review-driven phases of the workflow, lightly mirroring the RED/GREEN/REFACTOR phases of TDD:
 
