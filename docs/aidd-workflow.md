@@ -2,7 +2,7 @@
 
 _Professional TDD for AI-Augmented Software Development_
 
-![AAID Augmented Being](../assets/aaid-ai-workflow-h.webp)
+![AAID Augmented Being](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/refs/heads/main/assets/aaid-ai-workflow-h.webp)
 
 ## Table of Contents
 
