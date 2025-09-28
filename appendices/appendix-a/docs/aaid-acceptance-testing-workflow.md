@@ -191,7 +191,7 @@ Acceptance tests run against your real, production-like system, typically includ
 
 ### Layer Responsibilities
 
-#### Layer 1: Test Cases (Executable Specifications)
+#### 🎯 Layer 1: Test Cases (Executable Specifications)
 
 **Purpose:** Express acceptance criteria in business language
 
@@ -202,7 +202,7 @@ Acceptance tests run against your real, production-like system, typically includ
 - Never references technical implementation
 - Maps 1:1 to BDD scenarios
 
-#### Layer 2: Domain-Specific Language (DSL)
+#### 🗣️ Layer 2: Domain-Specific Language (DSL)
 
 **Purpose:** Bridge between business language and technical implementation
 
@@ -214,7 +214,7 @@ Acceptance tests run against your real, production-like system, typically includ
 - **Pure translation layer**: NO assertions, NO failures, NO business or verification logic
 - **Simply calls Protocol Driver**: Transforms business language to driver calls
 
-#### Layer 3: Protocol Drivers & Stubs
+#### 🔌 Layer 3: Protocol Drivers & Stubs
 
 **Purpose:** Handle all technical interaction with system AND all verification logic
 
@@ -235,7 +235,7 @@ Acceptance tests run against your real, production-like system, typically includ
 - Allow tests to define specific responses
 - Ensure tests are predictable and reliable
 
-#### Layer 4: System Under Test (SUT)
+#### 🏭 Layer 4: System Under Test (SUT)
 
 **Purpose:** The actual application being tested
 
@@ -540,7 +540,7 @@ acceptance-test/
 
 <a id="layer-1-executable-specs"></a>
 
-### Layer 1: Executable Specifications
+### 🎯 Layer 1: Executable Specifications
 
 Transform BDD scenarios with natural language DSL. Structure requirements like this (adjust the headings if your organization uses a different naming convention):
 
@@ -561,12 +561,14 @@ Scenario: Archive a completed todo
   Then "Buy milk" should be in archived todos
   And "Buy milk" should not be in active todos
 
-Scenario: ...
+Scenario: ... # Next Scenario
 
-# Linked Tasks (not mapped to acceptance tests):
-# - UI Tasks: visual styling, animations
-# - Technical Tasks: infrastructure, monitoring
+# Linked technical implementation (non-behavioral) tasks (not mapped to acceptance tests):
+# - UI Tasks: visual styling, screen reader accessibility, animations
+# - Technical Tasks: infrastructure, adapters, monitoring
 ```
+
+> For more information on handling technical implementation details, see [Appendix D](../../appendix-d/handling-technical-implementation-details.md) of the main [AAID documentation](../../../docs/aidd-workflow.md).
 
 <a id="mapping-from-requirements-to-executable-specs"></a>
 
@@ -589,6 +591,10 @@ describe("<Feature>", () => {
       // Then  → dsl.<domain>.<confirm>(...)
       // And   → dsl.<domain>.<additional>(...)
     });
+  });
+
+  describe("<Next Scenario>", () => {
+    ...
   });
 });
 ```
@@ -667,7 +673,7 @@ Calling `createDsl()` inside `beforeEach` guarantees every test receives a fresh
 
 <a id="layer-2-dsl"></a>
 
-### Layer 2: Domain-Specific Language
+### 🗣️ Layer 2: Domain-Specific Language
 
 The DSL layer bridges business language and technical implementation. It contains NO logic or assertions - just parameter handling and driver delegation.
 
@@ -834,7 +840,7 @@ Returning DSL instances through a `createDsl` factory ensures each test construc
 
 <a id="layer-3-protocol-drivers"></a>
 
-### Layer 3: Protocol Drivers & Stubs
+### 🔌 Layer 3: Protocol Drivers & Stubs
 
 <a id="protocol-drivers"></a>
 
@@ -1001,7 +1007,7 @@ export class EmailServiceStub {
 
 <a id="layer-4-sut"></a>
 
-### Layer 4: System Under Test
+### 🏭 Layer 4: System Under Test
 
 The SUT is your actual application running in a test environment:
 
@@ -1022,14 +1028,14 @@ The SUT is your actual application running in a test environment:
 
 #### Layer Separation Rules
 
-**Executable Specifications**:
+**🎯 Executable Specifications**:
 
     1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
     2. **NO explanatory comments**: DSL should be self-explanatory
     3. **BDD mapping**: Each BDD line maps to a DSL call
     4. **Business readable**: Non-technical people should understand
 
-**DSL Layer**:
+**🗣️ DSL Layer**:
 
     1. **Natural Language**: Methods match BDD scenarios exactly
     2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
@@ -1038,7 +1044,7 @@ The SUT is your actual application running in a test environment:
     5. **Automatic Aliasing**: Implements isolation transparently
     6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
 
-**Protocol Drivers**:
+**🔌 Protocol Drivers**:
 
     1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
     2. **Atomic Operations**: Each method either fully succeeds or fails clearly
