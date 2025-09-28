@@ -23,17 +23,23 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
     - [Phase 1: Generate Executable Spec & DSL](#phase-1)
     - [Phase 2: Implement Protocol Driver & SUT Connection](#phase-2)
     - [Phase 3: Refactor Layers & Validate Isolation](#phase-3)
-- [Implementation Guide](#implementation-guide)
+- [Layer Implementation Guide](#layer-implementation-guide)
   - [Project Structure](#project-structure)
-  - [Executable Specifications](#executable-specs)
-  - [Core DSL Utilities](#core-utilities)
-  - [Domain-Specific DSL Classes](#dsl-classes)
-  - [Protocol Drivers](#protocol-drivers)
-  - [External System Stubs](#external-stubs)
-- [Critical Implementation Rules](#critical-rules)
-- [Common Anti-Patterns](#anti-patterns)
-- [Validation Checklist](#validation-checklist)
-- [Quick Reference](#quick-reference)
+  - [Layer 1: Executable Specifications](#layer-1-executable-specs)
+    - [Mapping From Requirements to Executable Specs](#mapping-from-requirements-to-executable-specs)
+  - [Layer 2: Domain-Specific Language](#layer-2-dsl)
+    - [Core DSL Utilities](#core-utilities)
+    - [Domain-Specific DSL Classes](#dsl-classes)
+  - [Layer 3: Protocol Drivers & Stubs](#layer-3-protocol-drivers)
+    - [Protocol Drivers](#protocol-drivers)
+    - [External System Stubs](#external-stubs)
+  - [Layer 4: System Under Test](#layer-4-sut)
+- [Best Practices & Anti-Patterns](#best-practices)
+  - [Critical Implementation Rules](#critical-rules)
+  - [Common Anti-Patterns](#anti-patterns)
+- [Validation & Reference](#validation-reference)
+  - [Validation Checklist](#validation-checklist)
+  - [Quick Reference](#quick-reference)
 - [Protocol Driver Strategy Roadmap Template](#driver-strategy-roadmap)
 
 <a id="prerequisites-overview"></a>
@@ -41,6 +47,8 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
 ## Prerequisites & Overview
 
 This blueprint combines Dave Farley's Four-Layer Model for acceptance testing with a disciplined AI-augmented workflow adopting `AAID` (Augmented AI Development) principles.
+
+> To learn more about **ATDD** (Acceptance Test-Driven Development) and many of the concepts that inspired this `AAID` workflow, consider taking this course at [Continuous Delivery Training](https://courses.cd.training/pages/about-atdd-bdd-from-stories-to-executable-specifications).
 
 **Prerequisites:**
 
@@ -116,36 +124,35 @@ And "Buy milk" should not be in active todos       # Additional outcome
 
 ### The Three Levels of Test Isolation
 
-Per Dave Farley's definition, three levels of isolation are essential for reliable and fast acceptance testing:
+Per Dave Farley’s definition, three levels of isolation are essential for reliable and fast acceptance testing.
+
+Acceptance tests run against your real, production-like system, typically including the real test database and cache. Isolation prevents cross-test data collisions and order dependence.
 
 #### 1. System-Level Isolation
 
 **Be very specific about the boundaries of your system-under-test:**
 
-- Test right at the boundary of your system using its normal interfaces directly
-- Use stubs ONLY for external third-party dependencies to collect data for assertions or inject data to invoke behaviors
-- Consider Contract Testing for external dependencies. Mock during development, toggle to real calls before big releases to ensure contract holds
-- **Critical**: Never stub your own database, cache, or internal services: they're part of your system
+- Test at your system boundary using its normal interfaces directly
+- Use stubs **only** for external third-party dependencies to capture assertions or inject inputs
+- Consider contract testing for external dependencies; mock during development, toggle to real calls before releases to verify the contract
+- Critical: Do not stub your own database, cache, or internal services; they are part of the SUT and must be exercised in a production-like environment, which is why isolation is mandatory.
 
 #### 2. Functional Isolation
 
-**Use natural boundaries within a multi-user system to isolate test cases:**
+**Run many tests in the same deployed system without interference by giving each test its own isolated functional scope:**
 
-- Each test creates new accounts, products, marketplaces (whatever represents natural functional boundaries)
-- Share the startup costs of a large complex system
-- Run many tests together, in parallel, without them disturbing one another
-- Example: Testing an e-commerce site - each test begins by registering a new account and creating new products for sale
-- After test run is over, your system will contain a lot of junk data. That's okay! Discard old test SUT and start fresh next test run
+- Each test creates fresh domain partitions (accounts, products, marketplaces, etc.)
+- Share startup cost of a complex system and execute tests in parallel safely
+- Example: For an e-commerce site, each test registers a new account and creates distinct products
+- After a test run is over, your system will contain a lot of junk data. That's okay! Discard old test SUT and start fresh for the next run
 
 #### 3. Temporal Isolation
 
 **Run the same test repeatedly and get the same results:**
 
-- Combines with functional isolation technique above
-- Uses proxy-naming technique: test infrastructure creates an alias for names
-- Within test scope, test uses its chosen name (e.g., "Buy milk")
-- Test infrastructure maps to unique name it chose (e.g., "Buy milk1")
-- Allows same test to run over and over in the same running system
+- Combines with functional isolation
+- Uses proxy-naming technique: the test uses stable names, the test infrastructure (DSL layer) maps to unique aliases per run (e.g., “Buy milk” → “Buy milk1”)
+- Optional: treat time as an external dependency via a controllable clock to keep tests deterministic
 
 <a id="four-layer-architecture"></a>
 
@@ -219,6 +226,7 @@ Per Dave Farley's definition, three levels of isolation are essential for reliab
 - Contains ALL assertions and failures: This is where pass/fail decisions are made
 - Uses test framework's fail mechanism directly: e.g., `expect.fail()` in Vitest
 - Each operation should be atomic and reliable
+- Hide complex flows: `hasAuthorisedAccount` may involve register + login
 
 **External System Stubs:**
 
@@ -256,7 +264,7 @@ This workflow adapts `AAID` (Augmented AI Development) principles for acceptance
 
 ### Workflow Diagram
 
-With context, specs, and environment in place, we’re ready to start the AI-augmented acceptance testing cycle.  
+With context, specs, and environment in place, we're ready to start the AI-augmented acceptance testing cycle.  
 This diagram shows the **formal workflow**, with detailed explanations for each step in [Stage 1–3](#ai-workflow).
 
 ![AAID Acceptance Testing Workflow](../../../assets/at-ai-workflow-diagram.webp)
@@ -295,6 +303,7 @@ Before any AI interaction, establish comprehensive context:
 **3. Add Technical Context**
 
 - System architecture overview
+- Documentation on how to [map from requirements to executable specifications](#mapping-from-requirements-to-executable-specs)
 - Available entry points (API, UI, CLI)
 - Third-party integrations requiring stubs (NOT internal systems)
 
@@ -503,9 +512,9 @@ export class UIUserDriver {
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | **Phase 3 Review Checklist:**<br>🧼 All three isolation levels working correctly<br>🧼 Natural language maintained throughout DSL<br>🧼 Clear separation between layers<br>🧼 Tests run in parallel without interference |
 
-<a id="implementation-guide"></a>
+<a id="layer-implementation-guide"></a>
 
-## Implementation Guide
+## Layer Implementation Guide
 
 <a id="project-structure"></a>
 
@@ -529,73 +538,148 @@ acceptance-test/
     └── setup.ts
 ```
 
-<a id="executable-specs"></a>
+<a id="layer-1-executable-specs"></a>
 
-### Executable Specifications
+### Layer 1: Executable Specifications
 
-Transform BDD scenarios with natural language DSL:
+Transform BDD scenarios with natural language DSL. Structure requirements like this (adjust the headings if your organization uses a different naming convention):
+
+```gherkin
+Title: User archives completed todos
+
+User Story:
+As a user, I want to archive completed todos,
+so that my active list stays clean.
+
+Acceptance Criteria:
+
+Feature: User archives completed todos
+
+Scenario: Archive a completed todo
+  Given the user has a completed todo "Buy milk"
+  When they archive "Buy milk"
+  Then "Buy milk" should be in archived todos
+  And "Buy milk" should not be in active todos
+
+Scenario: ...
+
+# Linked Tasks (not mapped to acceptance tests):
+# - UI Tasks: visual styling, animations
+# - Technical Tasks: infrastructure, monitoring
+```
+
+<a id="mapping-from-requirements-to-executable-specs"></a>
+
+#### Mapping From Requirements to Executable Specs
+
+1. `Feature` → top-level `describe` block
+2. Each `Scenario` → nested `describe` named after the scenario, containing a single `it` test
+3. Name the `it` with the expected outcome (e.g., `it("should archive a completed todo")`)
+4. Every `Given`/`When`/`Then` line → matching DSL call with the same Gherkin comment so each step maps 1:1
+5. DSL method names mirror the scenario language so the executable spec stays business-readable
 
 ```typescript
-// executable-spec/archive-todos.spec.ts
-
-import { describe, it, beforeEach } from "vitest";
-import { dsl } from "../dsl";
-
-describe("Feature: User archives completed todos", () => {
-  beforeEach(() => {
-    dsl.reset(); // Critical for isolation
-  });
-
-  it("should archive a completed todo", async () => {
-    // Given
-    await dsl.user.hasCompletedTodo({ name: "Buy milk" });
-
-    // When
-    await dsl.user.archives({ todo: "Buy milk" });
-
-    // Then
-    await dsl.todo.confirmInArchive({ name: "Buy milk" });
-
-    // And
-    await dsl.todo.confirmNotInActive({ name: "Buy milk" });
-  });
-
-  it("should not archive an incomplete todo", async () => {
-    // Given
-    await dsl.user.hasIncompleteTodo({ name: "Walk dog" });
-
-    // When
-    await dsl.user.attemptsToArchive({ todo: "Walk dog" });
-
-    // Then
-    await dsl.todo.confirmErrorMessage();
-
-    // And
-    await dsl.todo.confirmInActive({ name: "Walk dog" });
-  });
-
-  it("should restore an archived todo", async () => {
-    // Given
-    await dsl.user.hasArchivedTodo({ name: "Review code" });
-
-    // When
-    await dsl.user.restores({ todo: "Review code" });
-
-    // Then
-    await dsl.todo.confirmInActive({ name: "Review code" });
+// Feature → top-level describe
+describe("<Feature>", () => {
+  // Scenario → nested describe with a single it
+  describe("<Scenario>", () => {
+    it("<expected outcome>", async () => {
+      // Given → dsl.<domain>.<context>(...)
+      // When  → dsl.<domain>.<action>(...)
+      // Then  → dsl.<domain>.<confirm>(...)
+      // And   → dsl.<domain>.<additional>(...)
+    });
   });
 });
 ```
 
+| ☝️                                                                                                                                                                                          |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| If your product hierarchy includes larger units (epics, initiatives, activities, themes), add a higher-level `describe` for that grouping above the feature block to preserve traceability. |
+
+The transformation follows a 1:1 mapping pattern:
+
+```typescript
+// executable-spec/archive-todos.spec.ts
+
+import { beforeEach, describe, it } from "vitest";
+import { createDsl } from "../dsl";
+
+describe("User archives completed todos", () => {
+  let dsl = createDsl();
+
+  beforeEach(() => {
+    dsl = createDsl();
+  });
+
+  describe("Archive a completed todo", () => {
+    it("should archive a completed todo", async () => {
+      // Given
+      await dsl.user.hasCompletedTodo({ name: "Buy milk" });
+
+      // When
+      await dsl.user.archives({ todo: "Buy milk" });
+
+      // Then
+      await dsl.todo.confirmInArchive({ name: "Buy milk" });
+
+      // And
+      await dsl.todo.confirmNotInActive({ name: "Buy milk" });
+    });
+  });
+
+  describe("Attempt to archive an incomplete todo", () => {
+    it("should not archive an incomplete todo", async () => {
+      // Given
+      await dsl.user.hasIncompleteTodo({ name: "Walk dog" });
+
+      // When
+      await dsl.user.attemptsToArchive({ todo: "Walk dog" });
+
+      // Then
+      await dsl.todo.confirmErrorMessage();
+
+      // And
+      await dsl.todo.confirmInActive({ name: "Walk dog" });
+    });
+  });
+
+  describe("Restore an archived todo", () => {
+    it("should restore an archived todo", async () => {
+      // Given
+      await dsl.user.hasArchivedTodo({ name: "Review code" });
+
+      // When
+      await dsl.user.restores({ todo: "Review code" });
+
+      // Then
+      await dsl.todo.confirmInActive({ name: "Review code" });
+    });
+  });
+});
+```
+
+Calling `createDsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios.
+
+| ☝️                                                                                                                                                                                                                                                                                                                                        |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| When writing executable specs, always create the DSL inside the suite’s setup (for example with `let dsl = createDsl();` followed by a `beforeEach` that reassigns it). Avoid storing DSL instances in shared modules; keeping the factory call local to each suite is the test author’s responsibility and is what guarantees isolation. |
+
+<a id="layer-2-dsl"></a>
+
+### Layer 2: Domain-Specific Language
+
+The DSL layer bridges business language and technical implementation. It contains NO logic or assertions - just parameter handling and driver delegation.
+
 <a id="core-utilities"></a>
 
-### Core DSL Utilities
+#### Core DSL Utilities
 
 The core utilities (`DslContext` and `Params`) provide automatic functional and temporal isolation through proxy-naming.
 
 > **Full Implementation**: See example implementations in TypeScript of `DslContext` and `Params` with tests at [github.com/dawid-dahl-umain/aaid-at-demo](https://github.com/dawid-dahl-umain/aaid-at-demo/tree/main/src/dsl)
 
-#### DslContext - Manages Test Isolation
+**DslContext - Manages Test Isolation:**
 
 ```typescript
 // dsl/utils/DslContext.ts
@@ -611,15 +695,10 @@ export class DslContext {
   public sequenceNumberForName(name: string, start?: number): string {
     /* ... */
   }
-
-  // Resets test-local state between tests
-  public reset(): void {
-    /* ... */
-  }
 }
 ```
 
-#### Params - Type-Safe Parameter Handling
+**Params - Type-Safe Parameter Handling:**
 
 ```typescript
 // dsl/utils/Params.ts
@@ -643,7 +722,7 @@ export class Params<T extends Record<string, any>> {
 
 <a id="dsl-classes"></a>
 
-### Domain-Specific DSL Classes
+#### Domain-Specific DSL Classes
 
 DSL methods must read like natural language, matching the BDD scenarios. They contain NO business or verification logic - just isolation handling and driver calls:
 
@@ -725,8 +804,10 @@ export class TodoDSL {
 }
 ```
 
+**Main DSL Export:**
+
 ```typescript
-// dsl/index.ts - Main export
+// dsl/index.ts
 
 import { DslContext } from "./utils/DslContext";
 import { UserDSL } from "./user.dsl";
@@ -734,35 +815,30 @@ import { TodoDSL } from "./todo.dsl";
 import { UIUserDriver } from "../protocol-driver/ui.user.driver";
 import { UITodoDriver } from "../protocol-driver/ui.todo.driver";
 
-class DSL {
-  private context: DslContext;
-  public user: UserDSL;
-  public todo: TodoDSL;
+export const createDsl = () => {
+  const context = new DslContext();
 
-  constructor() {
-    this.context = new DslContext();
+  // In reality, drivers would connect to real SUT
+  // For demo, using global.page from Playwright
+  const userDriver = new UIUserDriver(global.page);
+  const todoDriver = new UITodoDriver(global.page);
 
-    // In reality, drivers would connect to real SUT
-    // For demo, using global.page from Playwright
-    const userDriver = new UIUserDriver(global.page);
-    const todoDriver = new UITodoDriver(global.page);
-
-    this.user = new UserDSL(this.context, userDriver);
-    this.todo = new TodoDSL(this.context, todoDriver);
-  }
-
-  reset(): void {
-    this.context.reset();
-  }
-}
-
-// Export singleton instance
-export const dsl = new DSL();
+  return {
+    user: new UserDSL(context, userDriver),
+    todo: new TodoDSL(context, todoDriver),
+  };
+};
 ```
+
+Returning DSL instances through a `createDsl` factory ensures each test constructs its own fixture, so isolation is handled automatically without any shared state between scenarios.
+
+<a id="layer-3-protocol-drivers"></a>
+
+### Layer 3: Protocol Drivers & Stubs
 
 <a id="protocol-drivers"></a>
 
-### Protocol Drivers
+#### Protocol Drivers
 
 Protocol Drivers handle the technical interaction with the system AND all pass/fail logic:
 
@@ -887,7 +963,7 @@ export class UITodoDriver {
 
 <a id="external-stubs"></a>
 
-### External System Stubs
+#### External System Stubs
 
 Implement system-level isolation - stub ONLY third-party systems:
 
@@ -923,41 +999,66 @@ export class EmailServiceStub {
 
 > **Note**: We only stub external third-party systems (payment gateways, email services, analytics). Never stub your own database, cache, or internal services - they're part of your system under test.
 
+<a id="layer-4-sut"></a>
+
+### Layer 4: System Under Test
+
+The SUT is your actual application running in a test environment:
+
+**Configuration Requirements:**
+
+- **Deploy as production-like**: Same architecture, same technologies
+- **Include all internal systems**: Database, cache, message queues, internal services
+- **Optimize for testing**: Fast startup, test data cleanup strategies
+- **Support concurrent testing**: Handle multiple test runs simultaneously
+
+<a id="best-practices"></a>
+
+## Best Practices & Anti-Patterns
+
 <a id="critical-rules"></a>
 
-## Critical Implementation Rules
+### Critical Implementation Rules
 
-### Executable Specification Rules
+#### Layer Separation Rules
 
-1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
-2. **NO explanatory comments**: DSL should be self-explanatory
-3. **BDD mapping**: Each BDD line maps to a DSL call
-4. **Business readable**: Non-technical people should understand
+**Executable Specifications**:
 
-### DSL Design Principles
+    1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
+    2. **NO explanatory comments**: DSL should be self-explanatory
+    3. **BDD mapping**: Each BDD line maps to a DSL call
+    4. **Business readable**: Non-technical people should understand
 
-1. **Natural Language**: Methods match BDD scenarios exactly
-2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
-3. **Pure Translation**: Transform business language to driver calls
-4. **Object Parameters**: Type-safe objects for flexibility
-5. **Automatic Aliasing**: Implements isolation transparently
-6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
+**DSL Layer**:
 
-### Protocol Driver Guidelines
+    1. **Natural Language**: Methods match BDD scenarios exactly
+    2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
+    3. **Pure Translation**: Transform business language to driver calls
+    4. **Object Parameters**: Type-safe objects for flexibility
+    5. **Automatic Aliasing**: Implements isolation transparently
+    6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
 
-1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
-2. **Atomic Operations**: Each method either fully succeeds or fails clearly
-3. **Hide Complex Flows**: `hasAuthorisedAccount` may involve register + login
-4. **Handle System Boundaries**: Interact with SUT through its normal interfaces
-5. **Clear Error Messages**: Include context in failure messages
-6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
-7. **Never stub internal systems**: Your database, cache, queues are part of your system
+**Protocol Drivers**:
+
+    1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
+    2. **Atomic Operations**: Each method either fully succeeds or fails clearly
+    3. **Hide Complex Flows**: `hasAuthorisedAccount` may involve register + login
+    4. **Handle System Boundaries**: Interact with SUT through its normal interfaces
+    5. **Clear Error Messages**: Include context in failure messages
+    6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
+    7. **Never stub internal systems**: Your database, cache, queues are part of your system
+
+#### Naming Conventions
+
+- DSL methods use natural business language: `hasCompletedTodo` not `createTodo`
+- Assertions use `confirm` prefix: `confirmInArchive` not `assertInArchive`
+- Protocol driver methods preferably match DSL method names exactly
 
 <a id="anti-patterns"></a>
 
-## Common "Don't"s
+### Common Anti-Patterns
 
-### ❌ Assertions in DSL Layer
+**❌ Assertions in DSL Layer:**
 
 ```typescript
 // BAD: DSL contains logic and assertions
@@ -975,7 +1076,7 @@ async hasCompletedTodo(args) {
 }
 ```
 
-### ❌ Protocol Driver Returns Boolean
+**❌ Protocol Driver Returns Boolean:**
 
 ```typescript
 // BAD: Driver returns success/failure
@@ -998,7 +1099,7 @@ async createTodo(name: string): Promise<void> {
 }
 ```
 
-### ❌ Testing Implementation Details
+**❌ Testing Implementation Details:**
 
 ```typescript
 // BAD: Tests UI structure
@@ -1010,7 +1111,7 @@ await dsl.user.submitsForm();
 await dsl.form.confirmSuccessMessage();
 ```
 
-### ❌ Mocking Internal Systems
+**❌ Stubbing Internal Systems:**
 
 ```typescript
 // BAD: Mocking your own database
@@ -1020,11 +1121,32 @@ const mockDatabase = mock("./database");
 const emailServiceStub = new EmailServiceStub();
 ```
 
+**❌ Missing Isolation:**
+
+```typescript
+// BAD: No aliasing → collisions in parallel, retries, and shared SUT runs
+async createUser(name: string) {
+  return this.driver.createUser(name);  // Direct pass-through
+}
+
+// GOOD: Automatic aliasing prevents conflicts
+async createUser(args: UserParams = {}) {
+  const params = new Params(this.context, args);
+  const name = params.Alias("name");  // Unique per test
+
+  return this.driver.createUser(name);
+}
+```
+
+<a id="validation-reference"></a>
+
+## Validation & Reference
+
 <a id="validation-checklist"></a>
 
-## Validation Checklist
+### Validation Checklist
 
-### AI Workflow
+**AI Workflow Validation:**
 
 - [ ] Context provided (Stage 1)
 - [ ] Domain concepts extracted from BDD scenarios (Stage 2)
@@ -1032,33 +1154,32 @@ const emailServiceStub = new EmailServiceStub();
 - [ ] Each phase reviewed before proceeding
 - [ ] All four layers implemented
 
-### Layer Separation
+**Layer Implementation:**
 
-- [ ] Test Cases use only DSL methods
-- [ ] DSL contains NO logic or assertions - just parameter handling / test isolation strategies
-- [ ] All assertions and failures in Protocol Drivers
-- [ ] Each layer have clear responsibilities
+- [ ] Test Cases use only DSL methods with Gherkin comments
+- [ ] DSL contains NO logic or assertions - just parameter handling and isolation
+- [ ] All assertions and failures in Protocol Drivers using `expect.fail()`
+- [ ] Each layer has clear, single responsibility
 
-### Test Isolation (Dave Farley's Three Levels)
+**Test Quality:**
 
-- [ ] System-level: Testing at system boundaries, stubbing ONLY external third-party dependencies
-- [ ] Functional: Each test creates unique data using natural boundaries
-- [ ] Temporal: Proxy-naming aliases enable repeated test runs
-
-### Test Quality
-
-- [ ] DSL reads like natural language from BDD
-- [ ] _Only_ Gherkin keyword comments in executable specs
-- [ ] Each BDD line maps to a DSL call
+- [ ] DSL reads like natural language from BDD scenarios
+- [ ] Each BDD line maps to exactly one DSL call
 - [ ] Clear failure messages from Protocol Drivers
 - [ ] Tests run in parallel without interference
 - [ ] Internal systems (database, cache) NOT stubbed
 
+**Isolation Verification:**
+
+- [ ] System-level: External third-party dependencies stubbed
+- [ ] Functional: Each test creates its own unique data boundaries
+- [ ] Temporal: Same test can run multiple times with aliasing
+
 <a id="quick-reference"></a>
 
-## Quick Reference
+### Quick Reference
 
-### AI Workflow Phases
+**AI Workflow Phases:**
 
 ```
 🔴 Phase 1: Generate Executable Spec & DSL → Review
@@ -1066,12 +1187,7 @@ const emailServiceStub = new EmailServiceStub();
 🧼 Phase 3: Refactor Layers & Validate → Review
 ```
 
-### BDD to DSL Transformation Pattern
-
-- Actions on the actor (`user.archives`)
-- Assertions on the subject (`todo.confirmInArchive`)
-- Actors and subjects are concepts from Ubiquitous Language glossary, established in the Product Discovery phase of project
-- Always use "confirm" for assertions, not "assert", to ensure DSL remains free from developer-centric speech
+**BDD to DSL Transformation Pattern:**
 
 ```
 BDD:  Given the user has a completed todo "Buy milk"
@@ -1084,30 +1200,22 @@ BDD:  Then "Buy milk" should be in archived todos
 DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
 ```
 
-### Layer Responsibilities
+**Layer Responsibilities:**
 
-```typescript
+```
 Test Case:  Uses DSL methods only
 DSL:        Test isolation handling, call driver.method()
-Driver:     Technical interaction + expect.fail()
+Driver:     Technical interaction with SUT + expect.fail()
 SUT:        Your actual system
 ```
 
-### The Three Levels of Isolation (Dave Farley)
+**The Three Levels of Acceptance Test Isolation:**
 
-```typescript
+```
 System-Level: Stub ONLY external third-party dependencies
 Functional:   Each test creates unique data (new accounts/todos)
 Temporal:     Proxy-naming aliases ("Buy milk" → "Buy milk1")
 ```
-
-### Core Principles
-
-- **Natural Language DSL**: Methods read like BDD scenarios
-- **Clear Layer Separation**: Each layer has ONE job
-- **Assertions in Drivers**: ALL pass/fail logic in Protocol Drivers
-- **External Stubs Only**: Never stub your own database/cache
-- **Parallel Execution**: Enabled by functional isolation
 
 <a id="driver-strategy-roadmap"></a>
 
@@ -1208,8 +1316,8 @@ This blueprint combines Dave Farley's Four-Layer Model with a disciplined AI wor
 
 - **Survive refactoring** through clear layer separation
 - **Run in parallel** with comprehensive isolation (system-level, functional, temporal)
-- **Read like requirements** using natural language DSL
+- **Mirror business requirements** using natural language DSL
+- **Increase speed without sacrificing quality** through AI assistance and human review
 - **Provide confidence** through automated business verification
-- **Stay maintainable** with AI assistance and human review
 
-The AI augmentation accelerates development while mandatory review checkpoints ensure quality. The result is an automated Definition of Done using tests that business people can read, developers can maintain, and that reliably verify the system meets requirements.
+The AI augmentation accelerates the Acceptance Test implementation process, while the mandatory human review checkpoints ensure quality. The result is an automated Definition of Done using tests that business people can read, developers can maintain, and that reliably verify the system meets the specified requirements.

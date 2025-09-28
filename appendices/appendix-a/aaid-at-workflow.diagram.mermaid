@@ -16,7 +16,7 @@ graph TD
     
     %% PHASE 1 - RED-like
     ATCycle --> Phase1["🔴 PHASE 1: Generate Executable Spec & DSL"]
-    Phase1 --> P1_Act["Create Executable Specification & DSL Layer<br/><br/>(Natural Language Methods, Functional/Temporal Isolation)"]
+    Phase1 --> P1_Act["Collaborate with AI to:<br/><br/>**Create Executable Specification & DSL Layer**<br/><br/>(Natural Language Methods, Functional/Temporal Isolation)"] 
     P1_Act --> P1_Check{"Executable Spec<br/>Fails?"}
     P1_Check -->|No| P1_Fix["Debug: Spec Should Fail<br/>(Not Implemented Yet)"]
     P1_Check -->|Yes| P1_Review
@@ -29,7 +29,7 @@ graph TD
     
     %% PHASE 2 - GREEN-like
     Phase2["🟢 PHASE 2: Implement Protocol Driver & SUT Connection"]
-    Phase2 --> P2_Act["Build Protocol Driver Following Stage 2 Roadmap<br/><br/>(Connection Strategy, Atomic Operations, External Stubs)"]
+    Phase2 --> P2_Act["Collaborate with AI to:<br/><br/>**Build Protocol Driver Following Stage 2 Roadmap**<br/><br/>(Connection Strategy, Atomic Operations, External Stubs)"]
     P2_Act --> P2_Check{"Executable Spec<br/>Passes?"}
     P2_Check -->|No| P2_Fix["Debug Driver Implementation"]
     P2_Check -->|Yes| P2_Review
@@ -42,7 +42,7 @@ graph TD
     
     %% PHASE 3 - REFACTOR-like
     Phase3["🧼 PHASE 3: Refactor Layers & Validate Isolation"]
-    Phase3 --> P3_Act["Evaluate & Refactor If Needed<br/><br/>(Polish Layers, Verify Three Isolations, 1:1 BDD Mapping)"]
+    Phase3 --> P3_Act["Collaborate with AI to:<br/><br/>**Evaluate & Refactor If Needed**<br/><br/>(Polish Layers, Verify Three Isolations, 1:1 BDD Mapping)"]
     P3_Act --> P3_Check{"Executable Spec<br/>Still Passes?"}
     P3_Check -->|No| P3_Fix["Fix Regression"]
     P3_Check -->|Yes| P3_Review
