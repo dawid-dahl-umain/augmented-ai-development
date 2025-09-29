@@ -683,7 +683,7 @@ The DSL layer bridges business language and technical implementation. It contain
 
 The core utilities (`DslContext` and `Params`) provide automatic functional and temporal isolation through proxy-naming.
 
-> **Full Implementation**: See example implementations in TypeScript of `DslContext` and `Params` with tests at [github.com/dawid-dahl-umain/aaid-at-demo](https://github.com/dawid-dahl-umain/aaid-at-demo/tree/main/src/dsl)
+> **Full Implementation**: See example implementations in TypeScript of `DslContext` and `Params` with tests [ 🔗 [HERE](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/tree/main/acceptance-test/dsl/utils) ].
 
 **DslContext - Manages Test Isolation:**
 

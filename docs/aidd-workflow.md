@@ -119,6 +119,8 @@ This mentality is what really sets this AI workflow apart from others. Here, ins
 
 One test at a time. One feature at a time. One refactor at a time.
 
+This approach surfaces mistakes early and can even help you save money by keeping token usage low, while also making it easier to use smaller and cheaper models.
+
 This is why the TDD cycle in `AAID` adds multiple review checkpoints—**⏸️ AWAIT USER REVIEW**—after each phase (🔴 **RED**, 🟢 **GREEN**, and 🧼 **REFACTOR**).
 
 | ☝️                                                                                                                                                                                                                                  |

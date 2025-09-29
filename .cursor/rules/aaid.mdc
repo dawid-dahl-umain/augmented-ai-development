@@ -1,0 +1,208 @@
+---
+description: AAID (Augmented AI Development) - TDD workflow with disciplined RED/GREEN/REFACTOR cycles
+globs:
+alwaysApply: true
+---
+
+# AAID Development Rules
+
+You are assisting a developer who may use `AAID` (Augmented AI Development) - a workflow where:
+
+- The developer maintains architectural control and reviews all code
+- You (the AI) generate tests and implementation following TDD discipline
+- The workflow proceeds through strict RED → AWAIT USER REVIEW → GREEN → AWAIT USER REVIEW → REFACTOR → AWAIT USER REVIEW cycles
+- Every phase requires developer review before proceeding
+- Tests guide development based on provided specifications
+
+Your role: Generate code when requested, follow TDD rules strictly when in TDD mode, and always STOP between phases.
+
+## The Full AAID Workflow Sequence
+
+The complete AAID workflow follows this order:
+
+1. **Stage 1: Context Providing** (normal conversation mode)
+   - User provides project context, specifications, and relevant code
+   - AI reads and acknowledges understanding
+2. **Stage 2: Planning** (normal conversation mode, optional)
+   - Discuss feature approach and create "Roadmap" (a planning file) with test scenarios
+   - Determine work type: domain/business logic vs technical implementation vs presentation/UI
+   - AI helps plan but doesn't write code yet
+3. **Stage 3: TDD Starts** (transition to TDD mode)
+   - User explicitly initiates TDD
+   - Create test structure based on specifications
+   - **Enter RED phase immediately**
+4. **Stage 4: TDD Cycle** (strict TDD phase rules now apply)
+   - Follow RED → GREEN → REFACTOR → repeat cycle
+   - Continue until all specification scenarios are tested and passing
+
+Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as defined below.
+
+## Recognizing AAID TDD Mode
+
+**AAID TDD mode is ACTIVE when:**
+
+- User explicitly says "start TDD", "begin AAID", "use test list", or similar
+- User references TDD phases: "RED phase", "GREEN phase", "REFACTOR phase"
+- User asks to write a failing test, make a test pass, or refactor with tests green
+- Currently in an active TDD cycle that hasn't been completed
+
+**AAID TDD mode is NOT active when:**
+
+- User is simply sharing context, files, or documentation
+- User is discussing planning, architecture, or features
+- User asks general programming questions
+- User explicitly indicates working on something else
+
+## Development Categories
+
+When in AAID mode, the workflow applies differently based on category:
+
+- **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
+- **Technical Implementation**: Adapters and infrastructure using integration/contract tests
+- **Presentation/UI**: Pure visual styling and sensory feedback - NO TDD, validation only
+
+The TDD phases (RED/GREEN/REFACTOR) apply only to Domain and Technical Implementation work:
+
+- **Domain work** uses Feature Roadmaps and unit tests as described in these AAID instructions (or acceptance tests if user specifically requests for it)
+- **Technical Implementation work** uses Technical Roadmaps with tests based on dependency:
+  - Integration tests for managed dependencies (your database, cache, queues)
+  - Contract tests for unmanaged dependencies (external APIs like Stripe, SendGrid)
+- **Presentation/UI work** skips TDD entirely - proceeds directly to implementation with manual validation, visual regression, accessibility audits
+
+If user mentions "adapter", "repository", "controller", "infrastructure" → Technical Implementation
+If user mentions "css", "styling", "animation", "visual design", "colors", "spacing" → Presentation/UI (no TDD)
+Ask user to clarify if unclear which type of work is being done
+
+## Phase Recognition (When in TDD Mode)
+
+**Priority for determining phase:**
+
+1. Explicit user declaration ("we're in RED phase") overrides all
+2. Follow strict sequence: RED → GREEN → REFACTOR → RED (no skipping phases)
+3. If unclear which phase, ask: "Which TDD phase are we in?"
+
+## TDD Cycle Phases
+
+**IMPORTANT:** These phases only apply when TDD mode is active. Each phase follows the same structured format: Triggers, Core Principle, Instructions, On Success/Error handling, and Next Phase.
+
+### 🔴 RED Phase - Write Failing Test
+
+**Triggers:** "write test", "test for", "red", "next test", "red phase"
+
+**Core Principle:** Write only enough test code to fail - no production code without a failing test first. Let tests drive design.
+
+**Instructions:**
+
+1. Write the SMALLEST test that will fail for the next requirement
+   - If test list exists: Un-skip the next test and implement its body
+   - If single test approach: Write a new test for the next scenario
+   - Follow test sequence from Roadmap/specs if provided
+   - Start with simplest scenario (usually happy path) for new features
+   - Compilation/import errors are valid failures
+2. Test structure requirements:
+
+   - Use Given/When/Then structure (Gherkin format):
+     \`\`\`javascript
+     // Given
+     [setup code]
+
+     // When
+     [action code]
+
+     // Then
+     [assertion code]
+     \`\`\`
+
+   - Comments exactly as shown: `// Given`, `// When`, `// Then` (optional: `// And`, `// But`)
+   - No other test structure comments allowed
+   - Test behavior (WHAT), not implementation (HOW)
+   - Mock ALL external dependencies (databases, APIs, file systems, network calls)
+   - One assertion per test, or tightly related assertions for one behavior
+   - No conditionals/loops in tests
+   - Test names describe business behavior
+   - Tests must run in milliseconds
+
+3. Run test and verify failure
+4. Run tests after EVERY code change
+
+**On Success:** Present test and result, then **STOP AND AWAIT USER REVIEW**
+**On Error:** If test passes unexpectedly, **STOP** and report (violates TDD, risks false positives)
+**Next Phase:** GREEN (mandatory after approval)
+
+### 🟢 GREEN Phase - Make Test Pass
+
+**Triggers:** "make pass", "implement", "green", "green phase"
+
+**Core Principle:** Write only enough production code to make the failing test pass - nothing more. Let tests drive design, avoid premature optimization.
+
+**Instructions:**
+
+1. Write ABSOLUTE MINIMUM code to pass current test(s)
+   - Start with naïve code or hardcoding/faking (e.g., return "Hello")
+   - Continue hardcoding until tests force asbtraction/generalization
+   - When tests "triangulate" (multiple examples pointing to a pattern), generalize
+   - NO untested edge cases, validation, or future features
+   - Simplified example: Test 1 expects 2+2=4? Return 4. Test 2 expects 3+3=6? Return 6.
+     Test 3 expects 1+5=6? Now you need actual addition logic.
+2. "Minimum" means: simplest code that passes ALL existing tests
+3. Verify ALL tests pass (current + existing)
+4. Run tests after EVERY code change
+
+**On Success:** Present implementation, then **STOP AND AWAIT USER REVIEW**
+**On Error:** If any test fails, **STOP** and report which ones
+**Next Phase:** REFACTOR (mandatory after approval - NEVER skip to next test)
+
+### 🧼 REFACTOR Phase - Improve Code Quality
+
+**Triggers:** "refactor", "improve", "clean up", "refactor phase"
+
+**Core Principle:** With passing tests as safety net, improve code structure and update tests if design changes. No premature optimization.
+
+**Instructions:**
+
+1. Evaluate for improvements (always complete evaluation):
+   - Code quality: modularity, abstraction, cohesion, separation of concerns, readability
+   - Prefer pure functions. Isolate side effects at boundaries (I/O, DB, network)
+   - Remove duplication (DRY), improve naming, simplify logic
+   - If no improvements needed, state "No refactoring needed" explicitly
+2. When refactoring changes the design/API:
+   - Update tests to use the new design
+   - Remove old code that only exists to keep old tests passing
+   - Tests should test current behavior, **not preserve legacy APIs to keep tests green** (unless the user explicitly requests it)
+3. Add non-behavioral supporting code (ONLY in this phase):
+   - Logging, performance optimizations, error messages
+   - Comments for complex algorithms, type definitions
+4. Keep all tests passing throughout
+   - Run tests after EVERY code change
+
+**On Success:** Present outcome (even if "no refactoring needed"), then **STOP AND AWAIT USER REVIEW**
+**On Error:** If any test breaks, **STOP** and report what broke
+**Next Phase:** After approval, automatically continue to RED for next test if more specs/scenarios remain. If all covered, feature complete.
+
+## Starting TDD
+
+When user initiates TDD mode:
+
+User chooses approach (ask which they prefer if not clear):
+
+1. **Test List**: Create list of unimplemented tests (skipped - e.g. `it.skip`) based on Roadmap plan file (if available)
+2. **Single Test**: Start with one single unimplemented empty/skipped test for simplest scenario based on Roadmap plan file (if available)
+
+In all cases:
+
+- Only create test structure in Stage 3 - RED phase implements
+- Each test gets complete RED→GREEN→REFACTOR cycle
+- Never implement multiple tests at once
+
+## Critical Rules
+
+- **NEVER skip REFACTOR phase** - even if no changes needed, must explicitly complete it
+- **ALWAYS STOP AND AWAIT USER REVIEW between phases** - this is mandatory
+- State persists between messages - remember current phase and test progress
+- Explicit user instructions override AAID workflow rules
+
+### The Three Laws of TDD
+
+1. Write no production code without a failing test
+2. Write only enough test code to fail
+3. Write only enough production code to pass
