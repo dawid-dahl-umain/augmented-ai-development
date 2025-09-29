@@ -221,7 +221,7 @@ Acceptance tests run against your real, production-like system, typically includ
 **Protocol Drivers:**
 
 - Translate abstract commands from DSL into concrete interactions with system's interfaces
-- Separate driver per communication channel (e.g., UI, API, CLI)
+- One driver per protocol: each communication channel (UI, API, CLI, message queue) gets its own dedicated driver class
 - Handle specifics of communication protocol (HTTP requests, browser automation, message queues)
 - Contains ALL assertions and failures: This is where pass/fail decisions are made
 - Uses test framework's fail mechanism directly: e.g., `expect.fail()` in Vitest
@@ -407,8 +407,8 @@ it("should archive a completed todo", async () => {
 // DSL Method - Pure translation, NO business or verification logic
 async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
   const params = new Params(this.context, args);
-  const name = params.Alias("name");  // Implements isolation
-  const description = params.Optional("description", "");
+  const name = params.alias("name");  // Implements isolation
+  const description = params.optional("description", "");
 
   await this.driver.hasCompletedTodo(name, description);
 }
@@ -434,7 +434,9 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 
 ```typescript
 // Protocol Driver - Contains ALL assertions and failures
-export class UIUserDriver {
+export class UIDriver {
+  constructor(private page: Page) {}
+
   // Method name preferably matches DSL method name exactly
 
   async hasCompletedTodo(name: string, desc: string): Promise<void> {
@@ -533,7 +535,7 @@ acceptance-test/
 ├── protocol-driver/          # Layer 3: System interaction
 │   ├── stubs/
 │   │   └── [external].stub.ts
-│   └── [concept].driver.ts
+│   └── [protocol].driver.ts
 └── sut/                      # Layer 4: System setup
     └── setup.ts
 ```
@@ -612,7 +614,7 @@ import { beforeEach, describe, it } from "vitest";
 import { createDsl } from "../dsl";
 
 describe("User archives completed todos", () => {
-  let dsl = createDsl();
+  let dsl: Dsl;
 
   beforeEach(() => {
     dsl = createDsl();
@@ -667,9 +669,9 @@ describe("User archives completed todos", () => {
 
 Calling `createDsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                        |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| When writing executable specs, always create the DSL inside the suite’s setup (for example with `let dsl = createDsl();` followed by a `beforeEach` that reassigns it). Avoid storing DSL instances in shared modules; keeping the factory call local to each suite is the test author’s responsibility and is what guarantees isolation. |
+| ☝️                                                                                                                                                                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| When writing executable specs, always create the DSL inside the suite's setup (for example with `let dsl: Dsl;` followed by a `beforeEach` that creates it). Avoid storing DSL instances in shared modules; keeping the factory call local to each suite is the test author’s responsibility and is what guarantees isolation. |
 
 <a id="layer-2-dsl"></a>
 
@@ -711,16 +713,16 @@ export class DslContext {
 
 export class Params<T extends Record<string, any>> {
   // Type-safe parameter handling with automatic aliasing
-  public Optional<K extends keyof T>(name: K, defaultValue: T[K]): T[K] {
+  public optional<K extends keyof T>(name: K, defaultValue: T[K]): T[K] {
     /* ... */
   }
-  public Alias(name: keyof T): string {
+  public alias(name: keyof T): string {
     /* ... */
   }
-  public OptionalAlias(name: keyof T, defaultValue: string): string {
+  public optionalAlias(name: keyof T, defaultValue: string): string {
     /* ... */
   }
-  public OptionalSequence(name: keyof T, start?: number): string {
+  public optionalSequence(name: keyof T, start?: number): string {
     /* ... */
   }
 }
@@ -737,7 +739,7 @@ DSL methods must read like natural language, matching the BDD scenarios. They co
 
 import { DslContext } from "./utils/DslContext";
 import { Params } from "./utils/Params";
-import { UIUserDriver } from "../protocol-driver/ui.user.driver";
+import { UIDriver } from "../protocol-driver/ui.driver";
 
 interface TodoParams {
   name?: string;
@@ -749,17 +751,17 @@ interface ArchiveParams {
 }
 
 export class UserDSL {
-  private driver: UIUserDriver;
+  private driver: UIDriver;
 
-  constructor(private context: DslContext, driver: UIUserDriver) {
+  constructor(private context: DslContext, driver: UIDriver) {
     this.driver = driver;
   }
 
   // Named to match BDD: "Given the user has a completed todo"
   async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
     const params = new Params(this.context, args);
-    const name = params.Alias("name"); // Always alias for isolation
-    const description = params.Optional("description", "");
+    const name = params.alias("name"); // Always alias for isolation
+    const description = params.optional("description", "");
 
     await this.driver.hasCompletedTodo(name, description);
   }
@@ -767,7 +769,7 @@ export class UserDSL {
   // Named to match BDD: "When they archive"
   async archives(args: ArchiveParams): Promise<void> {
     const params = new Params(this.context, args);
-    const name = params.Alias("todo");
+    const name = params.alias("todo");
 
     await this.driver.archives(name);
   }
@@ -775,7 +777,7 @@ export class UserDSL {
   // Named to match BDD: "When they attempt to archive"
   async attemptsToArchive(args: ArchiveParams): Promise<void> {
     const params = new Params(this.context, args);
-    const name = params.Alias("todo");
+    const name = params.alias("todo");
 
     await this.driver.attemptsToArchive(name);
   }
@@ -786,16 +788,16 @@ export class UserDSL {
 // dsl/todo.dsl.ts
 
 export class TodoDSL {
-  private driver: UITodoDriver;
+  private driver: UIDriver;
 
-  constructor(private context: DslContext, driver: UITodoDriver) {
+  constructor(private context: DslContext, driver: UIDriver) {
     this.driver = driver;
   }
 
   // Named to match BDD: "Then X should be in archived todos"
   async confirmInArchive(args: { name?: string }): Promise<void> {
     const params = new Params(this.context, args);
-    const name = params.Alias("name");
+    const name = params.alias("name");
 
     await this.driver.confirmInArchive(name);
   }
@@ -803,7 +805,7 @@ export class TodoDSL {
   // Named to match BDD: "And X should not be in active todos"
   async confirmNotInActive(args: { name?: string }): Promise<void> {
     const params = new Params(this.context, args);
-    const name = params.Alias("name");
+    const name = params.alias("name");
 
     await this.driver.confirmNotInActive(name);
   }
@@ -818,20 +820,18 @@ export class TodoDSL {
 import { DslContext } from "./utils/DslContext";
 import { UserDSL } from "./user.dsl";
 import { TodoDSL } from "./todo.dsl";
-import { UIUserDriver } from "../protocol-driver/ui.user.driver";
-import { UITodoDriver } from "../protocol-driver/ui.todo.driver";
+import { UIDriver } from "../protocol-driver/ui.driver";
 
 export const createDsl = () => {
   const context = new DslContext();
 
   // In reality, drivers would connect to real SUT
   // For demo, using global.page from Playwright
-  const userDriver = new UIUserDriver(global.page);
-  const todoDriver = new UITodoDriver(global.page);
+  const uiDriver = new UIDriver(global.page);
 
   return {
-    user: new UserDSL(context, userDriver),
-    todo: new TodoDSL(context, todoDriver),
+    user: new UserDSL(context, uiDriver),
+    todo: new TodoDSL(context, uiDriver),
   };
 };
 ```
@@ -854,8 +854,10 @@ Protocol Drivers handle the technical interaction with the system AND all pass/f
 import { Page } from "@playwright/test";
 import { expect } from "vitest";
 
-export class UIUserDriver {
+export class UIDriver {
   constructor(private page: Page) {}
+
+  // === User Operations ===
 
   /**
    * Create todo and mark as completed
@@ -923,17 +925,8 @@ export class UIUserDriver {
       expect.fail(`Could not attempt to archive '${name}': ${error.message}`);
     }
   }
-}
-```
 
-```typescript
-// protocol-driver/ui.todo.driver.ts - Assertion methods
-
-import { Page } from "@playwright/test";
-import { expect } from "vitest";
-
-export class UITodoDriver {
-  constructor(private page: Page) {}
+  // === Todo Verification ===
 
   async confirmInArchive(name: string): Promise<void> {
     await this.page.goto("/todos/archived");
@@ -966,6 +959,8 @@ export class UITodoDriver {
   }
 }
 ```
+
+> **For Larger Systems**: Consider composing the driver internally while maintaining a single driver interface. See the demo repository for [an example](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/dsl/index.ts) of this approach.
 
 <a id="external-stubs"></a>
 
@@ -1138,7 +1133,7 @@ async createUser(name: string) {
 // GOOD: Automatic aliasing prevents conflicts
 async createUser(args: UserParams = {}) {
   const params = new Params(this.context, args);
-  const name = params.Alias("name");  // Unique per test
+  const name = params.alias("name");  // Unique per test
 
   return this.driver.createUser(name);
 }
