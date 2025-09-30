@@ -124,9 +124,11 @@ And "Buy milk" should not be in active todos       # Additional outcome
 
 ### The Three Levels of Test Isolation
 
-Per Dave Farley’s definition, three levels of isolation are essential for reliable and fast acceptance testing.
+Per Dave Farley's definition, three levels of isolation are essential for reliable and fast acceptance testing.
 
-Acceptance tests run against your real, production-like system, typically including the real test database and cache. Isolation prevents cross-test data collisions and order dependence.
+Acceptance tests run against your real, production-like system, including the real database and cache. Unlike unit tests (which mock everything and can therefore run sequentially in milliseconds), acceptance tests are slower.
+
+To keep test suites fast, we run tests in parallel. Isolation prevents tests from interfering with each other during parallel execution and ensures repeatable results across multiple runs.
 
 #### 1. System-Level Isolation
 
@@ -139,20 +141,28 @@ Acceptance tests run against your real, production-like system, typically includ
 
 #### 2. Functional Isolation
 
-**Run many tests in the same deployed system without interference by giving each test its own isolated functional scope:**
+**Run many tests in parallel against the same production-like system (e.g. with its real database) without interference:**
 
-- Each test creates fresh domain partitions (accounts, products, marketplaces, etc.)
-- Share startup cost of a complex system and execute tests in parallel safely
-- Example: For an e-commerce site, each test registers a new account and creates distinct products
-- After a test run is over, your system will contain a lot of junk data. That's okay! Discard old test SUT and start fresh for the next run
+- Each test creates its own unique data boundary (e.g., user account, customer record, workspace)
+- All test operations happen within that partition's context (e.g., todos belong to that specific user)
+- DSL methods use `params.alias()` to make identifiers unique: "user@test.com" → "user@test.com1", "user@test.com2", etc.
+- Tests share the same deployed system and database but operate in isolated spaces, enabling safe parallel execution
+- Example: For a todo app, each test creates a unique user account; for e-commerce, each test creates a unique customer and their products
+- After a test run is over, your system will contain accumulated test data. That's okay! Discard the test SUT and start fresh for the next run
 
 #### 3. Temporal Isolation
 
 **Run the same test repeatedly and get the same results:**
 
-- Combines with functional isolation
-- Uses proxy-naming technique: the test uses stable names, the test infrastructure (DSL layer) maps to unique aliases per run (e.g., “Buy milk” → “Buy milk1”)
+- Combines with functional isolation to ensure deterministic behavior across runs
+- Uses proxy-naming technique: the test uses stable names, the test infrastructure (DSL layer) maps to unique aliases per run
+  - Account identifiers: "user@test.com" → "user@test.com1" (run 1), "user@test.com2" (run 2)
+  - Data within account: "Buy milk" → "Buy milk1" (run 1), "Buy milk2" (run 2)
 - Optional: treat time as an external dependency via a controllable clock to keep tests deterministic
+
+> ℹ️ `DslContext` maintains a static `globalSequenceNumbers` map that persists across all tests within the process. Each test creates a fresh `DslContext` instance (which is destroyed after the test), but all instances share the same static counter, so Test 1 gets suffix "1", Test 2 gets "2", etc.
+>
+> This is the one intentional piece of shared state: it enables temporal isolation and deterministic numbering without manual cleanup. When you restart the test runner, the process terminates and the OS reclaims all process memory (including the static `globalSequenceNumbers` map), so the new process starts with a fresh empty map.
 
 <a id="four-layer-architecture"></a>
 
@@ -171,7 +181,7 @@ Acceptance tests run against your real, production-like system, typically includ
                         ▼
 ┌─────────────────────────────────────────────────┐
 │    Layer 2: Domain-Specific Language (DSL)      │
-│    "Business vocabulary as code methods"        │
+│         "Business vocabulary as code"           │
 └─────────────────────────────────────────────────┘
                         │
                         ▼
@@ -204,13 +214,13 @@ Acceptance tests run against your real, production-like system, typically includ
 
 #### 🗣️ Layer 2: Domain-Specific Language (DSL)
 
-**Purpose:** Bridge between business language and technical implementation
+**Purpose:** Translate business language into system interactions, while handling test isolation and keeping executable specifications free of technical details
 
 **Key Features:**
 
 - **Natural language methods**: Match BDD scenarios exactly
-- **Parameter handling**: Uses sensible defaults and optional parameters
-- **Automatic aliasing**: Implements functional and temporal isolation transparently
+- **Parameter handling**: Uses sensible defaults and optional parameters, to make the executable specifications readable and free from unecessary technical details
+- **Isolation infrastructure**: Uses methods like `params.alias()` to implement functional and temporal test isolation, to enable safe parallel test execution
 - **Pure translation layer**: NO assertions, NO failures, NO business or verification logic
 - **Simply calls Protocol Driver**: Transforms business language to driver calls
 
@@ -226,7 +236,7 @@ Acceptance tests run against your real, production-like system, typically includ
 - Contains ALL assertions and failures: This is where pass/fail decisions are made
 - Uses test framework's fail mechanism directly: e.g., `expect.fail()` in Vitest
 - Each operation should be atomic and reliable
-- Hide complex flows: `hasAuthorisedAccount` may involve register + login
+- Hide complex flows: `hasAccount` may involve register + login, establishing the functional isolation boundary for all subsequent operations
 
 **External System Stubs:**
 
@@ -327,7 +337,7 @@ Identify the key domain objects (nouns from Ubiquitous Language) that will becom
 
 **2. Choose Protocol Driver Type**
 
-Based on your system's interfaces:
+Based on your system's interfaces, for example:
 
 - **UI testing**: Playwright, Selenium
 - **API testing**: HTTP clients
@@ -339,7 +349,7 @@ Based on your system's interfaces:
 Use the [template](#driver-strategy-roadmap) to document how tests will interact with the system:
 
 - Protocol type and connection strategy
-- How tests will achieve three levels of isolation
+- How tests will achieve the [three levels of isolation](#test-isolation)
 - System boundaries and entry points
 - Which external third-party systems need stubbing (system-level isolation)
 - Which data needs aliasing (functional isolation)
@@ -358,8 +368,8 @@ Use the [template](#driver-strategy-roadmap) to document how tests will interact
 ## Isolation Strategy
 
 - **System-Level**: Stub EmailService and AnalyticsAPI (third-party only)
-- **Functional & Temporal**: User accounts provide natural boundaries,
-  DslContext handles aliasing automatically
+- **Functional** (parallel safe): Each test creates its own user account boundary
+- **Temporal** (repeatable): Proxy-naming aliases account emails ("user@test.com1", "user@test.com2") and todo names ("Buy milk1", "Buy milk2")
 
 [See complete roadmap template below for full structure]
 ```
@@ -384,7 +394,8 @@ The cycle follows three phases lightly mirroring the TDD RED/GREEN/REFACTOR patt
 
 - Executable specification matching BDD scenarios exactly
 - DSL layer with natural language methods
-- Functional/temporal isolation via aliasing
+- Implements isolation strategy from Stage 2: uses `params.alias()` to make user-provided identifiers unique
+- Keeps tests readable: uses `params.optional()`, `params.optionalSequence()`, and `params.optionalList()` to provide defaults
 
 **Example generation:**
 
@@ -392,6 +403,9 @@ The cycle follows three phases lightly mirroring the TDD RED/GREEN/REFACTOR patt
 // Executable Spec - 1:1 mapping to BDD
 it("should archive a completed todo", async () => {
   // Given
+  await dsl.user.hasAccount({ email: "user@test.com" });
+
+  // And
   await dsl.user.hasCompletedTodo({ name: "Buy milk" });
 
   // When
@@ -404,11 +418,18 @@ it("should archive a completed todo", async () => {
   await dsl.todo.confirmNotInActive({ name: "Buy milk" });
 });
 
-// DSL Method - Pure translation, NO business or verification logic
+// DSL Methods - Pure translation, NO business or verification logic
+async hasAccount(args: AccountParams = {}): Promise<void> {
+  const params = new Params(this.context, args);
+  const email = params.alias("email");  // Functional isolation boundary
+
+  await this.driver.hasAccount(email);
+}
+
 async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
   const params = new Params(this.context, args);
-  const name = params.alias("name");  // Implements isolation
-  const description = params.optional("description", "");
+  const name = params.alias("name");  // Temporal isolation within account
+  const description = params.optional("description", "");  // Falls back to "" if not provided
 
   await this.driver.hasCompletedTodo(name, description);
 }
@@ -435,9 +456,27 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 ```typescript
 // Protocol Driver - Contains ALL assertions and failures
 export class UIDriver {
+  private currentUserEmail?: string;
+
   constructor(private page: Page) {}
 
-  // Method name preferably matches DSL method name exactly
+  // Method names preferably match DSL method names exactly
+
+  async hasAccount(email: string): Promise<void> {
+    try {
+      await this.page.goto("/register");
+      await this.page.fill('[data-testid="email"]', email);
+      await this.page.fill('[data-testid="password"]', "test-password");
+      await this.page.click('[data-testid="register-submit"]');
+
+      // Wait for successful registration/login (functional isolation established)
+      await this.page.waitForSelector('[data-testid="user-menu"]');
+
+      this.currentUserEmail = email;
+    } catch (error) {
+      expect.fail(`Unable to create account for '${email}': ${error.message}`);
+    }
+  }
 
   async hasCompletedTodo(name: string, desc: string): Promise<void> {
     try {
@@ -558,12 +597,13 @@ Acceptance Criteria:
 Feature: User archives completed todos
 
 Scenario: Archive a completed todo
-  Given the user has a completed todo "Buy milk"
+  Given the user has an account
+  And they have a completed todo "Buy milk"
   When they archive "Buy milk"
   Then "Buy milk" should be in archived todos
   And "Buy milk" should not be in active todos
 
-Scenario: ... # Next Scenario
+Scenario: ... # Next Scenario (follows same pattern with account creation)
 
 # Linked technical implementation (non-behavioral) tasks (not mapped to acceptance tests):
 # - UI Tasks: visual styling, screen reader accessibility, animations
@@ -623,6 +663,9 @@ describe("User archives completed todos", () => {
   describe("Archive a completed todo", () => {
     it("should archive a completed todo", async () => {
       // Given
+      await dsl.user.hasAccount({ email: "user@test.com" });
+
+      // And
       await dsl.user.hasCompletedTodo({ name: "Buy milk" });
 
       // When
@@ -638,7 +681,10 @@ describe("User archives completed todos", () => {
 
   describe("Attempt to archive an incomplete todo", () => {
     it("should not archive an incomplete todo", async () => {
-      // Given
+      // Given (account creation follows same pattern)
+      await dsl.user.hasAccount({ email: "user@test.com" });
+
+      // And
       await dsl.user.hasIncompleteTodo({ name: "Walk dog" });
 
       // When
@@ -654,7 +700,10 @@ describe("User archives completed todos", () => {
 
   describe("Restore an archived todo", () => {
     it("should restore an archived todo", async () => {
-      // Given
+      // Given (account creation follows same pattern)
+      await dsl.user.hasAccount({ email: "user@test.com" });
+
+      // And
       await dsl.user.hasArchivedTodo({ name: "Review code" });
 
       // When
@@ -667,7 +716,7 @@ describe("User archives completed todos", () => {
 });
 ```
 
-Instantiating `new Dsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios.
+Instantiating `new Dsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios. Each test then establishes its own functional isolation boundary by creating a unique user account.
 
 | ☝️                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -700,7 +749,7 @@ export class DslContext {
   }
 
   // Generates sequential unique values for a name
-  public sequenceNumberForName(name: string, start?: number): string {
+  public sequenceNumberForName(name: string, start: number): string {
     /* ... */
   }
 }
@@ -708,16 +757,24 @@ export class DslContext {
 
 **Params - Parameter Handling with Isolation:**
 
+The `Params` class is constructed with the args object passed to a DSL method. Methods like `alias("email")` extract the value from `args.email`, then process it (e.g., make it unique).
+
 ```typescript
 // dsl/utils/Params.ts
 
 export class Params {
+  constructor(context: DslContext, args: ParamsArgs) {
+    /* ... */
+  }
+
   // Retrieves value or falls back to default
+  // Keeps tests concise and readable by only specifying what matters for each scenario
   public optional(name: string, defaultValue: string): string {
     /* ... */
   }
 
   // Creates unique alias for functional & temporal isolation
+  // Required for identifiers that establish boundaries or need uniqueness
   public alias(name: string): string {
     /* ... */
   }
@@ -732,7 +789,14 @@ export class Params {
     /* ... */
   }
 }
+
+type ParamsArgs = Record<string, string | string[]>;
 ```
+
+**Key distinction:**
+
+- `alias()` implements isolation (functional/temporal) - makes identifiers unique across tests
+- `optional()` keeps tests readable: test author writes `dsl.user.hasCompletedTodo({ name: "Buy milk" })` in business language; DSL method uses `optional()` to fill technical details (description, priority, etc.) that don't matter for this scenario
 
 <a id="dsl-classes"></a>
 
@@ -746,6 +810,10 @@ DSL methods must read like natural language, matching the BDD scenarios. They co
 import { DslContext } from "./utils/DslContext";
 import { Params } from "./utils/Params";
 import { UIDriver } from "../protocol-driver/ui.driver";
+
+interface AccountParams {
+  email?: string;
+}
 
 interface TodoParams {
   name?: string;
@@ -763,11 +831,19 @@ export class UserDsl {
     this.driver = driver;
   }
 
-  // Named to match BDD: "Given the user has a completed todo"
+  // Named to match BDD: "Given the user has an account"
+  async hasAccount(args: AccountParams = {}): Promise<void> {
+    const params = new Params(this.context, args);
+    const email = params.alias("email"); // Functional isolation boundary
+
+    await this.driver.hasAccount(email);
+  }
+
+  // Named to match BDD: "And they have a completed todo"
   async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
     const params = new Params(this.context, args);
-    const name = params.alias("name"); // Always alias for isolation
-    const description = params.optional("description", "");
+    const name = params.alias("name"); // Temporal isolation within account
+    const description = params.optional("description", ""); // Falls back to "" if not provided
 
     await this.driver.hasCompletedTodo(name, description);
   }
@@ -835,8 +911,9 @@ export class Dsl {
   constructor() {
     const context = new DslContext();
 
-    // In reality, drivers would connect to real SUT
-    // For demo, using global.page from Playwright
+    // Inject the connection mechanism into protocol drivers to interact with the production-like SUT
+    // (e.g., browser page, HTTP endpoint, message queue connection)
+
     const uiDriver = new UIDriver(global.page);
 
     this.user = new UserDsl(context, uiDriver);
@@ -845,7 +922,7 @@ export class Dsl {
 }
 ```
 
-Encapsulating DSL domain objects in a class ensures each test receives a fresh `DslContext` and newly wired protocol drivers. This guarantees isolation: tests cannot share state, aliases are scoped per-test, and parallel execution is safe.
+Encapsulating DSL domain objects in a class ensures each test receives a fresh `DslContext` and newly wired protocol drivers. This guarantees isolation: tests cannot share state, aliases are scoped per-test, and parallel execution is safe. The first action in each test typically establishes the functional isolation boundary (creating a unique account), with subsequent operations operating within that boundary.
 
 <a id="layer-3-protocol-drivers"></a>
 
@@ -864,7 +941,32 @@ import { Page } from "@playwright/test";
 import { expect } from "vitest";
 
 export class UIDriver {
+  private currentUserEmail?: string;
+
   constructor(private page: Page) {}
+
+  // === Account Management ===
+
+  /**
+   * Creates unique user account: all test operations happen within this user's context.
+   * The DSL layer aliases the email (e.g., user@test.com → user@test.com1, user@test.com2),
+   * so tests can run in parallel against the same database without interfering.
+   */
+  async hasAccount(email: string): Promise<void> {
+    try {
+      await this.page.goto("/register");
+      await this.page.fill('[data-testid="email"]', email);
+      await this.page.fill('[data-testid="password"]', "test-password");
+      await this.page.click('[data-testid="register-submit"]');
+
+      // Wait for successful registration/login
+      await this.page.waitForSelector('[data-testid="user-menu"]');
+
+      this.currentUserEmail = email;
+    } catch (error) {
+      expect.fail(`Unable to create account for '${email}': ${error.message}`);
+    }
+  }
 
   // === User Operations ===
 
@@ -1018,7 +1120,8 @@ The SUT is your actual application running in a test environment:
 **Configuration Requirements:**
 
 - **Deploy as production-like**: Same architecture, same technologies
-- **Include all internal systems**: Database, cache, message queues, internal services
+- **Include all internal systems**: Database, cache, message queues, internal services you control
+- **Stub external dependencies**: Third-party APIs, payment gateways, external services you don't control (use contract testing to verify these integrations separately)
 - **Optimize for testing**: Fast startup, test data cleanup strategies
 - **Support concurrent testing**: Handle multiple test runs simultaneously
 
@@ -1062,7 +1165,7 @@ The SUT is your actual application running in a test environment:
 
 - DSL methods use natural business language: `hasCompletedTodo` not `createTodo`
 - Assertions use `confirm` prefix: `confirmInArchive` not `assertInArchive`
-- Protocol driver methods preferably match DSL method names exactly
+- Protocol driver method names preferably match DSL method names exactly (e.g., `dsl.hasAccount()` → `driver.hasAccount()`). Method arguments naturally differ: DSL takes object parameters, driver takes primitives. Minor pragmatic deviations in naming are acceptable if they improve technical clarity.
 
 <a id="anti-patterns"></a>
 
@@ -1089,7 +1192,7 @@ async hasCompletedTodo(args) {
 **❌ Protocol Driver Returns Boolean:**
 
 ```typescript
-// BAD: Driver returns success/failure
+// BAD: Driver returns success/failure. DSL shouldn't handle assertions.
 async createTodo(name: string): Promise<boolean> {
   try {
     // ...
@@ -1134,17 +1237,28 @@ const emailServiceStub = new EmailServiceStub();
 **❌ Missing Isolation:**
 
 ```typescript
-// BAD: No aliasing → collisions in parallel, retries, and shared SUT runs
-async createUser(name: string) {
-  return this.driver.createUser(name);  // Direct pass-through
+// BAD: No account boundary or aliasing → collisions in parallel/retry runs
+async hasCompletedTodo(name: string) {
+  return this.driver.hasCompletedTodo(name);  // Direct pass-through, no isolation
 }
 
-// GOOD: Automatic aliasing prevents conflicts
-async createUser(args: UserParams = {}) {
-  const params = new Params(this.context, args);
-  const name = params.alias("name");  // Unique per test
+// GOOD: Account boundary + aliasing prevents conflicts
+// Each test creates fresh DSL + driver instances (via beforeEach), so no shared state across tests
 
-  return this.driver.createUser(name);
+// Step 1: Establish functional isolation boundary (first action in every test)
+async hasAccount(args: AccountParams = {}) {
+  const params = new Params(this.context, args);
+  const email = params.alias("email");  // Creates unique account: user@test.com1, user@test.com2, etc.
+
+  return this.driver.hasAccount(email);  // Driver stores account in instance variable for this test's operations
+}
+
+// Step 2: Operate within that account with temporal isolation
+async hasCompletedTodo(args: TodoParams = {}) {
+  const params = new Params(this.context, args);
+  const name = params.alias("name");  // Unique within account: "Buy milk1", "Buy milk2", etc.
+
+  return this.driver.hasCompletedTodo(name);  // Uses the account this driver instance stored
 }
 ```
 
@@ -1182,8 +1296,8 @@ async createUser(args: UserParams = {}) {
 **Isolation Verification:**
 
 - [ ] System-level: External third-party dependencies stubbed
-- [ ] Functional: Each test creates its own unique data boundaries
-- [ ] Temporal: Same test can run multiple times with aliasing
+- [ ] Functional: Each test creates its own natural boundaries (e.g., accounts, products) without sharing with other tests
+- [ ] Temporal: Proxy-naming produces unique aliases (e.g., "user@test.com1", "Buy milk2") allowing same test to run repeatedly
 
 <a id="quick-reference"></a>
 
@@ -1200,7 +1314,10 @@ async createUser(args: UserParams = {}) {
 **BDD to DSL Transformation Pattern:**
 
 ```
-BDD:  Given the user has a completed todo "Buy milk"
+BDD:  Given the user has an account
+DSL:  await dsl.user.hasAccount({ email: "user@test.com" })
+
+BDD:  And they have a completed todo "Buy milk"
 DSL:  await dsl.user.hasCompletedTodo({ name: "Buy milk" })
 
 BDD:  When they archive "Buy milk"
@@ -1214,17 +1331,9 @@ DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
 
 ```
 Test Case:  Uses DSL methods only
-DSL:        Test isolation handling, call driver.method()
+DSL:        Translate business language into system interactions + test isolation handling
 Driver:     Technical interaction with SUT + expect.fail()
 SUT:        Your actual system
-```
-
-**The Three Levels of Acceptance Test Isolation:**
-
-```
-System-Level: Stub ONLY external third-party dependencies
-Functional:   Each test creates unique data (new accounts/todos)
-Temporal:     Proxy-naming aliases ("Buy milk" → "Buy milk1")
 ```
 
 <a id="driver-strategy-roadmap"></a>
@@ -1259,11 +1368,17 @@ Use this template in Stage 2 Planning to document how tests will interact with t
   - [Service name]: [Why we need to control it]
 - **NOT stubbing**: [Our database, cache, queues - they're part of our system]
 
-### Functional & Temporal Isolation
+### Functional Isolation (Parallel Execution Safety)
 
-- **Natural boundaries**: [User accounts/products/workspaces/orders?]
-- **Aliasing strategy**: Standard DslContext/Params utilities handle all aliasing automatically
-- **What gets aliased**: [User names, product IDs, order numbers, etc]
+- **Natural boundaries**: [What domain concepts create natural boundaries? E.g., user accounts, customer records, product catalogs, workspaces - each test will create its own]
+- **Why this matters**: Tests run in parallel against the same database without interfering; each operates in its own isolated boundary
+- **Strategy**: First action in each test should create a fresh boundary (e.g., new user account, new customer record)
+
+### Temporal Isolation (Repeatability)
+
+- **Proxy-naming approach**: Use aliasing technique to give identifiers unique suffixes for each test run
+- **What gets aliased**: [List all identifiers: account emails, usernames, product IDs, order numbers, todo names, etc.]
+- **Why this matters**: Same test can run multiple times with deterministic results. "user@test.com" becomes "user@test.com1" (run 1), "user@test.com2" (run 2), etc.
 
 ## Notes
 
@@ -1303,14 +1418,19 @@ Here's an example of how the AI should fill out this roadmap for a todo archive 
   - AnalyticsAPI: External tracking service we don't control
 - **NOT stubbing**: PostgreSQL database, Redis cache (part of our system)
 
-### Functional & Temporal Isolation
+### Functional Isolation (Parallel Execution Safety)
 
-- **Natural boundaries**: User accounts
-- **Aliasing strategy**: Standard DslContext/Params utilities handle all aliasing automatically
+- **Natural boundaries**: User accounts (each test creates its own user)
+- **Why this matters**: Tests run in parallel against the same database without interfering; each operates in its own account boundary
+- **Strategy**: First action in each test should create a fresh user account
+
+### Temporal Isolation (Repeatability)
+
+- **Proxy-naming approach**: Use aliasing to give identifiers unique suffixes for each test run
 - **What gets aliased**:
-  - User emails: "alice@test.com" → "alice@test.com1"
-  - Todo titles: "Buy milk" → "Buy milk1"
-  - Archive names: "Q1 Archive" → "Q1 Archive1"
+  - Account identifiers: emails → "user@test.com1" (run 1), "user@test.com2" (run 2)
+  - Todo names: "Buy milk" → "Buy milk1" (run 1), "Buy milk2" (run 2)
+- **Why this matters**: Same test can run multiple times with deterministic results without colliding with previous data
 
 ## Notes
 
