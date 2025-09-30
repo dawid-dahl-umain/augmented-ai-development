@@ -29,7 +29,7 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 ## Quick Links
 
 - **[Complete AAID Guide](docs/aidd-workflow.md)** - The full methodology and workflow
-- **[Acceptance Testing Workflow](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Four-Layer Model for ATDD/BDD
+- **[Complete AAID Acceptance Testing Guide](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Four-Layer Model for ATDD/BDD
 - **[Dev.to Article](https://dev.to/placeholder-link)** _(Coming Soon)_ - Introduction and overview
 - **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the AAID process
 
