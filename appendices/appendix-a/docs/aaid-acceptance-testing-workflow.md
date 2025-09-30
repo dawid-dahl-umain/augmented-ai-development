@@ -583,6 +583,8 @@ acceptance-test/
 
 ### 🎯 Layer 1: Executable Specifications
 
+![Layer 1: Executable Specifications](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/12.webp?raw=true)
+
 Transform BDD scenarios with natural language DSL. Structure requirements like this (adjust the headings if your organization uses a different naming convention):
 
 ```gherkin
@@ -724,7 +726,9 @@ Instantiating `new Dsl()` inside `beforeEach` guarantees every test receives a f
 
 <a id="layer-2-dsl"></a>
 
-### 🗣️ Layer 2: Domain-Specific Language
+### 🗣️ Layer 2: Domain Specific Language (DSL)
+
+![Layer 2: Domain-Specific Language](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/13.webp?raw=true)
 
 The DSL layer bridges business language and technical implementation. It contains NO logic or assertions - just parameter handling and driver delegation.
 
@@ -928,6 +932,8 @@ Encapsulating DSL domain objects in a class ensures each test receives a fresh `
 
 ### 🔌 Layer 3: Protocol Drivers & Stubs
 
+![Layer 3: Protocol Drivers & Stubs](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/14.webp?raw=true)
+
 <a id="protocol-drivers"></a>
 
 #### Protocol Drivers
@@ -1113,7 +1119,9 @@ export class EmailServiceStub {
 
 <a id="layer-4-sut"></a>
 
-### 🏭 Layer 4: System Under Test
+### 🏭 Layer 4: System Under Test (SUT)
+
+![Layer 4: System Under Test](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/15.webp?raw=true)
 
 The SUT is your actual application running in a test environment:
 

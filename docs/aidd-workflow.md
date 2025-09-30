@@ -253,7 +253,7 @@ The diagram shows three distinct development paths, distinguished by colored arr
 
 ### 📚 Stage 1: Context Providing
 
-![Stage 1 - Context Providing](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/d6isrck8ucsne1qmf1y3.jpg)
+![Stage 1 - Context Providing](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/stages/3.jpg?raw=true)
 
 Before any AI interaction, establish comprehensive context. The AI needs to understand the project landscape to generate relevant code.
 
@@ -302,7 +302,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 ### 🎯 Stage 2: Planning (High-Level Approach)
 
-![Stage 2 - Planning](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/p6e7p5fqz66bxejm3cv4.jpg)
+![Stage 2 - Planning](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/stages/4.jpg?raw=true)
 
 With the AI agent now informed of your specific project's context from Stage 1, collaborate to understand the feature at a **high level** before diving into implementation. This is _not_ about prescribing implementation details; those will emerge through TDD for domain and technical work, or through design implementation for presentation/UI work. Instead, it's about making sure you and the AI are **aligned** on scope and approach.
 
@@ -392,7 +392,7 @@ If the roadmap looks good, now is when disciplined development actually starts!
 
 ### ✅ Stage 3: TDD Development Begins
 
-![Stage 3 - TDD Development Begins](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/rsmfkcb5kmfmgrl4g7qe.jpg)
+![Stage 3 - TDD Development Begins](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/stages/5.jpg?raw=true)
 
 Choose one of these two approaches for implementing your tests when starting work on a new feature:
 
@@ -434,7 +434,7 @@ describe("User archives completed todos", () => {
 
 ### 🔄 Stage 4: The TDD Cycle
 
-![Stage 4 - TDD Cycle](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/fh7jmwwb59z02lqqxt3u.jpg)
+![Stage 4 - TDD Cycle](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/stages/6.jpg?raw=true)
 
 | 🤖                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -814,7 +814,7 @@ Comprehensive test coverage is also included as a consequence of TDD; both unit 
 
 ## Appendix A: Unit Testing and Acceptance Testing
 
-![Appendix A](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/e3xra22c01p5m3dh27an.png)
+![Appendix A](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/7.webp?raw=true)
 
 This article on `AAID` focuses on TDD (Test-Driven Development) for **Unit Testing**, which ensures you actually write your code correctly and with high quality.
 
@@ -935,7 +935,7 @@ In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing th
 
 ## Appendix B: Helpful Commands (Reusable Prompts)
 
-![Appendix B](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bi3pb8m680ooad039qq0.png)
+![Appendix B](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/8.webp?raw=true)
 
 These reusable prompt commands speed up your `AAID` workflow.
 
@@ -1020,7 +1020,7 @@ These are just examples of `AAID` commands. Create your own or modify these to m
 
 ## Appendix C: AAID Workflow Rules
 
-![Appendix C](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/34gja5j2umhsllvz3i7a.png)
+![Appendix C](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/9.webp?raw=true)
 
 Configure your AI environment to understand the `AAID` workflow. These are simple text instructions, no special `AAID` app or tool is required.
 
@@ -1263,7 +1263,7 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ## Appendix D: Handling Technical Implementation Details
 
-![Appendix D](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pl6x69jvidsn04396hn8.png)
+![Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/10.webp?raw=true)
 
 The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d/handling-technical-implementation-details.md).
 
