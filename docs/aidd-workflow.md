@@ -2,6 +2,8 @@
 
 _Professional TDD for AI-Augmented Software Development_
 
+🔻
+
 ![AAID Augmented Being](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/refs/heads/main/assets/aaid-ai-workflow-h.webp)
 
 ## Table of Contents
@@ -96,7 +98,7 @@ Unlike most other AI-driven workflows, `AAID` doesn't try to reinvent product di
 - **Robert C. Martin**'s Three Laws of TDD
 - **Daniel Terhorst-North**'s Behavior-Driven Development (BDD) methodology
 - **Aslak Hellesøy**'s BDD and Gherkin syntax for executable specifications
-- **Martin Fowler**'s work on refactoring and evolutionary design
+- **Martin Fowler**'s work on refactoring, evolutionary design, and Domain-Specific Languages
 - And more.
 
 These battle-tested practices become your foundation that guides AI-assisted development.

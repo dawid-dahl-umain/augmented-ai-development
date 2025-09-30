@@ -4,7 +4,7 @@ _Professional TDD for AI-Augmented Software Development_
 
 🔻
 
-![AAID Banner](https://media2.dev.to/dynamic/image/width=1000,height=420,fit=cover,gravity=auto,format=auto/https%3A%2F%2Fdev-to-uploads.s3.amazonaws.com%2Fuploads%2Farticles%2Fqgjees84mjbbq1xh083w.jpg)
+![AAID Augmented Being](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/refs/heads/main/assets/aaid-ai-workflow-h.webp)
 
 > **📋 Repository Purpose**: This repository contains support resources for developers who want to follow the `AAID` framework. The main methodology is introduced in our [dev.to article](https://dev.to/placeholder-link), with detailed resources, templates, and tools provided here.
 
@@ -21,15 +21,17 @@ This separates professional software development from "vibe coding." While vibe 
 - **Predictable Development**: TDD discipline prevents AI-generated bugs
 - **Full Understanding**: You review and understand every line of code
 - **Production Quality**: Tests ensure code meets business requirements
+- **Complete Testing Coverage**: Unit tests (TDD) and acceptance tests (ATDD/BDD) ensure quality at every level
 - **Speed + Stability**: AI accelerates development while TDD ensures reliability
 
-Built on proven foundations from Kent Beck's TDD, Dave Farley's Continous Delivery & Four Layer Model, Robert C. Martin's Three Laws of TDD, and other battle-tested practices.
+Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Delivery, Acceptance Testing and Four-Layer Model, Robert C. Martin's Three Laws of TDD, and other battle-tested practices.
 
 ## Quick Links
 
-- **📖 [Complete AAID Guide](docs/aidd-workflow.md)** - The full methodology and workflow
-- **📝 [Dev.to Article](https://dev.to/placeholder-link)** _(Coming Soon)_ - Introduction and overview
-- **🔄 [Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the AAID process
+- **[Complete AAID Guide](docs/aidd-workflow.md)** - The full methodology and workflow
+- **[Acceptance Testing Workflow](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Four-Layer Model for ATDD/BDD
+- **[Dev.to Article](https://dev.to/placeholder-link)** _(Coming Soon)_ - Introduction and overview
+- **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the AAID process
 
 ## Repository Structure
 
@@ -46,13 +48,13 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continous Delive
 
 ## Core Components
 
-### 🎯 **Main Guide**
+### 📙 **Main Guide**
 
 - **[`docs/aidd-workflow.md`](docs/aidd-workflow.md)**: The complete `AAID` methodology with detailed explanations, examples, and step-by-step workflows
 
 ### 📚 **Appendices**
 
-- **Appendix A**: Unit Testing vs Acceptance Testing
+- **Appendix A**: [Acceptance Testing with Four-Layer Model](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md) - Complete workflow for ATDD/BDD using Dave Farley's architecture
 - **Appendix B**: Reusable prompts and AI commands
 - **Appendix C**: AI workflow rules for your IDE
 - **Appendix D**: Handling technical implementation details
