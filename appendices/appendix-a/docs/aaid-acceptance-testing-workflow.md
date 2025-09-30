@@ -1147,29 +1147,29 @@ The SUT is your actual application running in a test environment:
 
 **🎯 Executable Specifications**:
 
-    1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
-    2. **NO explanatory comments**: DSL should be self-explanatory
-    3. **BDD mapping**: Each BDD line maps to a DSL call
-    4. **Business readable**: Non-technical people should understand
+1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
+2. **NO explanatory comments**: DSL should be self-explanatory
+3. **BDD mapping**: Each BDD line maps to a DSL call
+4. **Business readable**: Non-technical people should understand
 
 **🗣️ DSL Layer**:
 
-    1. **Natural Language**: Methods match BDD scenarios exactly
-    2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
-    3. **Pure Translation**: Transform business language to driver calls
-    4. **Object Parameters**: Type-safe objects for flexibility
-    5. **Automatic Aliasing**: Implements isolation transparently
-    6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
+1. **Natural Language**: Methods match BDD scenarios exactly
+2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
+3. **Pure Translation**: Transform business language to driver calls
+4. **Object Parameters**: Type-safe objects for flexibility
+5. **Automatic Aliasing**: Implements isolation transparently
+6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
 
 **🔌 Protocol Drivers**:
 
-    1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
-    2. **Atomic Operations**: Each method either fully succeeds or fails clearly
-    3. **Hide Complex Flows**: `hasAuthorisedAccount` may involve register + login
-    4. **Handle System Boundaries**: Interact with SUT through its normal interfaces
-    5. **Clear Error Messages**: Include context in failure messages
-    6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
-    7. **Never stub internal systems**: Your database, cache, queues are part of your system
+1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
+2. **Atomic Operations**: Each method either fully succeeds or fails clearly
+3. **Hide Complex Flows**: `hasAuthorisedAccount` may involve register + login
+4. **Handle System Boundaries**: Interact with SUT through its normal interfaces
+5. **Clear Error Messages**: Include context in failure messages
+6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
+7. **Never stub internal systems**: Your database, cache, queues are part of your system
 
 #### Naming Conventions
 
