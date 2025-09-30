@@ -1158,7 +1158,7 @@ The SUT is your actual application running in a test environment:
 2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
 3. **Pure Translation**: Transform business language to driver calls
 4. **Object Parameters**: Type-safe objects for flexibility
-5. **Automatic Aliasing**: Implements isolation transparently
+5. **Aliasing Infrastructure**: Uses `params.alias()` to make identifiers unique for test isolation
 6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
 
 **🔌 Protocol Drivers**:
