@@ -524,7 +524,7 @@ export class UIDriver {
 
 ```
 acceptance-test/
-├── executable-spec/          # Layer 1: Test cases
+├── executable-specs/         # Layer 1: Test cases
 │   └── [feature].spec.ts
 ├── dsl/                      # Layer 2: Business vocabulary
 │   ├── utils/
@@ -608,16 +608,16 @@ describe("<Feature>", () => {
 The transformation follows a 1:1 mapping pattern:
 
 ```typescript
-// executable-spec/archive-todos.spec.ts
+// executable-specs/archive-todos.spec.ts
 
 import { beforeEach, describe, it } from "vitest";
-import { createDsl } from "../dsl";
+import { Dsl } from "../dsl";
 
 describe("User archives completed todos", () => {
   let dsl: Dsl;
 
   beforeEach(() => {
-    dsl = createDsl();
+    dsl = new Dsl();
   });
 
   describe("Archive a completed todo", () => {
@@ -667,11 +667,11 @@ describe("User archives completed todos", () => {
 });
 ```
 
-Calling `createDsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios.
+Instantiating `new Dsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios.
 
-| ☝️                                                                                                                                                                                                                                                                                                                             |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| When writing executable specs, always create the DSL inside the suite's setup (for example with `let dsl: Dsl;` followed by a `beforeEach` that creates it). Avoid storing DSL instances in shared modules; keeping the factory call local to each suite is the test author’s responsibility and is what guarantees isolation. |
+| ☝️                                                                                                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| When writing executable specs, always create the DSL inside the suite's setup (for example with `let dsl: Dsl;` followed by a `beforeEach` that instantiates it). Avoid storing DSL instances in shared modules; keeping the instantiation local to each suite is the test author's responsibility and is what guarantees isolation. |
 
 <a id="layer-2-dsl"></a>
 
@@ -706,23 +706,29 @@ export class DslContext {
 }
 ```
 
-**Params - Type-Safe Parameter Handling:**
+**Params - Parameter Handling with Isolation:**
 
 ```typescript
 // dsl/utils/Params.ts
 
-export class Params<T extends Record<string, any>> {
-  // Type-safe parameter handling with automatic aliasing
-  public optional<K extends keyof T>(name: K, defaultValue: T[K]): T[K] {
+export class Params {
+  // Retrieves value or falls back to default
+  public optional(name: string, defaultValue: string): string {
     /* ... */
   }
-  public alias(name: keyof T): string {
+
+  // Creates unique alias for functional & temporal isolation
+  public alias(name: string): string {
     /* ... */
   }
-  public optionalAlias(name: keyof T, defaultValue: string): string {
+
+  // Generates sequential IDs scoped to test context
+  public optionalSequence(name: string, start: number): string {
     /* ... */
   }
-  public optionalSequence(name: keyof T, start?: number): string {
+
+  // Retrieves list or falls back to defaults
+  public optionalList(name: string, defaults: string[]): string[] {
     /* ... */
   }
 }
@@ -750,7 +756,7 @@ interface ArchiveParams {
   todo?: string;
 }
 
-export class UserDSL {
+export class UserDsl {
   private driver: UIDriver;
 
   constructor(private context: DslContext, driver: UIDriver) {
@@ -787,7 +793,7 @@ export class UserDSL {
 ```typescript
 // dsl/todo.dsl.ts
 
-export class TodoDSL {
+export class TodoDsl {
   private driver: UIDriver;
 
   constructor(private context: DslContext, driver: UIDriver) {
@@ -818,25 +824,28 @@ export class TodoDSL {
 // dsl/index.ts
 
 import { DslContext } from "./utils/DslContext";
-import { UserDSL } from "./user.dsl";
-import { TodoDSL } from "./todo.dsl";
+import { UserDsl } from "./user.dsl";
+import { TodoDsl } from "./todo.dsl";
 import { UIDriver } from "../protocol-driver/ui.driver";
 
-export const createDsl = () => {
-  const context = new DslContext();
+export class Dsl {
+  public readonly user: UserDsl;
+  public readonly todo: TodoDsl;
 
-  // In reality, drivers would connect to real SUT
-  // For demo, using global.page from Playwright
-  const uiDriver = new UIDriver(global.page);
+  constructor() {
+    const context = new DslContext();
 
-  return {
-    user: new UserDSL(context, uiDriver),
-    todo: new TodoDSL(context, uiDriver),
-  };
-};
+    // In reality, drivers would connect to real SUT
+    // For demo, using global.page from Playwright
+    const uiDriver = new UIDriver(global.page);
+
+    this.user = new UserDsl(context, uiDriver);
+    this.todo = new TodoDsl(context, uiDriver);
+  }
+}
 ```
 
-Returning DSL instances through a `createDsl` factory ensures each test constructs its own fixture, so isolation is handled automatically without any shared state between scenarios.
+Encapsulating DSL domain objects in a class ensures each test receives a fresh `DslContext` and newly wired protocol drivers. This guarantees isolation: tests cannot share state, aliases are scoped per-test, and parallel execution is safe.
 
 <a id="layer-3-protocol-drivers"></a>
 
@@ -849,7 +858,7 @@ Returning DSL instances through a `createDsl` factory ensures each test construc
 Protocol Drivers handle the technical interaction with the system AND all pass/fail logic:
 
 ```typescript
-// protocol-driver/ui.user.driver.ts
+// protocol-driver/ui.driver.ts
 
 import { Page } from "@playwright/test";
 import { expect } from "vitest";
