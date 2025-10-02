@@ -318,6 +318,10 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 With the AI agent now informed of your specific project's context from Stage 1, collaborate to understand the feature at a **high level** before diving into implementation. This is _not_ about prescribing implementation details; those will emerge through TDD for domain and technical work, or through design implementation for presentation/UI work. Instead, it's about making sure you and the AI are **aligned** on scope and approach.
 
+| ☝️                                                                                                                                                                                                      |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| If you and the AI have different ideas of what is supposed to be built, many times using AI can actually slow progress down rather than speed it up. This AI planning stage helps eliminate this issue. |
+
 #### Planning vs TDD Discovery
 
 For domain and technical work, the planning stage provides a roadmap of **_what_** to build and roughly which tests to write. TDD will still discover **_how_** to build it through the 🔴 **Red** • 🟢 **Green** • 🧼 **Refactor** cycle. For presentation/UI work, planning outlines validation criteria rather than tests.
@@ -341,9 +345,7 @@ For domain and technical work, the planning stage provides a roadmap of **_what_
 
 Think of it like navigation: Planning sets the destination, TDD finds the path.
 
-| ☝️                                                                                                                                                                                                      |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| If you and the AI have different ideas of what is supposed to be built, many times using AI can actually slow progress down rather than speed it up. This AI planning stage helps eliminate this issue. |
+> **Modifying Untested Code?** Changing untested code in an existing codebase requires strategies (characterization tests, finding seams, etc) outside this guide's scope. In that case, see [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/).
 
 **Steps:**
 
@@ -991,9 +993,9 @@ Each command enforces these laws at the appropriate phase by referencing the [AA
 
 **In practice:** Since the rules file is automatically loaded by your IDE/CLI, you often won't need these commands; the AI will often follow the workflow from the rules alone. That said, the commands remain useful as explicit phase triggers when needed.
 
-| ☝️                                                                                                                                                                                                                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Legacy Code**: These commands assume greenfield TDD. For legacy code, create variants for writing characterization tests (documenting existing behavior) and finding seams (testable injection points). See [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/). |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Adding to Existing Projects**: These commands work for adding new features to any codebase (new or existing).<br><br>**Modifying Untested Code**: When changing existing untested code, first establish characterization tests (documenting current behavior) and find seams (testable injection points). See [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/). |
 
 <a id="appendix-b-investigation-commands"></a>
 
