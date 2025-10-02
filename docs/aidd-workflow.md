@@ -14,7 +14,7 @@ _Professional TDD for AI-Augmented Software Development_
 - [Built on Proven Foundations](#built-on-proven-foundations)
 - [Developer Mindset](#developer-mindset)
 - [Prerequisite: Product Discovery & Specification Phase](#prerequisite)
-- [Getting Started](#getting-started)
+- [Getting Started With AAID](#getting-started-with-aaid)
 - [AAID Workflow Diagram](#workflow-diagram)
 - [AAID Development Stages](#development-stages)
   - [Stage 1: Context Providing](#stage-1-context)
@@ -147,7 +147,7 @@ Using techniques like Impact Mapping, Event Storming, and Story Mapping, teams e
 
 The exact combination varies by project.
 
-These this specification package will then be used—almost religiously—to serve as the objective foundation for the `AAID` workflow, aligning development with the actual needs of the business.
+This specification package will then be used—almost religiously—to serve as the objective foundation for the `AAID` workflow, aligning development with the actual needs of the business.
 
 | ⚙️                                                                                                                                                                              |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -192,9 +192,19 @@ Scenario: Restore an archived todo
 
 This article is not about this product discovery and specification refinement step; it assumes you have the specs ready. When you do, it will guide you towards how to transform the specs → tests and code ready for production.
 
-<a id="getting-started"></a>
+<a id="getting-started-with-aaid"></a>
 
-## Getting Started
+## Getting Started With AAID
+
+> **Prerequisites**: `AAID` is a feature development workflow that assumes:
+>
+> ✅ **Working project**: Development environment set up, basic tooling configured (new or existing codebase)<br />
+> ✅ **Specifications ready**: User stories with BDD scenarios from Product Discovery
+>
+> **Note**: Basic project scaffolding (running framework generators, setting up config files)
+> involves structural setup rather than implementable logic, placing it outside `AAID`'s TDD
+> workflow. Custom infrastructure _implementations_ (adapters, middleware, auth setup, etc)
+> use `AAID` with TDD. See [Appendix D](#appendix-d) for details on technical implementation.
 
 Setting up `AAID` takes just three steps:
 
@@ -382,9 +392,9 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 
 If the roadmap looks good, now is when disciplined development actually starts!
 
-| 🔀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Path Divergence**: After roadmap approval, the workflow splits into three paths:<br><br>• **Domain/Business Logic** → Continue to Stage 3 (TDD Development)<br>• **Technical Implementation (Non-Observable)** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI (Observable Technical)** → Proceed to implementation and validation without TDD<br><br>See [Appendix D](#appendix-d) or the [Workflow Diagram](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/aaid-workflow-diagram.mermaid) for more information on these three categories. |
+| 🔀                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Path Divergence**: After roadmap approval, the workflow splits into three paths:<br><br>• **Domain/Business Logic** → Continue to Stage 3 (TDD Development)<br>• **Technical Implementation (Non-Observable)** → Continue to Stage 3 (TDD Development)<br>• **Presentation/UI (Observable Technical)** → Proceed to implementation and validation without TDD<br><br>See [Appendix D](#appendix-d) or the [Workflow Diagram](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/aaid-workflow-diagram.mermaid) for more information on these three implementation categories. |
 
 | 💻                                                                                                                                                                                                                                                                                                                                                                                                      |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -1090,9 +1100,9 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 - User asks general programming questions
 - User explicitly indicates working on something else
 
-## Development Categories
+## Implementation Categories
 
-When in AAID mode, the workflow applies differently based on category:
+When in AAID mode, the workflow applies differently based on implementation category:
 
 - **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
 - **Technical Implementation**: Adapters and infrastructure using integration/contract tests
@@ -1267,7 +1277,7 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ![Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/10.webp?raw=true)
 
-The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-d/handling-technical-implementation-details.md).
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](../appendices/appendix-d/handling-technical-implementation-details.md).
 
 ![AAID implementation categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/aaid-implementation-categories-s.webp)
 

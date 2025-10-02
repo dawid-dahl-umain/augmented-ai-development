@@ -55,9 +55,9 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 ### 📚 **Appendices**
 
 - **Appendix A**: [Acceptance Testing with Four-Layer Model](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md) - Complete workflow for ATDD/BDD using Dave Farley's architecture
-- **Appendix B**: Reusable prompts and AI commands
-- **Appendix C**: AI workflow rules for your IDE
-- **Appendix D**: Handling technical implementation details
+- **Appendix B**: [Reusable prompts and AI commands](appendices/appendix-b/reusable-prompts.md)
+- **Appendix C**: [AI workflow rules for your IDE](appendices/appendix-c/aaid-ai-workflow-rules.md)
+- **Appendix D**: [Handling technical implementation details](appendices/appendix-d/handling-technical-implementation-details.md)
 
 ### ⚡ **Reusable Prompts**
 

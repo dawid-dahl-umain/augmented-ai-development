@@ -82,4 +82,4 @@ These are just examples of `AAID` commands. Create your own or modify these to m
 
 ---
 
-⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)
+⬅️ Back to the main guide: [AAID Workflow and Guide](../../docs/aidd-workflow.md)

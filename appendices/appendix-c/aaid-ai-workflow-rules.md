@@ -30,4 +30,4 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ---
 
-⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)
+⬅️ Back to the main guide: [AAID Workflow and Guide](../../docs/aidd-workflow.md)

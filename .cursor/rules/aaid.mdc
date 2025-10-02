@@ -53,9 +53,9 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 - User asks general programming questions
 - User explicitly indicates working on something else
 
-## Development Categories
+## Implementation Categories
 
-When in AAID mode, the workflow applies differently based on category:
+When in AAID mode, the workflow applies differently based on implementation category:
 
 - **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
 - **Technical Implementation**: Adapters and infrastructure using integration/contract tests

@@ -6,7 +6,9 @@ While the main `AAID` guide focuses on BDD/TDD for business logic and system **b
 
 ## Table of Contents
 
-- [Understanding Technical Implementation Categories](#understanding-technical-implementation-categories)
+- [Implementation Categories](#implementation-categories)
+  - [The Three Implementation Categories](#the-three-implementation-categories)
+  - [Why These Categories Matter](#why-these-categories-matter)
   - [A Note on Adapters and Architecture Patterns](#a-note-on-adapters-and-architecture-patterns)
 - [AAID Implementation Matrix: Build Types and Verification](#aaid-implementation-matrix-build-types-and-verification)
 - [Examples in Practice](#examples-in-practice)
@@ -26,19 +28,27 @@ While the main `AAID` guide focuses on BDD/TDD for business logic and system **b
 - [Key Integration Patterns](#key-integration-patterns)
 - [Practical Guidelines](#practical-guidelines)
 
-## Understanding Technical Implementation Categories
+## Implementation Categories
 
-![AAID implementation categories](../assets/aaid-implementation-categories-s.webp)
+![AAID implementation categories](../../assets/aaid-implementation-categories-s.webp)
 
-The `AAID` framework divides all development work into three categories to maintain clear separation of concerns:
+### The Three Implementation Categories
+
+The `AAID` framework divides all development work into three implementation categories to maintain clear separation of concerns:
 
 - **Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
 - **Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
-- **Non-Observable Technical**: Internal implementation including all adapters (input/output), persistence, caching, infrastructure
+- **Non-Observable Technical**: Internal implementations that aren't behavior, including all adapters (input/output), persistence, caching, infrastructure
 
-| ☝️                                                                                                                                                                                                                                            |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Why separate?** BDD scenarios describe WHAT the system does. Technical tasks describe HOW it does it or HOW it presents. Mixing them pollutes your specifications and couples behavior to implementation, making the system hard to change. |
+### Why These Categories Matter
+
+These implementation categories solve real problems that both teams and AI agents often face. Without them, developers—and AI agents working with or for them—mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This leads to polluted specs with technical constraints, wasted time trying to TDD things like CSS, and brittle tests coupled to implementation details that break or yield false positives when technologies change.
+
+Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for technical adapters, and manual validation for pure presentation. No more confusion about what to test or how.
+
+Behavior stays decoupled from implementation, specifications remain pure when technical details change, and the system becomes easier to evolve.
+
+The Non-Observable Technical category deserves special attention; adapters in particular often raise questions about what they are and how to test them.
 
 ### A Note on Adapters and Architecture Patterns
 
@@ -90,6 +100,13 @@ These are called _by_ the domain to interact with the outside:
 | **Non-Observable Technical** | Implementation & adapter logic           | <ul><li>Integration tests (managed deps)</li><li>Contract tests (unmanaged deps)</li></ul>                          | <ul><li>All adapters</li><li>Caching</li><li>Monitoring</li><li>Infrastructure</li></ul>                                               | All adapter implementations: <ul><li>REST/GraphQL controllers</li><li>Database repositories</li><li>Message publishers</li><li>CLI renderers</li><li>Email senders</li></ul> | **No**              | **Yes**   |
 
 > The key distinction: **Observable** categories involve what users directly experience (behavior or sensory presentation), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces observable output.
+>
+> **Note on Scaffolding**: Basic project scaffolding (framework initialization, config files,
+> package installation) is Non-Observable Technical in nature but consists of structural setup
+> rather than implementable logic. Like Observable Technical (which skips TDD for manual
+> validation), scaffolding sits outside AAID's TDD workflow as prerequisite work. Custom
+> infrastructure implementations with technical logic (database connection handling, auth
+> initialization, custom middleware) use AAID as Non-Observable Technical with TDD.
 
 ## Examples in Practice
 
@@ -111,9 +128,9 @@ These are called _by_ the domain to interact with the outside:
 - **Observable Technical**: Error message red color, screen reader error announcement, field shake animation
 - **Non-Observable Technical**: Form submission adapter, API client, validation service
 
-| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note for Frontend Developers**: Many frontend developers believe TDD isn't suitable for their work. This is a misconception! The confusion often stems from trying to test the wrong things (like CSS properties) or not recognizing the testable behavior in their components.<br><br>**Frontend Observable Behavioral (uses TDD)**:<br>• "Form validation prevents submission with invalid email"<br>• "Shopping cart updates total when items added"<br>• "Dropdown filters options based on search text"<br>• "Pagination component calculates correct page ranges"<br><br>**Frontend Observable Technical (no TDD, manual validation)**:<br>• "Error message appears in red with 16px font"<br>• "Screen reader announces 'Error: Invalid email format'"<br>• "Submit button has 200ms fade transition"<br>• "Focus ring is 2px solid blue"<br><br>The key insight: Your components have testable behavior: TDD that. Your styling and sensory feedback needs human validation: validate that. |
+| 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note for Frontend Developers**: Many frontend developers believe TDD isn't suitable for their work. This is a misconception! The confusion stems from trying to test the wrong things or not recognizing testable behavior in components.<br><br>**Frontend Observable Behavioral - (Uses TDD)**:<br>• "Form validates email format before submission"<br>• "Shopping cart recalculates total when quantity changes"<br>• "Dropdown filters list based on search input"<br><br>**Frontend Observable Technical - (No TDD, manual validation)**:<br>• "Error message appears in #DC2626 red with 14px font"<br>• "Button hover transition takes 200ms with ease-in-out"<br>• "Success sound is not too loud"<br><br>**Frontend Non-Observable Technical - (Uses TDD)**:<br>• "HTTP request retries on network failure"<br>• "Form data serializes to JSON for server"<br>• "Draft state persists in browser storage" |
 
 ## Specifications for Technical Details
 
@@ -270,9 +287,9 @@ Create roadmaps for each aspect of your feature:
 
 ### Stage 3: TDD Starts
 
-| ☝️                                                                                                                      |
-| ----------------------------------------------------------------------------------------------------------------------- |
-| **For Observable Technical:** Stage 3 and 4 is skipped - proceed directly to implementation and validation without TDD. |
+| ☝️                                                                                                                        |
+| ------------------------------------------------------------------------------------------------------------------------- |
+| **For Observable Technical:** Stages 3 and 4 are skipped - proceed directly to implementation and validation without TDD. |
 
 **Recommended approach: Domain-first**
 Build pure business logic first, then add technical elements. This ensures your core domain remains decoupled from technical concerns and follows the natural flow of dependencies.
@@ -298,13 +315,13 @@ Create focused roadmaps for individual technical implementation elements that co
 
 For Non-Observable Technical elements (adapters, infrastructure):
 
-[@ai-technical-roadmap-template](../reusable-prompts/setup-and-planning/ai-technical-roadmap-template.md)
+[View template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-technical-roadmap-template.md)
 
 ### `@ai-presentation-roadmap-template`
 
 For Observable Technical elements (pure presentation/UI):
 
-[@ai-presentation-roadmap-template](../reusable-prompts/setup-and-planning/ai-presentation-roadmap-template.md)
+[View template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-presentation-roadmap-template.md)
 
 ## TDD Workflow for Non-Observable Technical
 
@@ -467,4 +484,4 @@ The disciplined approach of `AAID` adapts to each category: TDD for logic (Obser
 
 ---
 
-⬅️ Back to the main guide: [AAID Workflow and Guide](../docs/aidd-workflow.md)
+⬅️ Back to the main guide: [AAID Workflow and Guide](../../docs/aidd-workflow.md)

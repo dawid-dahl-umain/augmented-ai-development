@@ -143,13 +143,15 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 #### 2. Functional Isolation
 
-**Run many tests in parallel against the same production-like system (e.g. with its real database) without interference:**
+**Run many tests in any order, in parallel, or individually against the same production-like system (e.g. with its real database) without interference:**
 
 - Each test creates its own unique data boundary (e.g., user account, customer record, workspace)
 - All test operations happen within that partition's context (e.g., todos belong to that specific user)
 - DSL methods use `params.alias()` to make identifiers unique: "user@test.com" → "user@test.com1", "user@test.com2", etc.
-- Tests share the same deployed system and database but operate in isolated spaces, enabling safe parallel execution
-- Example: For a todo app, each test creates a unique user account; for e-commerce, each test creates a unique customer and their products
+- Tests share the same deployed system and database but operate in their own isolated test scopes, enabling safe parallel execution
+- Example:
+  - For a school management app, each test might create a whole new school with all its various business logic entities and rules
+  - For e-commerce, each test might create a unique customer and their products
 - After a test run is over, your system will contain accumulated test data. That's okay! Discard the test SUT and start fresh for the next run
 
 #### 3. Temporal Isolation
