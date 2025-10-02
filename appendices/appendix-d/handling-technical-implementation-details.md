@@ -89,10 +89,6 @@ These are called _by_ the domain to interact with the outside:
 - Renderers / presenters (CLI renderer, templating engine)
 - Loggers / metrics collectors
 
-| ☝️                                                                                                                                                                                                                                                                                                                                    |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Adapter effects vs. adapter logic**: An HTML email sender has templating logic (Non-Observable Technical, tested via TDD) and produces CSS-styled output (Observable Technical, validated manually). The adapter's logic is Non-Observable Technical even though its output is observable; we test the logic, validate the styling. |
-
 ## AAID Implementation Matrix: Build Types and Verification
 
 | Category                     | What We Test/Validate                    | How We Test/Validate                                                                                                | Typical Items                                                                                                                          | Hexagonal Architecture Examples                                                                                                                                              | Uses BDD scenarios? | Uses TDD? |
