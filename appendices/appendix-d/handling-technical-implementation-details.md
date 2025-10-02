@@ -42,17 +42,17 @@ The `AAID` framework divides all development work into three implementation cate
 
 ### Why These Categories Matter
 
-These implementation categories solve real problems that both teams and AI agents often face. Without them, developers—and AI agents working with or for them—mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This leads to polluted specs with technical constraints, wasted time trying to TDD things like CSS, and brittle tests coupled to implementation details that break or yield false positives when technologies change.
+A good system is, almost by definition, one that's easy to change. These three implementation categories provide the conceptual clarity developers need to build systems with that property.
 
-Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for technical adapters, and manual validation for pure presentation. No more confusion about what to test or how.
+Without this clarity, developers—and AI agents working with or for them—mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This confusion leads to polluted specs with technical constraints, wasted time trying to TDD things like CSS, and brittle tests coupled to implementation details that break or yield false positives when technologies change.
 
-Behavior stays decoupled from implementation, specifications remain pure when technical details change, and the system becomes easier to evolve.
-
-The Non-Observable Technical category deserves special attention; adapters in particular often raise questions about what they are and how to test them.
+Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for Non-Observable Technical, and manual validation for pure presentation.
 
 ### A Note on Adapters and Architecture Patterns
 
-Whether you're using Hexagonal Architecture (Ports & Adapters), MVC, Clean Architecture, or another pattern, you'll have components that connect your core business logic to the outside world. These adapters/controllers/gateways translate between your domain and external systems.
+The Non-Observable Technical category encompasses all adapters. Understanding what qualifies as an adapter is essential because they form a large part of most applications, yet they can be confusing to categorize correctly, especially when they produce visible output.
+
+Adapters are components that connect your core business logic to the outside world. Whether you call them adapters, controllers, or gateways depends on your architecture pattern (Hexagonal, MVC, Clean Architecture, etc.), but they all serve the same purpose of translating between your domain and external systems.
 
 **All adapters are Non-Observable Technical**, regardless of their output. This might seem counterintuitive for adapters with visual effects (like CLI renderers), but the distinction is important:
 
@@ -122,11 +122,11 @@ These are called _by_ the domain to interact with the outside:
 - **Observable Technical**: Archive button styling, success toast visual design, completion sound
 - **Non-Observable Technical**: REST controller (input adapter), email sender (output adapter), database repository (persistence adapter), Redis cache
 
-**Frontend Form Example:**
+**Autocomplete Search Example:**
 
-- **Observable Behavioral**: "Form validates email format before submission"
-- **Observable Technical**: Error message red color, screen reader error announcement, field shake animation
-- **Non-Observable Technical**: Form submission adapter, API client, validation service
+- **Observable Behavioral**: "Search suggestions update as user types"
+- **Observable Technical**: Dropdown styling, loading spinner animation, keyboard highlight style
+- **Non-Observable Technical**: Debounced API client, search result cache, request cancellation handler
 
 | 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
