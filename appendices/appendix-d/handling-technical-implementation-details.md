@@ -44,7 +44,7 @@ The `AAID` framework divides all development work into three implementation cate
 
 A good system is, almost by definition, one that's easy to change. These three implementation categories provide the conceptual clarity developers need to build systems with that property.
 
-Without this clarity, developers - and AI agents working with or for them - mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This confusion couples things that should stay independent: specifications become polluted with technical constraints, tests become brittle by coupling to implementation details, and changes to one aspect force changes to others unnecessarily.
+Without this clarity, developers — and AI agents working with or for them — mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This confusion couples things that should stay independent: specifications become polluted with technical constraints, tests become brittle by coupling to implementation details, and changes to one aspect force changes to others unnecessarily.
 
 Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for Non-Observable Technical, and manual validation for pure presentation.
 
@@ -89,9 +89,9 @@ These are called _by_ the domain to interact with the outside:
 - Renderers / presenters (CLI renderer, templating engine)
 - Loggers / metrics collectors
 
-| ☝️                                                                                                                                                                                                                                                 |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Adapter effects vs. adapter logic**: A CLI renderer has formatting logic (tested via TDD) and produces visual output (validated manually). The adapter itself is Non-Observable Technical, while pure CSS styling would be Observable Technical. |
+| ☝️                                                                                                                                                                                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Adapter effects vs. adapter logic**: An HTML email sender has templating logic (Non-Observable Technical, tested via TDD) and produces CSS-styled output (Observable Technical, validated manually). The adapter's logic is Non-Observable Technical even though its output is observable; we test the logic, validate the styling. |
 
 ## AAID Implementation Matrix: Build Types and Verification
 
