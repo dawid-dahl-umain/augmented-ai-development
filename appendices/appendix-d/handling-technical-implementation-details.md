@@ -44,9 +44,11 @@ The `AAID` framework divides all development work into three implementation cate
 
 A good system is, almost by definition, one that's easy to change. These three implementation categories provide the conceptual clarity developers need to build systems with that property.
 
-Without this clarity, developers—and AI agents working with or for them—mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This confusion leads to polluted specs with technical constraints, wasted time trying to TDD things like CSS, and brittle tests coupled to implementation details that break or yield false positives when technologies change.
+Without this clarity, developers - and AI agents working with or for them - mix **WHAT** the system does (behavior) with **HOW** it does it (technical implementation) or **HOW** it presents (styling). This confusion couples things that should stay independent: specifications become polluted with technical constraints, tests become brittle by coupling to implementation details, and changes to one aspect force changes to others unnecessarily.
 
 Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for Non-Observable Technical, and manual validation for pure presentation.
+
+Applying the wrong approach makes change expensive: trying to TDD CSS wastes time, while testing implementation details means tests break whenever you change how things work.
 
 ### A Note on Adapters and Architecture Patterns
 
