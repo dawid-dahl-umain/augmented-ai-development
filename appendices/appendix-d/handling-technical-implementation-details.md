@@ -9,8 +9,9 @@ While the main `AAID` guide focuses on BDD/TDD for business logic and system **b
 - [Implementation Categories](#implementation-categories)
   - [The Three Implementation Categories](#the-three-implementation-categories)
   - [Why These Categories Matter](#why-these-categories-matter)
-  - [A Note on Adapters in Hexagonal Architecture](#a-note-on-adapters-in-hexagonal-architecture)
+  - [Adapters in Hexagonal Architecture: Infrastructure as Non-Observable Technical](#adapters-in-hexagonal-architecture-infrastructure-as-non-observable-technical)
 - [AAID Implementation Matrix: Build Types and Verification](#aaid-implementation-matrix-build-types-and-verification)
+- [Scaffolding and Prerequisites](#scaffolding-and-prerequisites)
 - [Examples in Practice](#examples-in-practice)
 - [Specifications for Technical Details](#specifications-for-technical-details)
   - [What Goes Where](#what-goes-where)
@@ -50,7 +51,7 @@ Each category gets the right approach: TDD with unit tests and complete test iso
 
 Applying the wrong approach makes change expensive; trying to TDD CSS wastes time, while testing implementation details means tests break whenever you change your app's technical plumbing.
 
-### A Note on Adapters in Hexagonal Architecture
+### Adapters in Hexagonal Architecture: Infrastructure as Non-Observable Technical
 
 The Non-Observable Technical category encompasses all infrastructure elements. In Hexagonal Architecture specifically, the term "adapters" refers to the elements within the infrastructure layer that bridge between your core business logic and the outside world. Whether you call them adapters (Hexagonal), repositories/gateways (Clean Architecture/DDD), or controllers (MVC), they all serve the same purpose of translating between your domain and external systems.
 
@@ -97,9 +98,13 @@ These are called _by_ the domain to interact with the outside:
 
 > The key distinction: **Observable** categories involve what users directly experience (behavior or sensory presentation), while **Non-Observable Technical** involves the infrastructure implementations and technical contracts that enable those experiences, even when those implementations produce observable output.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on Scaffolding**: Basic project scaffolding (framework initialization, config files, package installation) is Non-Observable Technical in nature but consists of structural setup rather than implementable technical contracts. Like Observable Technical (which skips TDD for manual validation), scaffolding sits outside `AAID`'s TDD workflow as prerequisite work. Custom infrastructure implementations with technical contracts (database connection handling, auth initialization, custom middleware) use `AAID` as Non-Observable Technical with TDD. |
+## Scaffolding and Prerequisites
+
+Basic project scaffolding—running framework generators, configuring linters and formatters, installing packages, setting up test runners, configuring commit hooks—sits outside the `AAID` workflow as prerequisite work. Set these up yourself before beginning feature development.
+
+However, when you implement custom infrastructure with testable behavior—database adapters, authentication services, custom middleware—these follow `AAID` as Non-Observable Technical with TDD.
+
+The remainder of this appendix focuses on that latter category: implementing and testing custom infrastructure elements using `AAID`.
 
 ## Examples in Practice
 
