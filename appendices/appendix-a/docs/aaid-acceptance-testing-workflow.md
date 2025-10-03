@@ -205,7 +205,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 ### Layer Responsibilities
 
-#### 🎯 Layer 1: Test Cases (Executable Specifications)
+#### ✅ Layer 1: Test Cases (Executable Specifications)
 
 **Purpose:** Express acceptance criteria in business language
 
@@ -585,7 +585,7 @@ acceptance-test/
 
 <a id="layer-1-executable-specs"></a>
 
-### 🎯 Layer 1: Executable Specifications
+### ✅ Layer 1: Executable Specifications
 
 ![Layer 1: Executable Specifications](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/12.webp?raw=true)
 
@@ -1147,7 +1147,7 @@ The SUT is your actual application running in a test environment:
 
 #### Layer Separation Rules
 
-**🎯 Executable Specifications**:
+**✅ Executable Specifications**:
 
 1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
 2. **NO explanatory comments**: DSL should be self-explanatory

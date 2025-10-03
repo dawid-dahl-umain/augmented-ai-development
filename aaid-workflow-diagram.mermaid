@@ -57,12 +57,12 @@ graph TD
     PresValidation --> PresComplete["✨ Feature Complete<br/>(Presentation Validated)<br/>Ready for Deployment Pipeline"]
     
     %% TDD PATH (Domain/Business and Technical Implementation)
-    TDDPhase["✅ Stage 3: <br> TDD DEVELOPMENT STARTS"]
+    TDDPhase["📝 Stage 3: <br> TDD DEVELOPMENT STARTS"]
     
     TDDPhase --> InitChoice{"Choose TDD<br/>Approach"}
     
-    InitChoice -->|Test List| TL1["📝 Create Complete Test List<br/>(Markdown or Skipped Tests)"]
-    InitChoice -->|Single Test| ST1["📝 Write Simplest First Test"]
+    InitChoice -->|Test List| TL1["Create Complete Test List<br/>(Markdown or Skipped Tests)"]
+    InitChoice -->|Single Test| ST1["Write Simplest First Test"]
     
     TL1 --> TL2["Review Against Specifications"]
     ST1 --> CycleStart

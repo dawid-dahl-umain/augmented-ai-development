@@ -201,10 +201,7 @@ This article is not about this product discovery and specification refinement st
 > ✅ **Working project**: Development environment set up, basic tooling configured (new or existing codebase)<br />
 > ✅ **Specifications ready**: User stories with BDD scenarios from Product Discovery
 >
-> **Note**: Basic project scaffolding (running framework generators, setting up config files)
-> involves structural setup rather than implementable logic, placing it outside `AAID`'s TDD
-> workflow. Custom infrastructure _implementations_ (adapters, middleware, auth setup, etc)
-> use `AAID` with TDD. See [Appendix D](#appendix-d) for details on technical implementation.
+> **Note**: Basic project scaffolding (running framework generators, setting up config files) involves structural setup rather than implementable technical contracts, placing it outside `AAID`'s TDD workflow. Custom infrastructure _implementations_ (adapters, middleware, auth setup, etc) use `AAID` with TDD. See [Appendix D](#appendix-d) for details on technical implementation.
 
 Setting up `AAID` takes just three steps:
 
@@ -404,7 +401,7 @@ If the roadmap looks good, now is when disciplined development actually starts!
 
 <a id="stage-3-tdd-begins"></a>
 
-### ✅ Stage 3: TDD Development Begins
+### 📝 Stage 3: TDD Development Begins
 
 ![Stage 3 - TDD Development Begins](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/stages/5.jpg?raw=true)
 

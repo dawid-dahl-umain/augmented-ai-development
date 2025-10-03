@@ -2,14 +2,14 @@
 
 ![Appendix D](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pl6x69jvidsn04396hn8.png)
 
-While the main `AAID` guide focuses on BDD/TDD for business logic and system **behavior**, real applications need adapters, infrastructure, and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
+While the main `AAID` guide focuses on BDD/TDD for business logic and system **behavior**, real applications need infrastructure elements and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
 
 ## Table of Contents
 
 - [Implementation Categories](#implementation-categories)
   - [The Three Implementation Categories](#the-three-implementation-categories)
   - [Why These Categories Matter](#why-these-categories-matter)
-  - [A Note on Adapters and Architecture Patterns](#a-note-on-adapters-and-architecture-patterns)
+  - [A Note on Adapters in Hexagonal Architecture](#a-note-on-adapters-in-hexagonal-architecture)
 - [AAID Implementation Matrix: Build Types and Verification](#aaid-implementation-matrix-build-types-and-verification)
 - [Examples in Practice](#examples-in-practice)
 - [Specifications for Technical Details](#specifications-for-technical-details)
@@ -36,9 +36,9 @@ While the main `AAID` guide focuses on BDD/TDD for business logic and system **b
 
 The `AAID` framework divides all development work into three implementation categories to maintain clear separation of concerns:
 
-- **Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
-- **Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
-- **Non-Observable Technical**: Internal implementations that aren't behavior, including all adapters (input/output), persistence, caching, infrastructure
+- **🎯 Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
+- **👁️ Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
+- **⚙️ Non-Observable Technical**: Infrastructure implementations that bridge your domain to the outside world — whether you call them adapters (Hexagonal), repositories/gateways (Clean/DDD), or controllers (MVC) — handling all external interactions like persistence, caching, external APIs, messaging, plus supporting utilities and configuration
 
 ### Why These Categories Matter
 
@@ -48,21 +48,19 @@ Without this clarity, developers — and AI agents working with or for them — 
 
 Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for Non-Observable Technical, and manual validation for pure presentation.
 
-Applying the wrong approach makes change expensive: trying to TDD CSS wastes time, while testing implementation details means tests break whenever you change how things work.
+Applying the wrong approach makes change expensive; trying to TDD CSS wastes time, while testing implementation details means tests break whenever you change your app's technical plumbing.
 
-### A Note on Adapters and Architecture Patterns
+### A Note on Adapters in Hexagonal Architecture
 
-The Non-Observable Technical category encompasses all adapters. Understanding what qualifies as an adapter is essential because they form a large part of most applications, yet they can be confusing to categorize correctly, especially when they produce visible output.
+The Non-Observable Technical category encompasses all infrastructure elements. In Hexagonal Architecture specifically, the term "adapters" refers to the elements within the infrastructure layer that bridge between your core business logic and the outside world. Whether you call them adapters (Hexagonal), repositories/gateways (Clean Architecture/DDD), or controllers (MVC), they all serve the same purpose of translating between your domain and external systems.
 
-Adapters are components that connect your core business logic to the outside world. Whether you call them adapters, controllers, or gateways depends on your architecture pattern (Hexagonal, MVC, Clean Architecture, etc.), but they all serve the same purpose of translating between your domain and external systems.
+All adapters are infrastructure elements and thus **Non-Observable Technical**, regardless of their output. This might seem counterintuitive for adapters with visual effects (like CLI renderers), but the distinction is important:
 
-**All adapters are Non-Observable Technical**, regardless of their output. This might seem counterintuitive for adapters with visual effects (like CLI renderers), but the distinction is important:
-
-- We **test the adapter's logic** (Non-Observable Technical)
+- We **test the adapter's technical contract** (Non-Observable Technical)
 - We **validate pure presentation** (Observable Technical)
-- The fact that adapter logic might produce visible output doesn't change what we're testing
+- The fact that the adapter's technical contract might produce visible output doesn't change what we're testing
 
-Examples of adapters (all **Non-Observable Technical**):
+Examples of infrastructure elements using Hexagonal Architecture terminology:
 
 ### Driving Adapters (Inputs)
 
@@ -80,31 +78,28 @@ These bring requests _into_ the domain:
 
 These are called _by_ the domain to interact with the outside:
 
-- Database repositories
+- Database repositories (persistence)
 - External API clients
 - Email/SMS/Push senders
 - Message-queue **publishers**
-- Caches (Redis, Memcached)
-- Filesystem writers
+- Cache adapters (Redis, Memcached)
+- Filesystem writer adapters
 - Renderers / presenters (CLI renderer, templating engine)
 - Loggers / metrics collectors
 
 ## AAID Implementation Matrix: Build Types and Verification
 
-| Category                     | What We Test/Validate                    | How We Test/Validate                                                                                                | Typical Items                                                                                                                          | Hexagonal Architecture Examples                                                                                                                                              | Uses BDD scenarios? | Uses TDD? |
-| ---------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | --------- |
-| **Observable Behavioral**    | Business behavior                        | <ul><li>Unit tests (TDD)</li><li>Acceptance tests (BDD)</li></ul>                                                   | <ul><li>Domain logic</li><li>Pure functions/morphisms</li><li>Use cases</li><li>Business rules</li></ul>                               | Core domain (inside hexagon): <ul><li>Entities</li><li>Value Objects</li><li>Domain Services</li><li>Application Services</li></ul>                                          | **Yes**             | **Yes**   |
-| **Observable Technical**     | User presentation (any sense perception) | <ul><li>Manual review</li><li>Visual regression</li><li>Accessibility audits</li><li>Cross-browser checks</li></ul> | <ul><li>CSS styling</li><li>Layouts</li><li>Animations</li><li>Screen reader text</li><li>Audio cues</li><li>Haptic feedback</li></ul> | Presentation layer (outside hexagon): <ul><li>Pure sensory elements without logic</li></ul>                                                                                  | **No**              | **No**    |
-| **Non-Observable Technical** | Implementation & adapter logic           | <ul><li>Integration tests (managed deps)</li><li>Contract tests (unmanaged deps)</li></ul>                          | <ul><li>All adapters</li><li>Caching</li><li>Monitoring</li><li>Infrastructure</li></ul>                                               | All adapter implementations: <ul><li>REST/GraphQL controllers</li><li>Database repositories</li><li>Message publishers</li><li>CLI renderers</li><li>Email senders</li></ul> | **No**              | **Yes**   |
+| Category                        | What We Test/Validate                    | How We Test/Validate                                                                                                | Typical Items                                                                                                                                                                                                                       | Hexagonal Architecture Examples                                                                                                                                                                                               | Uses BDD scenarios? | Uses TDD? |
+| ------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- | --------- |
+| **🎯 Observable Behavioral**    | Business behavior                        | <ul><li>Unit tests (TDD)</li><li>Acceptance tests (BDD)</li></ul>                                                   | <ul><li>Domain logic</li><li>Pure functions/morphisms</li><li>Use cases</li><li>Business rules</li></ul>                                                                                                                            | Core domain (inside hexagon): <ul><li>Entities</li><li>Value Objects</li><li>Domain Services</li><li>Application Services defining ports (interfaces)</li></ul>                                                               | **Yes**             | **Yes**   |
+| **👁️ Observable Technical**     | User presentation (any sense perception) | <ul><li>Manual review</li><li>Visual regression</li><li>Accessibility audits</li><li>Cross-browser checks</li></ul> | <ul><li>CSS styling</li><li>Layouts</li><li>Animations</li><li>Screen reader text</li><li>Audio cues</li><li>Haptic feedback</li></ul>                                                                                              | Presentation layer (outside hexagon): <ul><li>Pure sensory elements without logic</li></ul>                                                                                                                                   | **No**              | **No**    |
+| **⚙️ Non-Observable Technical** | Infrastructure & technical contracts     | <ul><li>Integration tests (managed deps)</li><li>Contract tests (unmanaged deps)</li></ul>                          | <ul><li>Infrastructure elements for external interactions:<ul><li>Controllers, repositories, services, DAOs, clients</li><li>Handle persistence, caching, APIs, messaging</li></ul></li><li>Supporting utilities & config</li></ul> | Adapters implementing domain-defined ports: <ul><li>Driving adapters (REST controllers, etc)</li><li>Driven adapters (repositories implementing persistence ports, etc)</li><li>All adapters depend on domain ports</li></ul> | **No**              | **Yes**   |
 
-> The key distinction: **Observable** categories involve what users directly experience (behavior or sensory presentation), while **Non-Observable Technical** involves the implementation logic that enables those experiences, even when that logic produces observable output.
->
-> **Note on Scaffolding**: Basic project scaffolding (framework initialization, config files,
-> package installation) is Non-Observable Technical in nature but consists of structural setup
-> rather than implementable logic. Like Observable Technical (which skips TDD for manual
-> validation), scaffolding sits outside AAID's TDD workflow as prerequisite work. Custom
-> infrastructure implementations with technical logic (database connection handling, auth
-> initialization, custom middleware) use AAID as Non-Observable Technical with TDD.
+> The key distinction: **Observable** categories involve what users directly experience (behavior or sensory presentation), while **Non-Observable Technical** involves the infrastructure implementations and technical contracts that enable those experiences, even when those implementations produce observable output.
+
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on Scaffolding**: Basic project scaffolding (framework initialization, config files, package installation) is Non-Observable Technical in nature but consists of structural setup rather than implementable technical contracts. Like Observable Technical (which skips TDD for manual validation), scaffolding sits outside `AAID`'s TDD workflow as prerequisite work. Custom infrastructure implementations with technical contracts (database connection handling, auth initialization, custom middleware) use `AAID` as Non-Observable Technical with TDD. |
 
 ## Examples in Practice
 
@@ -112,19 +107,19 @@ These are called _by_ the domain to interact with the outside:
 
 - **Observable Behavioral**: "Player wins with three in a row"
 - **Observable Technical**: Board colors, X/O fonts, victory sound effect, screen reader announcements
-- **Non-Observable Technical**: CLI renderer (output adapter), CLI input parser (input adapter), board state repository (persistence adapter)
+- **Non-Observable Technical**: Infrastructure elements — CLI renderer adapter, CLI input parser adapter, board state persistence adapter
 
 **Todo Application Example:**
 
 - **Observable Behavioral**: "User archives completed todos"
 - **Observable Technical**: Archive button styling, success toast visual design, completion sound
-- **Non-Observable Technical**: REST controller (input adapter), email sender (output adapter), database repository (persistence adapter), Redis cache
+- **Non-Observable Technical**: Infrastructure elements — REST controller (input adapter), email notification adapter, database repository (persistence adapter), cache adapter (Redis)
 
 **Autocomplete Search Example:**
 
 - **Observable Behavioral**: "Search suggestions update as user types"
 - **Observable Technical**: Dropdown styling, loading spinner animation, keyboard highlight style
-- **Non-Observable Technical**: Debounced API client, search result cache, request cancellation handler
+- **Non-Observable Technical**: Infrastructure elements — debounced API client adapter, search result cache adapter, request cancellation handler
 
 | 💻                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -142,7 +137,7 @@ Specifications include:
 - User stories with BDD examples (Observable Behavioral)
 - Technical requirements as separate linked tasks:
   - Presentation/UI Tasks (Observable Technical: pure styling/accessibility/sensory feedback)
-  - Technical Tasks (Non-Observable Technical: all adapters, infrastructure, performance, caching, etc.)
+  - Technical Tasks (Non-Observable Technical: infrastructure elements — adapters/repositories/gateways handling persistence, caching, APIs, etc.)
 - PRD, ubiquitous language glossary, etc.
 ```
 
@@ -165,10 +160,10 @@ Linked Presentation/UI Tasks:
 Linked Technical Tasks:
 
 - TECH-101: Implement REST PUT /todos/{id}/archive endpoint
-- TECH-102: Add PostgreSQL archive_date column with index
-- TECH-105: Configure Redis cache invalidation for archived todos
-- TECH-106: Add performance monitoring for archive operation
-- TECH-107: Implement email notification sender for archive confirmations
+- TECH-102: Add PostgreSQL persistence adapter with archive_date column
+- TECH-105: Configure Redis cache adapter for archived todos
+- TECH-106: Add performance monitoring adapter for archive operation
+- TECH-107: Implement email notification adapter for archive confirmations
 ```
 
 ### How Non-Functional Requirements (NFRs) Fit In
@@ -280,7 +275,7 @@ When working on technical elements, add technical context to your `@project-cont
 Create roadmaps for each aspect of your feature:
 
 1. **Observable Behavioral**: One roadmap per domain/business logic feature (`@ai-roadmap-template`)
-2. **Non-Observable Technical**: One roadmap per adapter/infrastructure element (`@ai-technical-roadmap-template`)
+2. **Non-Observable Technical**: One roadmap per infrastructure element — adapters/repositories/gateways (`@ai-technical-roadmap-template`)
 3. **Observable Technical (UI)**: One roadmap per presentation element (`@ai-presentation-roadmap-template`)
 
 ### Stage 3: TDD Starts
@@ -311,7 +306,7 @@ Create focused roadmaps for individual technical implementation elements that co
 
 ### `@ai-technical-roadmap-template`
 
-For Non-Observable Technical elements (adapters, infrastructure):
+For Non-Observable Technical elements (infrastructure elements — adapters/repositories/gateways):
 
 [View template](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-technical-roadmap-template.md)
 
@@ -329,7 +324,7 @@ The RED → GREEN → REFACTOR cycle applies to Non-Observable Technical impleme
 
 **Key Principle: "Behavior" is contextual to the abstraction layer.**
 
-Even when testing technical elements, focus test names on **behavior from the element's user's perspective**. Here “user” means the element’s consumer, not the "end user" (as in BDD).
+Even when testing technical elements, focus test names on **behavior from the element's user's perspective**. Here "user" means the element's consumer, not the "end user" (as in BDD).
 
 - Another developer using your API
 - A system consuming your adapter's output
@@ -386,9 +381,9 @@ The test name describes the **expected behavior** (what the element promises to 
 > - **Pre-deploy validation**: Real connections to verify external services still work
 > - **CI/CD flexibility**: Choose when to run with real vs mocked dependencies
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Principle of single testing responsibility**: When testing technical elements, don't overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn't repeat it. Instead, focus on the adapter's or infrastructure's own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation <br>**Output Adapters** → formatting, serialization <br>**Infrastructure** → persistence, caching, queue handling |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Principle of single testing responsibility**: When testing technical elements, don't overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn't repeat it. Instead, focus on the adapter's (or repository's/gateway's) own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation <br>**Output Adapters** → formatting, serialization <br>**Infrastructure** → persistence, caching, queue handling |
 
 **Modified TDD Cycle for Integration Tests:**
 
@@ -450,10 +445,10 @@ Pure sensory elements that don't contain logic are validated differently from TD
 ### The Dependency Rule
 
 ```
-Presentation → Adapters/Infrastructure → Domain
-     ↓                  ↓                   ↓
-Observable          Non-Observable      Observable
-Technical            Technical          Behavioral
+Presentation → Infrastructure/Adapters → Domain
+     ↓                  ↓                  ↓
+Observable          Non-Observable     Observable
+Technical            Technical         Behavioral
 ```
 
 Dependencies flow inward. Domain never knows about technical elements. Technical elements never know about presentation.
@@ -470,15 +465,15 @@ Dependencies flow inward. Domain never knows about technical elements. Technical
 
 1. **Track technical tasks separately** in your project management tool:
    - "Linked Presentation/UI Tasks" for Observable Technical (pure styling/accessibility/sensory)
-   - "Linked Technical Tasks" for Non-Observable Technical (all adapters, infrastructure)
+   - "Linked Technical Tasks" for Non-Observable Technical (infrastructure elements — adapters/repositories/gateways)
 2. **Create one roadmap per technical element** rather than bundling multiple components
 3. **Test at the appropriate level** based on dependency type (managed vs unmanaged)
 4. **Name tests based on behavior** even for technical elements - the test name should remain valid even if underlying technology changes
-5. **Let tests drive design** of your adapters just like they drive domain design
+5. **Let tests drive design** of your infrastructure elements just like they drive domain design
 6. **Use validation for sensory elements** - manual review as primary, automated tools as support
 7. **Document interfaces** as contracts between layers, regardless of your architecture pattern
 
-The disciplined approach of `AAID` adapts to each category: TDD for logic (Observable Behavioral and Non-Observable Technical), validation for sensory presentation (Observable Technical), while maintaining quality through appropriate testing or validation methods.
+The disciplined approach of `AAID` adapts to each category: TDD for business behavior (Observable Behavioral) and technical contracts (Non-Observable Technical), validation for sensory presentation (Observable Technical), while maintaining quality through appropriate testing or validation methods.
 
 ---
 
