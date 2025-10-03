@@ -6,7 +6,7 @@ _Professional TDD for AI-Augmented Software Development_
 
 ![AAID Augmented Being](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/refs/heads/main/assets/aaid-ai-workflow-h.webp)
 
-> **📋 Repository Purpose**: This repository contains support resources for developers who want to follow the `AAID` framework. The main methodology is introduced in our [dev.to article](https://dev.to/placeholder-link), with detailed resources, templates, and tools provided here.
+> **📋 Repository Purpose**: This repository contains support resources for developers who want to follow the `AAID` framework. The main methodology is introduced in our [dev.to article](https://dev.to/placeholder-link) (also available in the repo [here](./docs/aidd-workflow.md)) with detailed resources, templates, and tools provided here.
 
 ## What is AAID?
 
@@ -18,10 +18,10 @@ This separates professional software development from "vibe coding." While vibe 
 
 ## The AAID Advantage
 
-- **Predictable Development**: TDD discipline prevents AI-generated bugs
+- **Predictable Development**: TDD discipline keeps the AI under control - _your_ control
 - **Full Understanding**: You review and understand every line of code
-- **Production Quality**: Tests ensure code meets business requirements
-- **Complete Testing Coverage**: Unit tests (TDD) and acceptance tests (ATDD/BDD) ensure quality at every level
+- **Production Quality**: Tests ensure code meets business and technical requirements
+- **Comprehensive Testing**: Unit tests (TDD) and acceptance tests (ATDD/BDD) ensure every aspect of the application is fully tested
 - **Speed + Stability**: AI accelerates development while TDD ensures reliability
 
 Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Delivery, Acceptance Testing and Four-Layer Model, Robert C. Martin's Three Laws of TDD, and other battle-tested practices.
@@ -29,16 +29,17 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 ## Quick Links
 
 - **[Complete AAID Guide](docs/aidd-workflow.md)** - The full methodology and workflow
-- **[Complete AAID Acceptance Testing Guide](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Four-Layer Model for ATDD/BDD
+- **[Complete AAID Acceptance Testing Guide](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Using Dave Farley's Four-Layer Model for ATDD/BDD
+  - **[Acceptance Testing Workflow Diagram](appendices/appendix-a/aaid-at-workflow.diagram.mermaid)** - Visual representation of the `AAID` Acceptance Testing process
 - **[Dev.to Article](https://dev.to/placeholder-link)** _(Coming Soon)_ - Introduction and overview
-- **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the AAID process
+- **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the `AAID` process
 
 ## Repository Structure
 
 ```
 ├── docs/              # Complete AAID methodology and workflow guide
-├── appendices/        # Supporting documentation (testing, prompts, rules, technical details)
-├── .cursor/commands/  # Cursor slash commands (copy markdown to other tools' custom-command folders)
+├── appendices/        # Supporting documentation
+├── .cursor/commands/  # Cursor slash commands (copy to other tools' custom-command folders)
 │   ├── planning/
 │   ├── tdd/
 │   ├── investigation/
@@ -70,22 +71,23 @@ Pre-written AI commands organized by purpose:
 
 ### 🤖 **AI Integration**
 
-- **Workflow Rules**: Ready-to-use rules for Cursor, Claude Code, and other AI IDEs
-- **Phase Management**: Structured commands that enforce TDD discipline
+- **Workflow Rules**: Ready-to-use rules for Cursor (and easily adaptable for Claude Code or other AI IDEs/CLIs)
+- **Phase Management**: Custom slash commands that enforce TDD discipline, if AI fails to follow rules/instructions properly
 
 ## Getting Started
 
 1. **Read the Guide**: Start with [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the complete methodology
-2. **Set Up AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
-3. **Use Reusable Prompts**: Use the markdown in [`.cursor/commands/`](.cursor/commands/) for Cursor slash commands, or copy them into your tool's custom-command location
-4. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development
+2. **Have BDD Specs Available**: `AAID` is a spec-driven methodology. No specs, no `AAID`.
+3. **Set up a project/Select a project**: To build new features in a new or existing project, set up or select one with which to work
+4. **Add AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
+5. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development. Use [diagram](aaid-workflow-diagram.mermaid) as a visual guide
 
 ## The AAID Workflow
 
 See the full diagram: [AAID Workflow Diagram](aaid-workflow-diagram.mermaid)
 
 1. **📚 Context Providing**: Give AI comprehensive project understanding
-2. **🎯 Planning**: Collaborate on high-level approach and test roadmap
+2. **🤝 Planning**: Collaborate on high-level approach and test roadmap
 3. **📝 TDD Development Starts**: Create test structure
 4. **🔄 TDD Cycle**: Disciplined Red → Green → Refactor cycles with mandatory reviews
 
@@ -99,7 +101,7 @@ Each phase includes specific commands, review checkpoints, and quality gates to 
 
 ## Who This Is For
 
-AAID is for developers building **maintainable software** - whether professional engineers or personal project builders expecting longevity. If you need quick scripts or throwaway prototypes, simpler AI approaches work better.
+`AAID` is for developers building **maintainable software** - whether professional engineers or personal project builders expecting longevity. If you need quick scripts or throwaway prototypes, simpler AI approaches work better.
 
 **You need:**
 

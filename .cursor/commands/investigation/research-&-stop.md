@@ -7,21 +7,18 @@ Research the codebase and relevant documentation to gather context for the curre
 ## Instructions
 
 1. **Search Codebase**
-
    - Find existing patterns, components, or implementations related to the task
    - Locate relevant utility functions, types, interfaces, or shared code
    - Find similar features or test examples that can guide the work
    - Identify architectural patterns and conventions being used
 
 2. **Search Documentation** (when relevant)
-
    - Look up official documentation for frameworks/libraries being used
    - Find best practices for the current approach
    - Research API documentation or technical specifications
    - Use web search tool if needed
 
 3. **Report Findings**
-
    - Summarize relevant patterns and code found
    - Highlight existing implementations to reference or extend
    - Note important constraints, conventions, or decisions

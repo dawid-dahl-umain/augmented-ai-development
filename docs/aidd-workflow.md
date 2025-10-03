@@ -198,8 +198,8 @@ This article is not about this product discovery and specification refinement st
 
 > **Prerequisites**: `AAID` is a feature development workflow that assumes:
 >
-> ✅ **Working project**: Development environment set up, basic tooling configured (new or existing codebase)<br />
-> ✅ **Specifications ready**: User stories with BDD scenarios from Product Discovery
+> ✅ **Specifications ready**: User stories with BDD scenarios from Product Discovery<br />
+> ✅ **Working project**: Development environment set up, basic tooling configured (new or existing codebase)
 >
 > **Note**: Basic project scaffolding (running framework generators, setting up config files) involves structural setup rather than implementable technical contracts, placing it outside `AAID`'s TDD workflow. Custom infrastructure _implementations_ (adapters, middleware, auth setup, etc) use `AAID` with TDD. See [Appendix D](#appendix-d) for details on technical implementation.
 
@@ -273,7 +273,6 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 **Steps:**
 
 1. **Add High-Level Context** (trigger `/project-context` and include the relevant context in the same message as arguments to the command)
-
    - Project's README, architecture docs, package.json, config files, etc. Whatever you find important to your project from a high level.
    - Overall system design and patterns
    - **AI Research**: Use `/research-&-stop` to let AI proactively search codebase patterns and relevant documentation
@@ -288,7 +287,6 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    - **Technical Implementation**: Adapters, infrastructure, integrations, initializations (see [Appendix D](#appendix-d))
    - **Presentation/UI**: Visual styling, animations, audio (see [Appendix D](#appendix-d))
 3. **Add Specification Context** (specific to your development type)
-
    - **For Domain/Business**: User stories with BDD scenarios, PRD sections
    - **For Technical**: Technical tasks, NFRs, architecture decisions
    - **For Presentation**: Design specs, Figma files, style guides
@@ -298,7 +296,6 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    | The AI is now fundamentally aligned with your development goals, whether creating business value, implementing technical infrastructure, or crafting user interfaces. |
 
 4. **Add Relevant Code Context** (specific to your development type)
-
    - **For Domain/Business**: Domain dependencies, tests, similar features, pure function utils for similar logic
    - **For Technical**: Existing adapters, infrastructure patterns, utils, integration points
    - **For Presentation**: Components, design system, CSS framework, presentation-related config files
@@ -309,7 +306,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 
 <a id="stage-2-planning"></a>
 
-### 🎯 Stage 2: Planning (High-Level Approach)
+### 🤝 Stage 2: Planning (High-Level Approach)
 
 ![Stage 2 - Planning](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/stages/4.jpg?raw=true)
 
@@ -347,7 +344,6 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 **Steps:**
 
 1. **Discuss the Feature**
-
    - Discuss and explore freely, as you would with a human
    - Is everything crystal clear given the provided specifications? Does the AI have any questions?
    - Share any constraints or technical considerations
@@ -355,14 +351,12 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
    - Clarify ambiguities; make sure the AI makes no wild assumptions
 
 2. **Check for Additional Context**
-
    - Ask: "_Do you need any other context to understand the feature's scope and boundaries?_"
    - Provide any missing domain knowledge or system information
    - Trigger `/research-&-stop` for AI-driven investigation
 
 3. **Request Appropriate Roadmap**
    Based on your Stage 1 choice:
-
    - Generate a high-level roadmap before any coding
    - For **domain/business logic**: trigger `/ai-roadmap-template`
    - For **technical implementation**: trigger `/ai-technical-roadmap-template`
@@ -419,10 +413,10 @@ The test list is a living document. Following Kent Beck's TDD approach, this lis
 
 ```jsx
 describe("User archives completed todos", () => {
-  it.skip("should archive a completed todo");
-  it.skip("should not archive an incomplete todo");
-  it.skip("should restore an archived todo");
-});
+  it.skip("should archive a completed todo")
+  it.skip("should not archive an incomplete todo")
+  it.skip("should restore an archived todo")
+})
 ```
 
 | ☝️                                                                                                                                                                                                                                                                                               |
@@ -437,8 +431,8 @@ Start with the simplest test and then build incrementally:
 describe("User archives completed todos", () => {
   it("should archive a completed todo", () => {
     // To be implemented
-  });
-});
+  })
+})
 ```
 
 <a id="stage-4-tdd-cycle"></a>
@@ -534,12 +528,12 @@ _Because of the context that has been provided in the previous steps, the prompt
 describe("addTodo", () => {
   it("should add a todo with the correct text", () => {
     // When
-    const result = addTodo("Buy groceries"); // Fails: 'addTodo' is not defined
+    const result = addTodo("Buy groceries") // Fails: 'addTodo' is not defined
 
     // Then
-    expect(result.text).toBe("Buy groceries");
-  });
-});
+    expect(result.text).toBe("Buy groceries")
+  })
+})
 ```
 
 | ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   |
@@ -564,25 +558,25 @@ _Often follow-ups like these are not needed because of Stage 1.4: Add Relevant C
 // todo.service.test.ts
 // Both imports will fail - files don't exist yet (compilation failure = valid test failure)
 
-import { TodoService } from "./todo.service";
-import type { Todo } from "./interfaces/todo.interface";
+import { TodoService } from "./todo.service"
+import type { Todo } from "./interfaces/todo.interface"
 
 describe("TodoService", () => {
   it("should add a todo with completed set to false", () => {
     // Given
-    const mockRepository = {}; // Start minimal - no API assumptions yet
-    const service = new TodoService(mockRepository);
+    const mockRepository = {} // Start minimal - no API assumptions yet
+    const service = new TodoService(mockRepository)
 
     // When
-    const result = service.addTodo("Buy groceries");
+    const result = service.addTodo("Buy groceries")
 
     // Then
-    expect(result.completed).toBe(false);
+    expect(result.completed).toBe(false)
 
     // Note: You're testing ONE behavior. The repository.save()
     // will be forced by a future test, not this one.
-  });
-});
+  })
+})
 ```
 
 ---
@@ -622,22 +616,22 @@ describe("TodoService", () => {
 // interfaces/todo.interface.ts
 
 export interface Todo {
-  text: string;
-  completed: boolean;
+  text: string
+  completed: boolean
 }
 ```
 
 ```tsx
 // todo.service.ts
 
-import type { Todo } from "./interfaces/todo.interface";
+import type { Todo } from "./interfaces/todo.interface"
 
 export class TodoService {
   constructor(private repository: unknown) {} // 'unknown' is fine - no test demands otherwise
 
   addTodo(text: string): Todo {
     // Simplest naïve/hardcoded implementation to pass the test
-    return { text: "", completed: false };
+    return { text: "", completed: false }
   }
 }
 ```
@@ -688,8 +682,8 @@ export class TodoService {
 // models/todo.model.ts
 
 export interface Todo {
-  text: string;
-  completed: boolean;
+  text: string
+  completed: boolean
 }
 
 export class TodoModel implements Todo {
@@ -701,7 +695,7 @@ export class TodoModel implements Todo {
   static create(): Todo {
     // For now just handles completed status
     // Future tests will force us to handle text properly
-    return new TodoModel("", false);
+    return new TodoModel("", false)
   }
 }
 ```
@@ -709,7 +703,7 @@ export class TodoModel implements Todo {
 ```tsx
 // services/todo.service.ts
 
-import { type Todo, TodoModel } from "../models/todo.model";
+import { type Todo, TodoModel } from "../models/todo.model"
 
 export class TodoService {
   constructor(private readonly repository: unknown) {}
@@ -717,7 +711,7 @@ export class TodoService {
   addTodo(text: string): Todo {
     // Still ignoring text parameter - test doesn't check it yet
     // Repository still unused - no test requires persistence yet
-    return TodoModel.create();
+    return TodoModel.create()
   }
 }
 ```
@@ -741,13 +735,13 @@ _Often these prompts aren't needed due to the [AI workflow instructions](#append
 ```tsx
 // services/todo.service.ts
 
-import { type Todo, TodoModel } from "../models/todo.model";
+import { type Todo, TodoModel } from "../models/todo.model"
 
 export class TodoService {
   constructor(private readonly repository: unknown) {}
 
   addTodo(text: string): Todo {
-    return TodoModel.create();
+    return TodoModel.create()
   }
 }
 ```
@@ -863,20 +857,18 @@ Example of what a unit test looks like:
 describe("TodoService", () => {
   it("should archive a completed todo", async () => {
     // Given
-    const completedTodo = { id: "todo-1", title: "Buy milk", completed: true };
-    mockTodoRepository.findById.mockResolvedValue(completedTodo);
+    const completedTodo = { id: "todo-1", title: "Buy milk", completed: true }
+    mockTodoRepository.findById.mockResolvedValue(completedTodo)
 
     // When
-    const result = await service.archiveTodo("todo-1");
+    const result = await service.archiveTodo("todo-1")
 
     // Then
-    expect(result.isOk()).toBe(true);
-    expect(mockTodoRepository.moveToArchive).toHaveBeenCalledWith(
-      completedTodo
-    );
-    expect(mockTodoRepository.removeFromActive).toHaveBeenCalledWith("todo-1");
-  });
-});
+    expect(result.isOk()).toBe(true)
+    expect(mockTodoRepository.moveToArchive).toHaveBeenCalledWith(completedTodo)
+    expect(mockTodoRepository.removeFromActive).toHaveBeenCalledWith("todo-1")
+  })
+})
 ```
 
 **Acceptance Tests (ATDD/BDD)**
@@ -901,22 +893,22 @@ Example of what an acceptance test looks like (using the [Four-Layer](https://do
 | 4. System Under Test (SUT)        | Production-like application environment |
 
 ```tsx
-import { user, todo } from "../dsl";
+import { user, todo } from "../dsl"
 
 describe("User archives completed todos", () => {
   it("should archive a completed todo", async () => {
     // Given
-    await user.startsWithNewAccount();
-    await user.hasCompletedTodo("Buy milk");
+    await user.startsWithNewAccount()
+    await user.hasCompletedTodo("Buy milk")
 
     // When
-    await todo.archive("Buy milk");
+    await todo.archive("Buy milk")
 
     // Then
-    todo.confirmInArchive("Buy milk");
-    todo.confirmNotInActive("Buy milk");
-  });
-});
+    todo.confirmInArchive("Buy milk")
+    todo.confirmNotInActive("Buy milk")
+  })
+})
 ```
 
 _Acceptance tests know nothing about how our app works internally. Even if the app changes its technical implementation details, this specification (test) will remain valid._
@@ -1146,7 +1138,6 @@ Ask user to clarify if unclear which type of work is being done
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
-
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given

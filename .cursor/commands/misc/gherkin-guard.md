@@ -60,14 +60,14 @@ Verify all are true before outputting:
 ```ts
 it("adds a new item to the list", () => {
   // Given
-  const list = createList();
+  const list = createList()
 
   // When
-  list.add("Milk");
+  list.add("Milk")
 
   // Then
-  expect(list.items).toContain("Milk");
-});
+  expect(list.items).toContain("Milk")
+})
 ```
 
 ### 2: Minimal (No Setup)
@@ -75,11 +75,11 @@ it("adds a new item to the list", () => {
 ```ts
 it("returns empty results for an unknown query", () => {
   // When
-  const results = search("unknown");
+  const results = search("unknown")
 
   // Then
-  expect(results).toHaveLength(0);
-});
+  expect(results).toHaveLength(0)
+})
 ```
 
 ### 3: Multiple Expectations via And/But
@@ -87,20 +87,20 @@ it("returns empty results for an unknown query", () => {
 ```ts
 it("authenticates a user but locks on too many attempts", () => {
   // Given
-  const auth = createAuth();
-  auth.failLogin("alice");
-  auth.failLogin("alice");
+  const auth = createAuth()
+  auth.failLogin("alice")
+  auth.failLogin("alice")
 
   // When
-  auth.failLogin("alice");
+  auth.failLogin("alice")
 
   // Then
-  expect(auth.isAuthenticated()).toBe(false);
+  expect(auth.isAuthenticated()).toBe(false)
 
   // And
-  expect(auth.attempts("alice")).toBe(3);
+  expect(auth.attempts("alice")).toBe(3)
 
   // But
-  expect(auth.isLocked("alice")).toBe(true);
-});
+  expect(auth.isLocked("alice")).toBe(true)
+})
 ```

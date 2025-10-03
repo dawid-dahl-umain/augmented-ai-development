@@ -38,20 +38,18 @@ Example of what a unit test looks like:
 describe("TodoService", () => {
   it("should archive a completed todo", async () => {
     // Given
-    const completedTodo = { id: "todo-1", title: "Buy milk", completed: true };
-    mockTodoRepository.findById.mockResolvedValue(completedTodo);
+    const completedTodo = { id: "todo-1", title: "Buy milk", completed: true }
+    mockTodoRepository.findById.mockResolvedValue(completedTodo)
 
     // When
-    const result = await service.archiveTodo("todo-1");
+    const result = await service.archiveTodo("todo-1")
 
     // Then
-    expect(result.isOk()).toBe(true);
-    expect(mockTodoRepository.moveToArchive).toHaveBeenCalledWith(
-      completedTodo
-    );
-    expect(mockTodoRepository.removeFromActive).toHaveBeenCalledWith("todo-1");
-  });
-});
+    expect(result.isOk()).toBe(true)
+    expect(mockTodoRepository.moveToArchive).toHaveBeenCalledWith(completedTodo)
+    expect(mockTodoRepository.removeFromActive).toHaveBeenCalledWith("todo-1")
+  })
+})
 ```
 
 **Acceptance Tests (ATDD/BDD)**
@@ -76,22 +74,22 @@ Example of what an acceptance test looks like (using the [Four-Layer](https://do
 | 4. System Under Test (SUT)        | Production-like application environment |
 
 ```tsx
-import { user, todo } from "../dsl";
+import { user, todo } from "../dsl"
 
 describe("User archives completed todos", () => {
   it("should archive a completed todo", async () => {
     // Given
-    await user.startsWithNewAccount();
-    await user.hasCompletedTodo("Buy milk");
+    await user.startsWithNewAccount()
+    await user.hasCompletedTodo("Buy milk")
 
     // When
-    await todo.archive("Buy milk");
+    await todo.archive("Buy milk")
 
     // Then
-    todo.confirmInArchive("Buy milk");
-    todo.confirmNotInActive("Buy milk");
-  });
-});
+    todo.confirmInArchive("Buy milk")
+    todo.confirmNotInActive("Buy milk")
+  })
+})
 ```
 
 _Acceptance tests know nothing about how our app works internally. Even if the app changes its technical implementation details, this specification (test) will remain valid._

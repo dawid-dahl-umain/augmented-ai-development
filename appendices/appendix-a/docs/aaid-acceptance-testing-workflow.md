@@ -460,7 +460,7 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 ```typescript
 // Protocol Driver - Contains ALL assertions and failures
 export class UIDriver {
-  private currentUserEmail?: string;
+  private currentUserEmail?: string
 
   constructor(private page: Page) {}
 
@@ -468,46 +468,44 @@ export class UIDriver {
 
   async hasAccount(email: string): Promise<void> {
     try {
-      await this.page.goto("/register");
-      await this.page.fill('[data-testid="email"]', email);
-      await this.page.fill('[data-testid="password"]', "test-password");
-      await this.page.click('[data-testid="register-submit"]');
+      await this.page.goto("/register")
+      await this.page.fill('[data-testid="email"]', email)
+      await this.page.fill('[data-testid="password"]', "test-password")
+      await this.page.click('[data-testid="register-submit"]')
 
       // Wait for successful registration/login (functional isolation established)
-      await this.page.waitForSelector('[data-testid="user-menu"]');
+      await this.page.waitForSelector('[data-testid="user-menu"]')
 
-      this.currentUserEmail = email;
+      this.currentUserEmail = email
     } catch (error) {
-      expect.fail(`Unable to create account for '${email}': ${error.message}`);
+      expect.fail(`Unable to create account for '${email}': ${error.message}`)
     }
   }
 
   async hasCompletedTodo(name: string, desc: string): Promise<void> {
     try {
-      await this.page.goto("/todos");
-      await this.page.fill('[data-testid="new-todo-name"]', name);
-      await this.page.click('[data-testid="add-todo"]');
+      await this.page.goto("/todos")
+      await this.page.fill('[data-testid="new-todo-name"]', name)
+      await this.page.click('[data-testid="add-todo"]')
 
       // Wait for todo to appear
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`);
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`)
 
       await this.page.click(
         `[data-testid="todo-${name}"] [data-testid="complete"]`
-      );
+      )
 
       // Verify completion state
       const isCompleted = await this.page
         .locator(`[data-testid="todo-${name}"]`)
-        .getAttribute("data-completed");
+        .getAttribute("data-completed")
 
       // ASSERTION happens here in the driver
       if (isCompleted !== "true") {
-        expect.fail(`Failed to create completed todo '${name}'`);
+        expect.fail(`Failed to create completed todo '${name}'`)
       }
     } catch (error) {
-      expect.fail(
-        `Unable to create completed todo '${name}': ${error.message}`
-      );
+      expect.fail(`Unable to create completed todo '${name}': ${error.message}`)
     }
   }
 
@@ -515,15 +513,15 @@ export class UIDriver {
     try {
       await this.page.click(
         `[data-testid="todo-${name}"] [data-testid="archive"]`
-      );
+      )
 
       // Wait for todo to disappear from active list
       await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
         state: "hidden",
-        timeout: 5000,
-      });
+        timeout: 5000
+      })
     } catch (error) {
-      expect.fail(`Failed to archive todo '${name}': ${error.message}`);
+      expect.fail(`Failed to archive todo '${name}': ${error.message}`)
     }
   }
 }
@@ -656,70 +654,70 @@ The transformation follows a 1:1 mapping pattern:
 ```typescript
 // executable-specs/archive-todos.spec.ts
 
-import { beforeEach, describe, it } from "vitest";
-import { Dsl } from "../dsl";
+import { beforeEach, describe, it } from "vitest"
+import { Dsl } from "../dsl"
 
 describe("User archives completed todos", () => {
-  let dsl: Dsl;
+  let dsl: Dsl
 
   beforeEach(() => {
-    dsl = new Dsl();
-  });
+    dsl = new Dsl()
+  })
 
   describe("Archive a completed todo", () => {
     it("should archive a completed todo", async () => {
       // Given
-      await dsl.user.hasAccount({ email: "user@test.com" });
+      await dsl.user.hasAccount({ email: "user@test.com" })
 
       // And
-      await dsl.user.hasCompletedTodo({ name: "Buy milk" });
+      await dsl.user.hasCompletedTodo({ name: "Buy milk" })
 
       // When
-      await dsl.user.archives({ todo: "Buy milk" });
+      await dsl.user.archives({ todo: "Buy milk" })
 
       // Then
-      await dsl.todo.confirmInArchive({ name: "Buy milk" });
+      await dsl.todo.confirmInArchive({ name: "Buy milk" })
 
       // And
-      await dsl.todo.confirmNotInActive({ name: "Buy milk" });
-    });
-  });
+      await dsl.todo.confirmNotInActive({ name: "Buy milk" })
+    })
+  })
 
   describe("Attempt to archive an incomplete todo", () => {
     it("should not archive an incomplete todo", async () => {
       // Given (account creation follows same pattern)
-      await dsl.user.hasAccount({ email: "user@test.com" });
+      await dsl.user.hasAccount({ email: "user@test.com" })
 
       // And
-      await dsl.user.hasIncompleteTodo({ name: "Walk dog" });
+      await dsl.user.hasIncompleteTodo({ name: "Walk dog" })
 
       // When
-      await dsl.user.attemptsToArchive({ todo: "Walk dog" });
+      await dsl.user.attemptsToArchive({ todo: "Walk dog" })
 
       // Then
-      await dsl.todo.confirmErrorMessage();
+      await dsl.todo.confirmErrorMessage()
 
       // And
-      await dsl.todo.confirmInActive({ name: "Walk dog" });
-    });
-  });
+      await dsl.todo.confirmInActive({ name: "Walk dog" })
+    })
+  })
 
   describe("Restore an archived todo", () => {
     it("should restore an archived todo", async () => {
       // Given (account creation follows same pattern)
-      await dsl.user.hasAccount({ email: "user@test.com" });
+      await dsl.user.hasAccount({ email: "user@test.com" })
 
       // And
-      await dsl.user.hasArchivedTodo({ name: "Review code" });
+      await dsl.user.hasArchivedTodo({ name: "Review code" })
 
       // When
-      await dsl.user.restores({ todo: "Review code" });
+      await dsl.user.restores({ todo: "Review code" })
 
       // Then
-      await dsl.todo.confirmInActive({ name: "Review code" });
-    });
-  });
-});
+      await dsl.todo.confirmInActive({ name: "Review code" })
+    })
+  })
+})
 ```
 
 Instantiating `new Dsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios. Each test then establishes its own functional isolation boundary by creating a unique user account.
@@ -798,7 +796,7 @@ export class Params {
   }
 }
 
-type ParamsArgs = Record<string, string | string[]>;
+type ParamsArgs = Record<string, string | string[]>
 ```
 
 **Key distinction:**
@@ -815,61 +813,64 @@ DSL methods must read like natural language, matching the BDD scenarios. They co
 ```typescript
 // dsl/user.dsl.ts
 
-import { DslContext } from "./utils/DslContext";
-import { Params } from "./utils/Params";
-import { UIDriver } from "../protocol-driver/ui.driver";
+import { DslContext } from "./utils/DslContext"
+import { Params } from "./utils/Params"
+import { UIDriver } from "../protocol-driver/ui.driver"
 
 interface AccountParams {
-  email?: string;
+  email?: string
 }
 
 interface TodoParams {
-  name?: string;
-  description?: string;
+  name?: string
+  description?: string
 }
 
 interface ArchiveParams {
-  todo?: string;
+  todo?: string
 }
 
 export class UserDsl {
-  private driver: UIDriver;
+  private driver: UIDriver
 
-  constructor(private context: DslContext, driver: UIDriver) {
-    this.driver = driver;
+  constructor(
+    private context: DslContext,
+    driver: UIDriver
+  ) {
+    this.driver = driver
   }
 
   // Named to match BDD: "Given the user has an account"
   async hasAccount(args: AccountParams = {}): Promise<void> {
-    const params = new Params(this.context, args);
-    const email = params.alias("email"); // Functional isolation boundary
+    const params = new Params(this.context, args)
+    const email = params.alias("email") // Functional isolation boundary
 
-    await this.driver.hasAccount(email);
+    await this.driver.hasAccount(email)
   }
 
   // Named to match BDD: "And they have a completed todo"
   async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.alias("name"); // Temporal isolation within account
-    const description = params.optional("description", ""); // Falls back to "" if not provided
+    const params = new Params(this.context, args)
+    const name = params.alias("name") // Temporal isolation within account
+    const description = params.optional("description", "") // Falls back to "" if not provided
 
-    await this.driver.hasCompletedTodo(name, description);
+    await this.driver.hasCompletedTodo(name, description)
   }
 
   // Named to match BDD: "When they archive"
   async archives(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.alias("todo");
+    const params = new Params(this.context, args)
+    const name = params.alias("todo")
 
-    await this.driver.archives(name);
+    await this.driver.archives(name)
   }
 
   // Named to match BDD: "When they attempt to archive"
   async attemptsToArchive(args: ArchiveParams): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.alias("todo");
+    const params = new Params(this.context, args)
+    const name = params.alias("todo")
 
-    await this.driver.attemptsToArchive(name);
+    await this.driver.attemptsToArchive(name)
   }
 }
 ```
@@ -878,26 +879,29 @@ export class UserDsl {
 // dsl/todo.dsl.ts
 
 export class TodoDsl {
-  private driver: UIDriver;
+  private driver: UIDriver
 
-  constructor(private context: DslContext, driver: UIDriver) {
-    this.driver = driver;
+  constructor(
+    private context: DslContext,
+    driver: UIDriver
+  ) {
+    this.driver = driver
   }
 
   // Named to match BDD: "Then X should be in archived todos"
   async confirmInArchive(args: { name?: string }): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.alias("name");
+    const params = new Params(this.context, args)
+    const name = params.alias("name")
 
-    await this.driver.confirmInArchive(name);
+    await this.driver.confirmInArchive(name)
   }
 
   // Named to match BDD: "And X should not be in active todos"
   async confirmNotInActive(args: { name?: string }): Promise<void> {
-    const params = new Params(this.context, args);
-    const name = params.alias("name");
+    const params = new Params(this.context, args)
+    const name = params.alias("name")
 
-    await this.driver.confirmNotInActive(name);
+    await this.driver.confirmNotInActive(name)
   }
 }
 ```
@@ -907,25 +911,25 @@ export class TodoDsl {
 ```typescript
 // dsl/index.ts
 
-import { DslContext } from "./utils/DslContext";
-import { UserDsl } from "./user.dsl";
-import { TodoDsl } from "./todo.dsl";
-import { UIDriver } from "../protocol-driver/ui.driver";
+import { DslContext } from "./utils/DslContext"
+import { UserDsl } from "./user.dsl"
+import { TodoDsl } from "./todo.dsl"
+import { UIDriver } from "../protocol-driver/ui.driver"
 
 export class Dsl {
-  public readonly user: UserDsl;
-  public readonly todo: TodoDsl;
+  public readonly user: UserDsl
+  public readonly todo: TodoDsl
 
   constructor() {
-    const context = new DslContext();
+    const context = new DslContext()
 
     // Inject the connection mechanism into protocol drivers to interact with the production-like SUT
     // (e.g., browser page, HTTP endpoint, message queue connection)
 
-    const uiDriver = new UIDriver(global.page);
+    const uiDriver = new UIDriver(global.page)
 
-    this.user = new UserDsl(context, uiDriver);
-    this.todo = new TodoDsl(context, uiDriver);
+    this.user = new UserDsl(context, uiDriver)
+    this.todo = new TodoDsl(context, uiDriver)
   }
 }
 ```
@@ -947,11 +951,11 @@ Protocol Drivers handle the technical interaction with the system AND all pass/f
 ```typescript
 // protocol-driver/ui.driver.ts
 
-import { Page } from "@playwright/test";
-import { expect } from "vitest";
+import { Page } from "@playwright/test"
+import { expect } from "vitest"
 
 export class UIDriver {
-  private currentUserEmail?: string;
+  private currentUserEmail?: string
 
   constructor(private page: Page) {}
 
@@ -964,17 +968,17 @@ export class UIDriver {
    */
   async hasAccount(email: string): Promise<void> {
     try {
-      await this.page.goto("/register");
-      await this.page.fill('[data-testid="email"]', email);
-      await this.page.fill('[data-testid="password"]', "test-password");
-      await this.page.click('[data-testid="register-submit"]');
+      await this.page.goto("/register")
+      await this.page.fill('[data-testid="email"]', email)
+      await this.page.fill('[data-testid="password"]', "test-password")
+      await this.page.click('[data-testid="register-submit"]')
 
       // Wait for successful registration/login
-      await this.page.waitForSelector('[data-testid="user-menu"]');
+      await this.page.waitForSelector('[data-testid="user-menu"]')
 
-      this.currentUserEmail = email;
+      this.currentUserEmail = email
     } catch (error) {
-      expect.fail(`Unable to create account for '${email}': ${error.message}`);
+      expect.fail(`Unable to create account for '${email}': ${error.message}`)
     }
   }
 
@@ -986,33 +990,31 @@ export class UIDriver {
    */
   async hasCompletedTodo(name: string, description: string): Promise<void> {
     try {
-      await this.page.goto("/todos");
-      await this.page.fill('[data-testid="new-todo-name"]', name);
+      await this.page.goto("/todos")
+      await this.page.fill('[data-testid="new-todo-name"]', name)
       if (description) {
-        await this.page.fill('[data-testid="new-todo-desc"]', description);
+        await this.page.fill('[data-testid="new-todo-desc"]', description)
       }
-      await this.page.click('[data-testid="add-todo"]');
+      await this.page.click('[data-testid="add-todo"]')
 
       // Wait for todo to appear
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`);
+      await this.page.waitForSelector(`[data-testid="todo-${name}"]`)
 
       await this.page.click(
         `[data-testid="todo-${name}"] [data-testid="complete"]`
-      );
+      )
 
       // Verify completion state
       const isCompleted = await this.page
         .locator(`[data-testid="todo-${name}"]`)
-        .getAttribute("data-completed");
+        .getAttribute("data-completed")
 
       if (isCompleted !== "true") {
-        expect.fail(`Todo '${name}' was not marked as completed`);
+        expect.fail(`Todo '${name}' was not marked as completed`)
       }
     } catch (error) {
-      if (error.message.includes("expect.fail")) throw error;
-      expect.fail(
-        `Unable to create completed todo '${name}': ${error.message}`
-      );
+      if (error.message.includes("expect.fail")) throw error
+      expect.fail(`Unable to create completed todo '${name}': ${error.message}`)
     }
   }
 
@@ -1020,15 +1022,15 @@ export class UIDriver {
     try {
       await this.page.click(
         `[data-testid="todo-${name}"] [data-testid="archive"]`
-      );
+      )
 
       // Wait for todo to disappear from active list
       await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
         state: "hidden",
-        timeout: 5000,
-      });
+        timeout: 5000
+      })
     } catch (error) {
-      expect.fail(`Failed to archive todo '${name}': ${error.message}`);
+      expect.fail(`Failed to archive todo '${name}': ${error.message}`)
     }
   }
 
@@ -1038,44 +1040,44 @@ export class UIDriver {
     try {
       await this.page.click(
         `[data-testid="todo-${name}"] [data-testid="archive"]`
-      );
+      )
       // Give it a moment to process
-      await this.page.waitForTimeout(500);
+      await this.page.waitForTimeout(500)
     } catch (error) {
       // Clicking the button failed - that's a real problem
-      expect.fail(`Could not attempt to archive '${name}': ${error.message}`);
+      expect.fail(`Could not attempt to archive '${name}': ${error.message}`)
     }
   }
 
   // === Todo Verification ===
 
   async confirmInArchive(name: string): Promise<void> {
-    await this.page.goto("/todos/archived");
-    const count = await this.page.locator(`text="${name}"`).count();
+    await this.page.goto("/todos/archived")
+    const count = await this.page.locator(`text="${name}"`).count()
 
     if (count === 0) {
-      expect.fail(`Todo '${name}' not found in archive`);
+      expect.fail(`Todo '${name}' not found in archive`)
     }
   }
 
   async confirmNotInActive(name: string): Promise<void> {
-    await this.page.goto("/todos");
+    await this.page.goto("/todos")
     const count = await this.page
       .locator(`[data-testid="todo-${name}"]`)
-      .count();
+      .count()
 
     if (count > 0) {
-      expect.fail(`Todo '${name}' should not be in active todos but was found`);
+      expect.fail(`Todo '${name}' should not be in active todos but was found`)
     }
   }
 
   async confirmErrorMessage(): Promise<void> {
     const errorVisible = await this.page
       .locator('[data-testid="error-message"]')
-      .isVisible();
+      .isVisible()
 
     if (!errorVisible) {
-      expect.fail("Expected error message was not displayed");
+      expect.fail("Expected error message was not displayed")
     }
   }
 }
@@ -1093,7 +1095,7 @@ Implement system-level isolation - stub ONLY third-party systems:
 // protocol-driver/stubs/email-service.stub.ts
 
 export class EmailServiceStub {
-  private sentEmails = new Map<string, any[]>();
+  private sentEmails = new Map<string, any[]>()
 
   async setupSuccessResponse(): Promise<void> {
     // Configure stub to return success for any email send
@@ -1104,17 +1106,17 @@ export class EmailServiceStub {
   }
 
   async sendEmail(to: string, subject: string, body: string): Promise<void> {
-    const emails = this.sentEmails.get(to) || [];
-    emails.push({ subject, body, timestamp: Date.now() });
-    this.sentEmails.set(to, emails);
+    const emails = this.sentEmails.get(to) || []
+    emails.push({ subject, body, timestamp: Date.now() })
+    this.sentEmails.set(to, emails)
   }
 
   async getEmailsSentTo(address: string): Promise<any[]> {
-    return this.sentEmails.get(address) || [];
+    return this.sentEmails.get(address) || []
   }
 
   async reset(): Promise<void> {
-    this.sentEmails.clear();
+    this.sentEmails.clear()
   }
 }
 ```
@@ -1228,22 +1230,22 @@ async createTodo(name: string): Promise<void> {
 
 ```typescript
 // BAD: Tests UI structure
-await page.click("#submit-button");
-await expect(page.locator(".success-toast")).toBeVisible();
+await page.click("#submit-button")
+await expect(page.locator(".success-toast")).toBeVisible()
 
 // GOOD: Tests behavior
-await dsl.user.submitsForm();
-await dsl.form.confirmSuccessMessage();
+await dsl.user.submitsForm()
+await dsl.form.confirmSuccessMessage()
 ```
 
 **❌ Stubbing Internal Systems:**
 
 ```typescript
 // BAD: Mocking your own database
-const mockDatabase = mock("./database");
+const mockDatabase = mock("./database")
 
 // GOOD: Only mock third-party systems you don't control
-const emailServiceStub = new EmailServiceStub();
+const emailServiceStub = new EmailServiceStub()
 ```
 
 **❌ Missing Isolation:**
