@@ -381,10 +381,11 @@ When testing infrastructure code, your approach changes based on whether you con
 
 **Test Types by Dependency:**
 
-- **Managed dependencies** (your database, cache, queues) → **Integration** tests with real resources
-- **Unmanaged dependencies** (Stripe, SendGrid, external APIs) → **Contract** tests with toggleable mocking
+- **Managed dependencies** (your database, cache, queues) → **Integration** tests with real resource(s)
+- **Governed Unmanaged dependencies** (microservices, internal services) → **Bidirectional contract** tests with provider coordination
+- **External Unmanaged dependencies** (Stripe, SendGrid, third-party APIs) → **Unidirectional contract** tests with consumer-side verification
 
-See [Appendix E: Dependencies and Mocking](../appendix-e/dependencies-and-mocking.md) for the 4 dependency categories and how each test type handles them.
+See [Appendix E: Dependencies and Mocking](../appendix-e/dependencies-and-mocking.md) for detailed guidance on all dependency categories and how each test type handles them.
 
 | ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
