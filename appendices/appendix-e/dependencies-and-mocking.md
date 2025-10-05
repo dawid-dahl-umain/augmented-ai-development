@@ -2,7 +2,7 @@
 
 ![Appendix E](../../assets/appendices/11.webp)
 
-AAID uses two categorization systems that work together:
+`AAID` uses two categorization systems that work together:
 
 - **[Implementation Categories](../appendix-d/handling-technical-implementation-details.md#implementation-categories)** categorize what you're building and determine which test type to use
 - **Dependency Categories** (this guide) categorize the dependencies of what you're building and determine your mocking strategy
@@ -28,7 +28,7 @@ Once you've determined your test type from the Implementation Matrix, use this g
 
 ![Dependency Categories](../../assets/dependencies-mocking.webp)
 
-AAID categorizes dependencies into four primary types to determine how they should be handled in tests:
+`AAID` categorizes dependencies into four primary types to determine how they should be handled in tests:
 
 | Category                            | Description                                                                            | Examples                                                                              |
 | ----------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
@@ -86,7 +86,7 @@ When you're writing tests and wonder "Should I mock this dependency?", use this 
 
 This diagram visualizes the Dependency Handling Matrix as an interactive decision tree, guiding you from your test type to the correct mocking strategy for each dependency.
 
-> 💡 **New to AAID?** The diagram starts with "What are you building?" referring to the [Three Implementation Categories](../appendix-d/handling-technical-implementation-details.md#implementation-categories) (Observable Behavioral, Non-Observable Technical, Observable Technical). These categories determine which test type to use.
+> 💡 **New to `AAID`?** The diagram starts with "What are you building?" referring to the [Three Implementation Categories](../appendix-d/handling-technical-implementation-details.md#implementation-categories) (Observable Behavioral, Non-Observable Technical, Observable Technical). These categories determine which test type to use.
 
 ![Dependencies and Mocking Decision Flow](../../assets/mocking-workflow-diagram.webp)
 
@@ -161,9 +161,11 @@ This two-part approach maintains speed and reliability (mocked tests) while catc
 
 ### 🎯 Acceptance Tests
 
-Acceptance tests verify complete business requirements by testing the full system through its outer boundary (HTTP endpoints, CLI commands) exactly as a user or external system would. They include all managed dependencies (database, cache, queues) but mock unmanaged ones (third-party APIs) to maintain reliability.
+Acceptance tests verify complete business requirements through the full system, entering via the outer boundary (HTTP endpoints, CLI commands) exactly as a user or external system would. Unlike integration tests that target a single adapter in isolation, acceptance tests flow through all layers verifying the entire system works together.
 
-> **Critical distinction from integration tests:** Acceptance tests enter through the system boundary and flow through all layers: _the whole system_. Integration tests bypass outer layers and test a single adapter directly.
+`AAID` structures these tests using Dave Farley's Four-Layer Model (Executable Specs, DSL, Protocol Drivers, SUT). The DSL translates BDD scenarios into executable specifications, while protocol drivers handle the technical interaction with the system. All managed dependencies (database, cache, queues) run real; only unmanaged ones (third-party APIs) are mocked for test suite stability.
+
+See [Appendix A: AAID Acceptance Testing Workflow](../../appendix-a/docs/aaid-acceptance-testing-workflow.md) for the complete architectural pattern.
 
 ### 👁️ Visual/Sensory Validation
 
