@@ -1292,7 +1292,9 @@ The main guide above has focused on BDD/TDD for domain behavior. Technical imple
 
 ![Appendix E](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/appendices/11.webp)
 
-Once you've identified your test type from the [Implementation Categories](../appendices/appendix-d/handling-technical-implementation-details.md#aaid-implementation-matrix-build-types-and-verification), this reference clarifies how to properly handle the dependencies of what you're building. It covers the four dependency categories (Pure In-Process, Impure In-Process, Managed Out-of-Process, Unmanaged Out-of-Process) and shows how each test type (unit, integration, contract, acceptance) handles them differently.
+Once you've identified your test type from the [Implementation Categories](../appendices/appendix-d/handling-technical-implementation-details.md#aaid-implementation-matrix-build-types-and-verification), this reference clarifies how to properly handle the dependencies of what you're building.
+
+It covers the four dependency categories (Pure In-Process, Impure In-Process, Managed Out-of-Process, Unmanaged Out-of-Process) and shows how each test type (unit, integration, contract, acceptance) handles them differently.
 
 ![Dependency Categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/dependencies-mocking.webp)
 
