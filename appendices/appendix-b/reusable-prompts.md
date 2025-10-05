@@ -1,6 +1,6 @@
 # Appendix B: Helpful Commands (Reusable Prompts)
 
-![Appendix B](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/bi3pb8m680ooad039qq0.png)
+![Appendix B](../../assets/appendices/8.webp)
 
 These reusable prompt commands speed up your `AAID` workflow.
 

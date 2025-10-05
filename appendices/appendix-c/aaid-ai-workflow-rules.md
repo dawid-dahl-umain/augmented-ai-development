@@ -1,6 +1,6 @@
 # Appendix C: AAID Workflow Rules
 
-![Appendix C](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/34gja5j2umhsllvz3i7a.png)
+![Appendix C](../../assets/appendices/9.webp)
 
 Configure your AI environment to understand the `AAID` workflow. These are simple text instructions, no special `AAID` app or tool is required.
 

@@ -33,6 +33,7 @@ _Professional TDD for AI-Augmented Software Development_
     - [Misc Commands](#appendix-b-misc-commands)
   - [Appendix C: AAID AI Workflow Rules](#appendix-c)
   - [Appendix D: Handling Technical Implementation Details](#appendix-d)
+  - [Appendix E: Dependencies and Mocking](#appendix-e)
 - [About the Author](#about-author)
 
 ---
@@ -273,6 +274,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 **Steps:**
 
 1. **Add High-Level Context** (trigger `/project-context` and include the relevant context in the same message as arguments to the command)
+
    - Project's README, architecture docs, package.json, config files, etc. Whatever you find important to your project from a high level.
    - Overall system design and patterns
    - **AI Research**: Use `/research-&-stop` to let AI proactively search codebase patterns and relevant documentation
@@ -282,11 +284,15 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    | This will make the AI read through and summarize the basic project context, and how to do things. This is similar to onboarding a new human colleague. |
 
 2. **Determine What You're Building**
+
    Choose your development type early to load the right context:
+
    - **Domain/Business Logic**: Core behavior delivering business value
    - **Technical Implementation**: Adapters, infrastructure, integrations, initializations (see [Appendix D](#appendix-d))
    - **Presentation/UI**: Visual styling, animations, audio (see [Appendix D](#appendix-d))
+
 3. **Add Specification Context** (specific to your development type)
+
    - **For Domain/Business**: User stories with BDD scenarios, PRD sections
    - **For Technical**: Technical tasks, NFRs, architecture decisions
    - **For Presentation**: Design specs, Figma files, style guides
@@ -296,6 +302,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    | The AI is now fundamentally aligned with your development goals, whether creating business value, implementing technical infrastructure, or crafting user interfaces. |
 
 4. **Add Relevant Code Context** (specific to your development type)
+
    - **For Domain/Business**: Domain dependencies, tests, similar features, pure function utils for similar logic
    - **For Technical**: Existing adapters, infrastructure patterns, utils, integration points
    - **For Presentation**: Components, design system, CSS framework, presentation-related config files
@@ -344,6 +351,7 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
 **Steps:**
 
 1. **Discuss the Feature**
+
    - Discuss and explore freely, as you would with a human
    - Is everything crystal clear given the provided specifications? Does the AI have any questions?
    - Share any constraints or technical considerations
@@ -351,12 +359,14 @@ Think of it like navigation: Planning sets the destination, TDD finds the path.
    - Clarify ambiguities; make sure the AI makes no wild assumptions
 
 2. **Check for Additional Context**
+
    - Ask: "_Do you need any other context to understand the feature's scope and boundaries?_"
    - Provide any missing domain knowledge or system information
    - Trigger `/research-&-stop` for AI-driven investigation
 
 3. **Request Appropriate Roadmap**
    Based on your Stage 1 choice:
+
    - Generate a high-level roadmap before any coding
    - For **domain/business logic**: trigger `/ai-roadmap-template`
    - For **technical implementation**: trigger `/ai-technical-roadmap-template`
@@ -919,9 +929,9 @@ The DSL provides business vocabulary (like `user` or `archive todo`), while the 
 
 Notice how unit tests directly test the class with mocks, while acceptance tests use this DSL layer to express tests in business terms.
 
-| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration Testing in the `AAID` context uses real managed resources (your database, cache, file systems) but mocks unmanaged dependencies (external APIs like Stripe, SendGrid). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify. |
+| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration tests verify a single infrastructure elements's technical contract by testing it with only its immediate managed dependency (e.g., a repository adapter with real database). Unmanaged dependencies are mocked. See [Appendix E](../appendices/appendix-e/dependencies-and-mocking.md) for complete dependency handling guidelines. |
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
 
@@ -1138,6 +1148,7 @@ Ask user to clarify if unclear which type of work is being done
    - Start with simplest scenario (usually happy path) for new features
    - Compilation/import errors are valid failures
 2. Test structure requirements:
+
    - Use Given/When/Then structure (Gherkin format):
      \`\`\`javascript
      // Given
@@ -1267,9 +1278,23 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ![Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/10.webp?raw=true)
 
-The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in [Appendix D](../appendices/appendix-d/handling-technical-implementation-details.md).
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in Appendix D.
 
 ![AAID implementation categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/aaid-implementation-categories-s.webp)
+
+[Read Appendix D: Handling Technical Implementation Details](../appendices/appendix-d/handling-technical-implementation-details.md)
+
+<a id="appendix-e"></a>
+
+## Appendix E: Dependencies and Mocking
+
+![Appendix E](../assets/appendices/11.webp)
+
+Once you've identified your test type from the [Implementation Categories](../appendices/appendix-d/handling-technical-implementation-details.md#aaid-implementation-matrix-build-types-and-verification), this reference clarifies how to properly handle the dependencies of what you're building. It covers the four dependency categories (Pure In-Process, Impure In-Process, Managed Out-of-Process, Unmanaged Out-of-Process) and shows how each test type (unit, integration, contract, acceptance) handles them differently.
+
+![Dependency Categories](../assets/dependencies-mocking.webp)
+
+[Read Appendix E: Dependencies and Mocking](../appendices/appendix-e/dependencies-and-mocking.md)
 
 ---
 

@@ -141,6 +141,8 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - Consider contract testing for external dependencies; mock during development, toggle to real calls before releases to verify the contract
 - Critical: Do not stub your own database, cache, or internal services; they are part of the SUT and must be exercised in a production-like environment, which is why isolation is mandatory.
 
+> For detailed guidance on which dependencies to mock versus use real in different test types, see [Appendix E: Dependencies and Mocking](../../appendix-e/dependencies-and-mocking.md).
+
 #### 2. Functional Isolation
 
 **Run many tests in any order, in parallel, or individually against the same production-like system (e.g. with its real database) without interference:**
@@ -833,10 +835,7 @@ interface ArchiveParams {
 export class UserDsl {
   private driver: UIDriver
 
-  constructor(
-    private context: DslContext,
-    driver: UIDriver
-  ) {
+  constructor(private context: DslContext, driver: UIDriver) {
     this.driver = driver
   }
 
@@ -881,10 +880,7 @@ export class UserDsl {
 export class TodoDsl {
   private driver: UIDriver
 
-  constructor(
-    private context: DslContext,
-    driver: UIDriver
-  ) {
+  constructor(private context: DslContext, driver: UIDriver) {
     this.driver = driver
   }
 

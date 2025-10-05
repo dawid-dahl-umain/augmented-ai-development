@@ -1,6 +1,6 @@
 # Appendix D: Handling Technical Implementation Details
 
-![Appendix D](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/pl6x69jvidsn04396hn8.png)
+![Appendix D](../../assets/appendices/10.webp)
 
 While the main `AAID` guide focuses on BDD/TDD for business logic and system **behavior**, real applications need infrastructure elements and presentation layers as well. This appendix shows how to apply `AAID` principles to these technical implementation details.
 
@@ -38,7 +38,8 @@ The `AAID` framework divides all development work into three implementation cate
 - **🎯 Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
 - **👁️ Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
 - **⚙️ Non-Observable Technical**: Infrastructure implementations that bridge your domain to the outside world — whether you call them adapters (Hexagonal), repositories/gateways (Clean/DDD), or controllers (MVC) — handling all external interactions like persistence, caching, external APIs, messaging, plus supporting utilities and configuration
-  > **Technical** as in _**technical implementation details**_.
+
+> **Technical** as in _**technical implementation details**_.
 
 ### Why These Categories Matter
 
@@ -49,6 +50,8 @@ Without this clarity, developers — and AI agents working with or for them — 
 Each category gets the right approach: TDD with unit tests and complete test isolation for behavioral logic, TDD with integration tests and un-mocked managed dependencies for Non-Observable Technical, and manual validation for pure presentation.
 
 Applying the wrong approach makes change expensive; trying to TDD CSS wastes time, while testing implementation details means tests break whenever you change your app's technical plumbing.
+
+In addition, the three Implementation Categories also helps you choose the right test type for what you're building. See the "How We Test/Validate" in the [AAID Implementation Matrix](#aaid-implementation-matrix-build-types-and-verification) below.
 
 ### Adapters in Hexagonal Architecture: Infrastructure as Non-Observable Technical
 
@@ -381,45 +384,64 @@ When testing infrastructure code, your approach changes based on whether you con
 - **Managed dependencies** (your database, cache, queues) → **Integration** tests with real resources
 - **Unmanaged dependencies** (Stripe, SendGrid, external APIs) → **Contract** tests with toggleable mocking
 
-> **Contract Testing Approach:**
-> Contract tests can toggle between mocked and real connections to unmanaged dependencies. This enables:
->
-> - **Development**: Mocked connections for deterministic, fast testing
-> - **Pre-deploy validation**: Real connections to verify external services still work
-> - **CI/CD flexibility**: Choose when to run with real vs mocked dependencies
+See [Appendix E: Dependencies and Mocking](../appendix-e/dependencies-and-mocking.md) for the 4 dependency categories and how each test type handles them.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Principle of single testing responsibility**: When testing technical elements, don't overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn't repeat it. Instead, focus on the adapter's (or repository's/gateway's) own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation, etc <br>**Output Adapters** → formatting, serialization, persistence, caching, external API calls, message publishing, etc |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Principle of single testing responsibility**: When testing technical elements, don't overlap with domain tests. If the domain already ensures that `order total = items + tax`, technical tests shouldn't repeat it. Instead, focus on the adapter's own responsibility: <br><br>**Input Adapters** → parsing, validation, error translation, etc <br>**Output Adapters** → formatting, serialization, persistence, caching, external API calls, message publishing, etc |
 
 **Modified TDD Cycle for Technical Elements:**
 
-🔴 **RED Phase - Integration/Contract Test**
+🔴 **RED Phase - Integration Test**
 
-```tsx
-// Example: Integration testing a Repository adapter with real database
+```ts
+describe("FileStorageAdapter", () => {
+  const storagePath = "./test-storage"
 
-describe("TodoRepository", () => {
-  it("persists todo and returns it with generated ID", async () => {
+  afterEach(() => fs.rm(storagePath, { recursive: true, force: true }))
+
+  it("stores provided content", async () => {
     // Given
-    const db = await createTestDatabase() // Real database connection
-    const repository = new TodoRepository(db)
-    const todo = { text: "Buy milk", completed: false }
+    const adapter = new FileStorageAdapter({ baseDir: storagePath }) // Real file system
 
     // When
-    const result = await repository.save(todo)
+    const result = await adapter.write("test-file.txt", "Test content")
 
     // Then
-    expect(result.id).toBeDefined()
-    expect(typeof result.id).toBe("string")
+    expect(result.isOk()).toBe(true)
+
+    const stored = await fs.readFile(result.value, "utf-8")
+
+    expect(stored).toBe("Test content")
   })
+
+  // Next test
 })
 
-// Note: NOT testing domain logic (e.g., completed defaults)
-// Domain unit tests already verify that behavior
+// Note: Domain logic (what to store, when to store) is tested separately.
+// This tests only the adapter's technical contract with the file system.
 ```
 
 🟢 **GREEN Phase**
+
+```ts
+// Port (defined in domain)
+
+interface WritePort {
+  write(
+    filename: string,
+    content: string
+  ): Promise<Result<string, FileStorageError>>
+}
+
+export interface StoragePort extends WritePort {}
+```
+
+```ts
+// Adapter (implements port)
+
+class FileStorageAdapter implements StoragePort { ... }
+```
 
 - Implement the actual technical element/adapter
 - For **Managed dependencies**: use real dependencies in tests

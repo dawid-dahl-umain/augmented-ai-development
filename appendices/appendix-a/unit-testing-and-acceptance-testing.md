@@ -1,6 +1,6 @@
 # Appendix A: Unit Testing and Acceptance Testing
 
-![Appendix A](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/e3xra22c01p5m3dh27an.png)
+![Appendix A](../../assets/appendices/7.webp)
 
 This article on `AAID` focuses on TDD (Test-Driven Development) for **Unit Testing**, which ensures you actually write your code correctly and with high quality.
 
@@ -100,9 +100,9 @@ The DSL provides business vocabulary (like `user` or `archive todo`), while the 
 
 Notice how unit tests directly test the class with mocks, while acceptance tests use this DSL layer to express tests in business terms.
 
-| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                  |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration Testing in the `AAID` context uses real managed resources (your database, cache, file systems) but mocks unmanaged dependencies (external APIs like Stripe, SendGrid). The same disciplined cycle applies: AI generates, human architects and reviews, tests verify. |
+| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration tests verify a single infrastructure elements's technical contract by testing it with only its immediate managed dependency (e.g., a repository adapter with real database). Unmanaged dependencies are mocked. See [Appendix E](../appendices/appendix-e/dependencies-and-mocking.md) for complete dependency handling guidelines. |
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
 
