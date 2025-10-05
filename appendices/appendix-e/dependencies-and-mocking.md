@@ -14,43 +14,54 @@ Once you've determined your test type from the Implementation Matrix, use this g
 - [Dependency Categories](#dependency-categories)
 - [Test Type Overview](#test-type-overview)
 - [Dependency Handling Matrix](#dependency-handling-matrix)
+- [Decision Flow Diagram](#decision-flow-diagram)
 - [Understanding Each Test Type](#understanding-each-test-type)
-  - [🔬 Unit Tests](#-unit-tests)
-  - [🔌 Integration Tests](#-integration-tests)
-  - [🤝 Contract Tests](#-contract-tests)
-    - [Verifying External API Contracts](#verifying-external-api-contracts)
-  - [🎯 Acceptance Tests](#-acceptance-tests)
-  - [👁️ Visual/Sensory Validation](#️-visualsensory-validation)
+  - [Unit Tests](#-unit-tests)
+  - [Integration Tests](#-integration-tests)
+  - [Bidirectional Contract Tests](#-bidirectional-contract-tests)
+  - [Unidirectional Contract Tests](#️-unidirectional-contract-tests)
+  - [Acceptance Tests](#-acceptance-tests)
+  - [Visual/Sensory Validation](#️-visualsensory-validation)
 - [The Test Pyramid in Practice](#the-test-pyramid-in-practice)
 
 ## Dependency Categories
 
 ![Dependency Categories](../../assets/dependencies-mocking.webp)
 
-AAID categorizes dependencies into four types to determine how they should be handled in tests:
+AAID categorizes dependencies into four primary types to determine how they should be handled in tests:
 
-| Category                            | Description                                                                            | Examples                                                                                                 |
-| ----------------------------------- | -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
-| **Pure In-Process (IPD)**           | Functions/modules with no side effects; deterministic and safe to use directly         | Utility functions, pure calculations, data transformations, immutable data structures                    |
-| **Impure In-Process (IPD)**         | Functions/modules with internal side effects or shared state                           | Logging, metrics collection, in-memory caches, global state managers                                     |
-| **Managed Out-of-Process (OOPD)**   | External systems/resources you control and can reset/manage state for testing          | Your database, Redis cache, message queues, file systems you manage                                      |
-| **Unmanaged Out-of-Process (OOPD)** | External systems/services with independent lifecycles; interact through contracts only | Third-party APIs (Stripe, SendGrid, Twilio), external webhooks, cloud services, your app's microservices |
+| Category                            | Description                                                                            | Examples                                                                              |
+| ----------------------------------- | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
+| **Pure In-Process (IPD)**           | Functions/modules with no side effects; deterministic and safe to use directly         | Utility functions, pure calculations, data transformations, immutable data structures |
+| **Impure In-Process (IPD)**         | Functions/modules with internal side effects or shared state                           | Logging, metrics collection, in-memory caches, global state managers                  |
+| **Managed Out-of-Process (OOPD)**   | External systems/resources you control and can reset/manage state for testing          | Your database, Redis cache, message queues, file systems you manage                   |
+| **Unmanaged Out-of-Process (OOPD)** | External systems/services with independent lifecycles; interact through contracts only | See sub-categories below                                                              |
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **Microservices Classification**: Your own microservices are **Unmanaged OOPD** despite ownership—each manages its own state and lifecycle independently. Ownership enables **bidirectional contract testing**: consumer tests generate contracts, and provider verification uses [provider states](https://docs.pact.io/getting_started/provider_states) to inject test data into datastores. External APIs you don't control (Stripe, SendGrid) are also **Unmanaged OOPD** but require **adapted contract testing**: consumer-side verification with mocks plus separate interface checks against the real API. Both use contract testing approaches—the difference is whether you can verify both sides of the contract or only the consumer side. |
+### Unmanaged OOPD Sub-Categories
+
+Unmanaged OOPD dependencies have independent lifecycles and contract-based interaction, but differ in governance control:
+
+| Sub-Category                | Inherent Property                                                                                   | Examples                                                                                            |
+| --------------------------- | --------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| **Governed Unmanaged OOPD** | Independent lifecycle but within organizational/governance boundary; provider coordination possible | Your microservices, internal services across teams, partner services with formal testing agreements |
+| **External Unmanaged OOPD** | Independent lifecycle and outside organizational/governance boundary; no provider coordination      | Third-party APIs (Stripe, SendGrid, Twilio), public APIs, SaaS platforms, external webhooks         |
+
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Governance Boundary Distinction**: Both sub-categories are Unmanaged OOPD (independent lifecycles), but differ in coordination capability. **Governed Unmanaged OOPD** (your microservices, internal services, partner APIs with agreements) enables **bidirectional contract testing** where both consumer and provider verify the contract using [provider states](https://docs.pact.io/getting_started/provider_states). **External Unmanaged OOPD** (third-party APIs you don't control) requires **unidirectional contract testing** with consumer-side verification plus minimal interface checks against the real API. The governance boundary determines which verification approach is possible. |
 
 ## Test Type Overview
 
 Each test type serves a different purpose and operates at a different level of your system:
 
-| Test Type                        | Entry Point                                  | Scope                                                    | Purpose                                                                  | Relative Speed                           |
-| -------------------------------- | -------------------------------------------- | -------------------------------------------------------- | ------------------------------------------------------------------------ | ---------------------------------------- |
-| 🔬 **Unit Tests**                | Domain class/function directly               | Single unit of domain logic in complete isolation        | Verify business rules and domain behavior are technically correct        | Fastest                                  |
-| 🔌 **Integration Tests**         | Adapter instantiation directly               | Single adapter + its immediate managed dependencies only | Verify adapter's technical contract with its direct managed dependencies | Medium                                   |
-| 🤝 **Contract Tests**            | Adapter instantiation directly               | Single adapter + external API contract                   | Verify adapter correctly implements external API contract                | Fast (mocked) / Medium (real connection) |
-| 🎯 **Acceptance Tests**          | System boundary (HTTP endpoint, CLI command) | Full system through all layers                           | Verify complete business requirement is satisfied                        | Slowest\*                                |
-| 👁️ **Visual/Sensory Validation** | Browser/device                               | Presentation layer only                                  | Verify aesthetic and sensory qualities meet design specs                 | Manual/varies                            |
+| Test Type                            | Entry Point                                  | Scope                                                    | Purpose                                                                    | Relative Speed                                     |
+| ------------------------------------ | -------------------------------------------- | -------------------------------------------------------- | -------------------------------------------------------------------------- | -------------------------------------------------- |
+| 🔬 **Unit Tests**                    | Domain class/function directly               | Single unit of domain logic in complete isolation        | Verify business rules and domain behavior are technically correct          | Fastest                                            |
+| 🔌 **Integration Tests**             | Adapter instantiation directly               | Single adapter + its immediate managed dependencies only | Verify adapter's technical contract with its direct managed dependencies   | Medium                                             |
+| 🤝 **Bidirectional Contract Tests**  | Adapter instantiation directly               | Single adapter + Governed Unmanaged OOPD contract        | Verify both consumer and provider correctly implement the contract         | Fast (mocked) / Medium (real with provider states) |
+| ➡️ **Unidirectional Contract Tests** | Adapter instantiation directly               | Single adapter + External Unmanaged OOPD contract        | Verify consumer correctly implements the contract; detect provider changes | Fast (mocked) / Fast (minimal real API checks)     |
+| 🎯 **Acceptance Tests**              | System boundary (HTTP endpoint, CLI command) | Full system through all layers                           | Verify complete business requirement is satisfied                          | Slowest\*                                          |
+| 👁️ **Visual/Sensory Validation**     | Browser/device                               | Presentation layer only                                  | Verify aesthetic and sensory qualities meet design specs                   | Manual/varies                                      |
 
 > \* _With proper functional and temporal isolation plus mocked unmanaged dependencies, acceptance tests should still run reasonably fast. If a single test takes over a minute, investigate for issues with test setup, lack of isolation, or improper mocking_
 
@@ -58,17 +69,34 @@ Each test type serves a different purpose and operates at a different level of y
 
 Now for the key question: how does each test type handle the four dependency categories?
 
-| Test Type                        | Pure IPD | Impure IPD       | Managed OOPD                                   | Unmanaged OOPD (Your Microservices)                       | Unmanaged OOPD (External APIs)              |
-| -------------------------------- | -------- | ---------------- | ---------------------------------------------- | --------------------------------------------------------- | ------------------------------------------- |
-| 🔬 **Unit Tests**                | Real     | Mocked           | Mocked                                         | Mocked                                                    | Mocked                                      |
-| 🔌 **Integration Tests**         | Real     | Real or Mocked\* | **Real** (only direct dependencies of adapter) | Mocked                                                    | Mocked                                      |
-| 🤝 **Contract Tests**            | Real     | **Mocked**       | Not applicable\*\*                             | **Toggleable** (mocked for dev, real with provider state) | **Mocked** (separate verification strategy) |
-| 🎯 **Acceptance Tests**          | Real     | Real             | Real (all managed dependencies)                | Mocked                                                    | Mocked                                      |
-| 👁️ **Visual/Sensory Validation** | N/A      | N/A              | N/A                                            | N/A                                                       | N/A                                         |
+| Test Type                            | Pure IPD | Impure IPD       | Managed OOPD                                   | Governed Unmanaged OOPD                                   | External Unmanaged OOPD                              |
+| ------------------------------------ | -------- | ---------------- | ---------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------- |
+| 🔬 **Unit Tests**                    | Real     | Mocked           | Mocked                                         | Mocked                                                    | Mocked                                               |
+| 🔌 **Integration Tests**             | Real     | Real or Mocked\* | **Real** (only direct dependencies of adapter) | Mocked                                                    | Mocked                                               |
+| 🤝 **Bidirectional Contract Tests**  | Real     | **Mocked**       | Not applicable\*\*                             | **Toggleable** (mocked for dev, real with provider state) | Not applicable                                       |
+| ➡️ **Unidirectional Contract Tests** | Real     | **Mocked**       | Not applicable\*\*                             | Not applicable                                            | **Toggleable** (mocked for dev, minimal real checks) |
+| 🎯 **Acceptance Tests**              | Real     | Real             | Real (all managed dependencies)                | Mocked                                                    | Mocked                                               |
+| 👁️ **Visual/Sensory Validation**     | N/A      | N/A              | N/A                                            | N/A                                                       | N/A                                                  |
 
 > \* _Impure IPD may be real in integration tests if stable and doesn't compromise test reliability_
 
 > \*\* _Contract test adapters typically have no managed dependencies since they only communicate with unmanaged external services_
+
+<a id="decision-flow-diagram"></a>
+
+## Decision Flow Diagram
+
+When you're writing tests and wonder "Should I mock this dependency?", use this decision flow to find your answer.
+
+This diagram visualizes the Dependency Handling Matrix as an interactive decision tree, guiding you from your test type to the correct mocking strategy for each dependency.
+
+![Dependencies and Mocking Decision Flow](../../assets/mocking-workflow-diagram.webp)
+
+| 🔗                                                                                                                                                                                                  |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Click [this link](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-e/dependencies-mocking-decision-flow.mermaid) to **view** the full diagram in Mermaid. |
+
+> If the diagram is not rendered on mobile, copy/paste the mermaid code into a [mermaid editor](https://mermaid.live).
 
 ## Understanding Each Test Type
 
@@ -84,76 +112,64 @@ The test stays at the adapter layer. Domain logic and other adapters aren't invo
 
 **Key principle:** Only the managed dependencies directly related to the adapter's responsibility are included. Testing an HTTP adapter includes the real HTTP server layer. Testing a repository adapter includes the real database. Other infrastructure and domain layers remain outside the test scope.
 
-### 🤝 Contract Tests
+### 🤝 Bidirectional Contract Tests
 
-Contract tests verify that an adapter correctly implements an external API's contract (request/response format). They focus exclusively on message structure, not behavior or side effects.
+Bidirectional contract tests verify that both consumer and provider correctly implement a shared contract. They apply to **Governed Unmanaged OOPD** dependencies where you have organizational/governance boundary access enabling provider coordination.
 
-Both your microservices and external APIs are **Unmanaged OOPD** (out-of-process dependencies with independent lifecycles), so contract testing is the appropriate approach for both. However, the strategy differs based on whether you control the provider.
+In contract testing terminology: the **consumer** is your code calling the API, and the **provider** is the service being called.
 
-**Your microservices (bidirectional contract testing):**
+**When to use:** Your microservices, internal services across teams, partner services with formal testing agreements; any provider where coordination is possible.
 
-When you control both consumer and provider, contract testing follows the traditional Pact-style approach where both sides verify the contract:
+**How it works:**
+
+Contract testing follows the traditional [Pact](https://docs.pact.io/)-style approach where both sides verify the contract:
 
 - **Consumer side:** Tests generate contracts with mocked provider responses
 - **Provider side:** Verification tests use [provider states](https://docs.pact.io/getting_started/provider_states) to inject test data into datastores
 - **Development:** Use mocks for fast feedback
-- **Pre-deployment:** Toggle to real connections with provider states for verification
+- **Pre-deployment:** Toggle to real connections with provider states for full verification
 - **Result:** Both sides verify the contract is honored, ensuring integration works
 
-**External APIs you don't control:**
+**Key characteristic:** The governance boundary enables bidirectional verification. Both consumer and provider participate in contract validation.
 
-When you don't control the provider, bidirectional contract testing isn't possible. You adapt the approach to consumer-side contract verification with separate interface checks. See [Verifying External API Contracts](#verifying-external-api-contracts) below for the complete strategy.
+### ➡️ Unidirectional Contract Tests
 
-**Why mock impure IPD:** Contract tests verify API contracts, not side effects. Including logging or metrics would test beyond the contract boundary. Keep contract tests focused on request/response format only.
+Unidirectional contract tests verify that your consumer correctly implements an external API's contract when the provider cannot participate in verification. They apply to **External Unmanaged OOPD** dependencies outside your organizational/governance boundary.
 
-#### Verifying External API Contracts
+**When to use:** Third-party APIs (Stripe, SendGrid), public APIs, SaaS platforms—any provider where you cannot coordinate verification.
 
-External APIs are Unmanaged OOPD just like your microservices, but present unique challenges: you cannot set provider states, cannot control their data, and cannot run verification tests in their codebase. Traditional bidirectional contract testing isn't possible.
+**How it works:**
 
-Instead, contract testing adapts to a two-part strategy that verifies your consumer-side integration while detecting provider interface changes.
+Contract testing adapts for providers you don't control through a consumer-focused verification strategy:
 
-**Part 1: Mock External APIs in Your Tests (Protocol Driver Pattern)**
+- **Consumer side:** Build test infrastructure that mocks only the external API interactions your system uses—feature by feature, add support as needed. Keep mocks simple: simulate behavior just enough to verify your adapter handles responses correctly (success, errors, edge cases)
+- **Provider side:** Cannot participate in verification (outside governance boundary)
+- **Development:** Use mocks for fast feedback and reliable test execution
+- **Pre-deployment:** Toggle to minimal real API checks for interface verification—separate, lightweight tests against the real external API to detect contract changes
+- **Result:** Minimal real API checks increases probability of catching breaking changes early
 
-During your acceptance tests and development, mock external APIs to maintain test speed, reliability, and isolation:
+**Real API verification approach:**
 
-- **Build test infrastructure that fakes only what you need:** Feature by feature, add support for only the interactions your system actually uses
-- **Keep mocks simple:** Simulate the external system's behavior as simply as possible—just enough to verify your adapter handles responses correctly
-- **Test your adapter's contract implementation:** Verify your code correctly sends requests and handles various responses (success, errors, edge cases)
-- **Benefits:** Fast, reliable, isolated tests that aren't affected by external service availability, rate limits, or network issues
+When running checks against the real external API:
 
-This verifies the consumer side of the contract—that your adapter correctly implements its integration with the external API.
+- Focus on read-only operations where possible to avoid side effects
+- Use sandbox environments when available
+- Mutating operations (create/update/delete) should preferably be avoided. They are inherently undeterministic actions, and polluting the external service with garbage data is not polite
+- Keep these minimal verification tests separate from your main test suite
 
-**Part 2: Separate Verification Tests Against Real External APIs**
+This two-part approach maintains speed and reliability (mocked tests) while catching breaking changes early (minimal real checks).
 
-Since you cannot verify the provider side within their codebase, run minimal, focused tests directly against the real external system to detect if the provider's interface has changed:
-
-- **Run these tests separately** from your acceptance test suite—don't use a running version of your system under test
-- **Test against the external system itself** using acceptance testing techniques
-- **Focus on detecting interface changes,** not full end-to-end scenarios
-- **Limit scenarios to the minimum necessary** to validate your expectations of the interface
-- **Use approval testing frameworks** to flag changes in expected responses
-- **Accept limitations:** You test what you can given your constraints; these tests will be more compromised than testing your own services
-
-**Addressing the Mutation Problem:**
-
-If the external API doesn't provide a sandbox or test environment, you face a dilemma: write operations create real data. Options:
-
-- **Focus on read-only operations** in verification tests where possible
-- **Use sandbox/test environments** provided by the API if available
-- **Minimize test scenarios** to only what's essential for detecting breaking changes
-- **Accept the trade-off:** Whatever testing approach you use will be more fragile than testing your own services—external APIs require compromise
-
-**Key principle:** E2E tests against external APIs will be MORE fragile, not less, than focused contract verification. By limiting what you verify to just the interface contract, you reduce brittleness while still catching API changes that could break your integration.
+**Key characteristic:** The governance boundary limits verification to consumer-side only—you cannot verify the provider's implementation.
 
 ### 🎯 Acceptance Tests
 
 Acceptance tests verify complete business requirements by testing the full system through its outer boundary (HTTP endpoints, CLI commands) exactly as a user or external system would. They include all managed dependencies (database, cache, queues) but mock unmanaged ones (third-party APIs) to maintain reliability.
 
-**Critical distinction from integration tests:** Acceptance tests enter through the system boundary and flow through all layers. Integration tests bypass outer layers and test a single adapter directly.
+> **Critical distinction from integration tests:** Acceptance tests enter through the system boundary and flow through all layers: _the whole system_. Integration tests bypass outer layers and test a single adapter directly.
 
 ### 👁️ Visual/Sensory Validation
 
-Pure presentation elements (styling, animations, audio) are validated through manual review, visual regression tests, and accessibility audits rather than TDD.
+Pure presentation elements (styling, animations, audio) are validated through manual review, visual regression tests, and accessibility audits rather than TDD or any kind of test automation.
 
 ## The Test Pyramid in Practice
 
@@ -174,17 +190,19 @@ The relative speed column reflects the test pyramid principle: more fast tests a
 
 - **Unit tests:** Fastest - no I/O, all external dependencies mocked
 - **Integration tests:** Medium - real managed dependencies (DB, cache) add I/O overhead
-- **Contract tests:** Fast when mocked (typical for external APIs), medium with real connections and provider states (your microservices pre-deploy validation)
+- **Bidirectional contract tests:** Fast when mocked (dev), medium when toggled to real connections (provider state setup requires writing test data)
+- **Unidirectional contract tests:** Fast when mocked (dev), fast when toggled to real API (minimal read-only checks detect interface changes)
 - **Acceptance tests:** Slowest relative to others, but should still be reasonably fast with proper isolation and mocking
 
 **Trade-offs:**
 
 - **Unit tests:** Maximum speed and isolation, but don't verify real integrations
 - **Integration tests:** Real dependencies add confidence but cost more time than unit tests
-- **Contract tests:** Verify API contracts without expensive end-to-end setup; your microservices enable full bidirectional testing, external APIs limited to consumer-side
+- **Bidirectional contract tests:** Verify both sides of contract, but requires organizational coordination between consumer and provider teams
+- **Unidirectional contract tests:** No provider coordination needed, but cannot control provider state for comprehensive testing scenarios
 - **Acceptance tests:** Highest confidence but slowest execution relative to other test types
 
-Choose the right level: unit tests for business logic, integration tests for adapter behavior, contract tests for API agreements, acceptance tests for complete features.
+Choose the right level: unit tests for business logic, integration tests for adapter behavior, bidirectional contract tests for Governed Unmanaged OOPD, unidirectional contract tests for External Unmanaged OOPD, acceptance tests for complete features.
 
 ---
 
