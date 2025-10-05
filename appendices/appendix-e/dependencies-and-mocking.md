@@ -92,9 +92,9 @@ This diagram visualizes the Dependency Handling Matrix as an interactive decisio
 
 ![Dependencies and Mocking Decision Flow](../../assets/mocking-workflow-diagram.webp)
 
-| 🔗                                                                                                                                                                                                  |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Click [this link](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/appendices/appendix-e/dependencies-mocking-decision-flow.mermaid) to **view** the full diagram in Mermaid. |
+| 🔗                                                                                                       |
+| -------------------------------------------------------------------------------------------------------- |
+| Click [this link](./dependencies-mocking-decision-flow.mermaid) to **view** the full diagram in Mermaid. |
 
 > If the diagram is not rendered on mobile, copy/paste the mermaid code into a [mermaid editor](https://mermaid.live).
 
