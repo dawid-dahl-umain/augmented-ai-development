@@ -855,6 +855,7 @@ So in short: `AAID` builds the solution, Acceptance Tests confirm it’s the rig
 - Answer: "_Is my code technically correct?_"
 - Fine-grained, developer-focused testing
 - Mock all external dependencies
+  - See [Appendix E](#appendix-e) for dependency categories
 - Test suite should run in seconds to tens-of-seconds
 - Apply design pressure through testability
 - Can but doesn't necessarily map 1:1 to user stories/acceptance criteria
@@ -888,6 +889,7 @@ describe("TodoService", () => {
 - Test in a production-like environment through system boundaries
 - Mock unmanaged external dependencies (like third-party APIs)
   - Don't mock managed external dependencies (like app's database)
+  - See [Appendix E](#appendix-e) for dependency categories
 - Test suite will run slower than unit tests
 - Maps 1:1 to user stories/acceptance criteria
 - Verify the system is ready for release
@@ -1288,11 +1290,11 @@ The main guide above has focused on BDD/TDD for domain behavior. Technical imple
 
 ## Appendix E: Dependencies and Mocking
 
-![Appendix E](../assets/appendices/11.webp)
+![Appendix E](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/appendices/11.webp)
 
 Once you've identified your test type from the [Implementation Categories](../appendices/appendix-d/handling-technical-implementation-details.md#aaid-implementation-matrix-build-types-and-verification), this reference clarifies how to properly handle the dependencies of what you're building. It covers the four dependency categories (Pure In-Process, Impure In-Process, Managed Out-of-Process, Unmanaged Out-of-Process) and shows how each test type (unit, integration, contract, acceptance) handles them differently.
 
-![Dependency Categories](../assets/dependencies-mocking.webp)
+![Dependency Categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/dependencies-mocking.webp)
 
 [Read Appendix E: Dependencies and Mocking](../appendices/appendix-e/dependencies-and-mocking.md)
 
