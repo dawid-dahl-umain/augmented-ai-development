@@ -165,7 +165,7 @@ Acceptance tests verify complete business requirements through the full system, 
 
 `AAID` structures these tests using Dave Farley's Four-Layer Model (Executable Specs, DSL, Protocol Drivers, SUT). The DSL translates BDD scenarios into executable specifications, while protocol drivers handle the technical interaction with the system. All managed dependencies (database, cache, queues) run real; only unmanaged ones (third-party APIs) are mocked for test suite stability.
 
-See [Appendix A: AAID Acceptance Testing Workflow](../../appendix-a/docs/aaid-acceptance-testing-workflow.md) for the complete architectural pattern.
+See [Appendix A: AAID Acceptance Testing Workflow](../../appendices//appendix-a/docs/aaid-acceptance-testing-workflow.md) for the complete architectural pattern.
 
 ### 👁️ Visual/Sensory Validation
 
