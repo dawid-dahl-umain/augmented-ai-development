@@ -73,14 +73,14 @@ Now for the key question: how does each test type handle the four dependency cat
 | ------------------------------------ | -------- | ---------------- | ---------------------------------------------- | --------------------------------------------------------- | ---------------------------------------------------- |
 | 🔬 **Unit Tests**                    | Real     | Mocked           | Mocked                                         | Mocked                                                    | Mocked                                               |
 | 🔌 **Integration Tests**             | Real     | Real or Mocked\* | **Real** (only direct dependencies of adapter) | Mocked                                                    | Mocked                                               |
-| 🤝 **Bidirectional Contract Tests**  | Real     | **Mocked**       | Not applicable\*\*                             | **Toggleable** (mocked for dev, real with provider state) | Not applicable                                       |
-| ➡️ **Unidirectional Contract Tests** | Real     | **Mocked**       | Not applicable\*\*                             | Not applicable                                            | **Toggleable** (mocked for dev, minimal real checks) |
+| 🤝 **Bidirectional Contract Tests**  | Real     | Real or Mocked\* | Mocked\*\*                                     | **Toggleable** (mocked for dev, real with provider state) | Not applicable                                       |
+| ➡️ **Unidirectional Contract Tests** | Real     | Real or Mocked\* | Mocked\*\*                                     | Not applicable                                            | **Toggleable** (mocked for dev, minimal real checks) |
 | 🎯 **Acceptance Tests**              | Real     | Real             | Real (all managed dependencies)                | Mocked                                                    | Mocked                                               |
 | 👁️ **Visual/Sensory Validation**     | N/A      | N/A              | N/A                                            | N/A                                                       | N/A                                                  |
 
-> \* _Impure IPD may be real in integration tests if stable and doesn't compromise test reliability_
+> \* _Impure IPD may be real in integration and contract tests if stable and doesn't compromise test reliability_
 
-> \*\* _Contract test adapters typically have no managed dependencies since they only communicate with unmanaged external services_
+> \*\* _Contract test adapters often have no managed dependencies since they focus on external service interaction. When present (e.g., caching, logging), mock them to keep tests focused on the contract_
 
 <a id="decision-flow-diagram"></a>
 
@@ -89,6 +89,8 @@ Now for the key question: how does each test type handle the four dependency cat
 When you're writing tests and wonder "Should I mock this dependency?", use this decision flow to find your answer.
 
 This diagram visualizes the Dependency Handling Matrix as an interactive decision tree, guiding you from your test type to the correct mocking strategy for each dependency.
+
+> 💡 **New to AAID?** The diagram starts with "What are you building?" referring to the [Three Implementation Categories](../appendix-d/handling-technical-implementation-details.md#implementation-categories) (Observable Behavioral, Non-Observable Technical, Observable Technical). These categories determine which test type to use.
 
 ![Dependencies and Mocking Decision Flow](../../assets/mocking-workflow-diagram.webp)
 

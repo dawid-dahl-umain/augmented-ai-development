@@ -1,9 +1,12 @@
 graph TD
     Legend["📖 LEGEND<br/>────────<br/>**IPD**: In-Process Dependency<br/><br/>**OOPD**: Out-of-Process Dependency<br/><br/>**Answers:**<br/><br/>**✓ Real**: Use actual dependency<br/>**⊗ Mock**: Use test double<br/>**⇄ Toggleable**: Mock dev, real verify<br/>**N/A**: Not applicable<br/><br/>**Note:** 'or' indicates context-dependent choice<br/>(stability, team preference, test reliability)"]
     
+    Info["💡 IMPLEMENTATION CATEGORIES<br/>────────<br/>**Observable Behavioral**: Business behavior<br/>(domain logic, use cases)<br/><br/>**Non-Observable Technical**: Infrastructure<br/>(adapters, repositories, controllers)<br/><br/>**Observable Technical**: Pure presentation<br/>(styling, animations, audio)<br/><br/>See Appendix D for details"]
+    
     Start["❓ Should I mock this dependency?"]
     
     Legend --> Start
+    Info --> Start
     
     Start --> Q1{"What are you building?"}
     
@@ -34,15 +37,15 @@ graph TD
     
     BiContract --> BiQ{"What's the dependency?"}
     BiQ -->|🟣 Pure IPD| BiA1["✓ Real"]
-    BiQ -->|🟠 Impure IPD| BiA2["⊗ Mock"]
-    BiQ -->|🟢 Managed OOPD| BiA3["N/A<br/>(no managed deps)"]
+    BiQ -->|🟠 Impure IPD| BiA2["✓ Real or ⊗ Mock*<br/>(if stable)"]
+    BiQ -->|🟢 Managed OOPD| BiA3["⊗ Mock<br/>(focus on contract)"]
     BiQ -->|🔵 Governed Unmanaged OOPD| BiA4["⇄ Toggleable<br/>(mock dev, real verify)"]
     BiQ -->|🔵 External Unmanaged OOPD| BiA5["N/A<br/>(not applicable)"]
     
     UniContract --> UniQ{"What's the dependency?"}
     UniQ -->|🟣 Pure IPD| UniA1["✓ Real"]
-    UniQ -->|🟠 Impure IPD| UniA2["⊗ Mock"]
-    UniQ -->|🟢 Managed OOPD| UniA3["N/A<br/>(no managed deps)"]
+    UniQ -->|🟠 Impure IPD| UniA2["✓ Real or ⊗ Mock*<br/>(if stable)"]
+    UniQ -->|🟢 Managed OOPD| UniA3["⊗ Mock<br/>(focus on contract)"]
     UniQ -->|🔵 Governed Unmanaged OOPD| UniA4["N/A<br/>(not applicable)"]
     UniQ -->|🔵 External Unmanaged OOPD| UniA5["⇄ Toggleable<br/>(mock dev, minimal checks)"]
     
@@ -53,6 +56,7 @@ graph TD
     AccQ -->|🔵 Unmanaged OOPD| AccA4["⊗ Mock<br/>(system isolation)"]
     
     style Legend fill:#fff9c4,stroke:#f9a825,stroke-width:3px,color:#000
+    style Info fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
     style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
     style Q1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
     style Q2A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
@@ -84,13 +88,13 @@ graph TD
     
     style BiA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
     style BiA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style BiA3 fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
+    style BiA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
     style BiA4 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
     style BiA5 fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
     
     style UniA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
     style UniA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style UniA3 fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
+    style UniA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
     style UniA4 fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
     style UniA5 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
     
