@@ -241,7 +241,7 @@ Now that you have your specs from the product specification phase (like the user
 
 This diagram presents the formal workflow; detailed explanations for each step follow in the **`AAID` Development Stages** section below.
 
-![AAID workflow diagram](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/2ulywojfy11fkmzx9ujk.png)
+![AAID workflow diagram](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/refs/heads/main/assets/aaid-workflow-diagram.webp)
 
 The diagram shows three distinct development paths, distinguished by colored arrows:
 
