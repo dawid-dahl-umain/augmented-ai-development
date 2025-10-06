@@ -32,7 +32,6 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 - **[Complete AAID Acceptance Testing Guide](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Using Dave Farley's Four-Layer Model for ATDD/BDD
   - **[Acceptance Testing Workflow Diagram](appendices/appendix-a/aaid-at-workflow.diagram.mermaid)** - Visual representation of the `AAID` Acceptance Testing process
 - **[Demo Repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo)** - TicTacToe CLI developed using the AAID workflow, demonstrating the Four-Layer Model, test isolation patterns, and hexagonal architecture
-- **[Dev.to Article](https://dev.to/dawiddahl/aaid-augmented-ai-development-50c9)** - Introduction and overview
 - **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the `AAID` process
 
 ## Repository Structure

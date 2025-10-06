@@ -152,7 +152,7 @@ When running checks against the real external API:
 
 - Focus on read-only operations where possible to avoid side effects
 - Use sandbox environments when available
-- Mutating operations (create/update/delete) should preferably be avoided. They are inherently undeterministic actions, and polluting the external service with garbage data is not polite
+- Mutating operations (create/update/delete) should preferably be avoided. They are inherently undeterministic actions, and polluting the external service with garbage data or mutations is not polite
 - Keep these minimal verification tests separate from your main test suite
 
 This two-part approach maintains speed and reliability (mocked tests) while catching breaking changes early (minimal real checks).
@@ -202,7 +202,7 @@ The relative speed column reflects the test pyramid principle: more fast tests a
 - **Unidirectional contract tests:** No provider coordination needed, but cannot control provider state for comprehensive testing scenarios
 - **Acceptance tests:** Highest confidence but slowest execution relative to other test types
 
-Choose the right level: unit tests for business logic, integration tests for adapter behavior, bidirectional contract tests for Governed Unmanaged OOPD, unidirectional contract tests for External Unmanaged OOPD, acceptance tests for complete features.
+Choose the right level: unit tests for business logic, integration tests for adapter behavior, bidirectional contract tests for Governed Unmanaged OOPD, unidirectional contract tests for External Unmanaged OOPD, acceptance tests for end-to-end executable definitions-of-done.
 
 ---
 

@@ -2,9 +2,9 @@ graph TD
     %% Reference boxes (no arrows to main flow)
     Legend["📖 SYMBOLS<br/>────────<br/>**✓ Real**: Use actual dependency<br/>**⊗ Mock**: Use test double<br/>**⇄ Toggle**: Mock dev, real verify<br/>**N/A**: Not applicable"]
     
-    DepTypes["🎨 DEPENDENCY TYPES<br/>────────<br/>**IPD** = In-Process Dependency<br/>**OOPD** = Out-of-Process Dependency<br/><br/>🟣 Pure IPD: No side effects<br/>🟠 Impure IPD: Internal side effects<br/>🟢 Managed OOPD: Your resources<br/>🔵 Unmanaged OOPD: External systems"]
+    DepTypes["🎨 DEPENDENCY CATEGORIES<br/>────────<br/>**IPD** = In-Process Dependency<br/>**OOPD** = Out-of-Process Dependency<br/><br/>🟣 Pure IPD: No side effects<br/>🟠 Impure IPD: Internal side effects<br/>🟢 Managed OOPD: Your resources<br/>🔵 Unmanaged OOPD: External systems"]
     
-    Info["💡 IMPLEMENTATION TYPES<br/>────────<br/>**Observable Behavioral**:<br/>Business logic & use cases<br/><br/>**Non-Observable Technical**:<br/>Infrastructure & adapters<br/><br/>**Observable Technical**:<br/>Pure presentation (UI/UX)"]
+    Info["💡 IMPLEMENTATION CATEGORIES<br/>────────<br/>**Observable Behavioral**:<br/>Business logic & use cases<br/><br/>**Non-Observable Technical**:<br/>Infrastructure & adapters<br/><br/>**Observable Technical**:<br/>Pure presentation (UI/UX)"]
     
     %% Main decision flow
     Start["Should I mock this dependency?"]
