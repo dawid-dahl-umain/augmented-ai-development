@@ -21,17 +21,17 @@ graph TD
     TechSplit -->|Managed OOPD| IntChoice["🔌 Integration Test"]
     TechSplit -->|Unmanaged OOPD| ContractRoute{"Governed or External?"}
     
-    ContractRoute -->|Governed| BiChoice["🤝 Bidirectional Contract"]
-    ContractRoute -->|External| UniChoice["➡️ Unidirectional Contract"]
+    ContractRoute -->|Governed| BiChoice["🤝 Bidirectional Contract Test"]
+    ContractRoute -->|External| UniChoice["➡️ Unidirectional Contract Test"]
     
     %% Compact answer nodes
     UnitChoice --> UnitAnswer["🔬 UNIT TEST<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ⊗ Mock<br/>🟢 Managed OOPD → ⊗ Mock<br/>🔵 Unmanaged OOPD → ⊗ Mock"]
     
     IntChoice --> IntAnswer["🔌 INTEGRATION TEST<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ✓ Real<br/>🔵 Unmanaged OOPD → ⊗ Mock"]
     
-    BiChoice --> BiAnswer["🤝 BIDIRECTIONAL CONTRACT<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ⊗ Mock**<br/>🔵 Governed → ⇄ Toggle<br/>🔵 External → N/A"]
+    BiChoice --> BiAnswer["🤝 BIDIRECTIONAL CONTRACT Test<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ⊗ Mock**<br/>🔵 Governed → ⇄ Toggle<br/>🔵 External → N/A"]
     
-    UniChoice --> UniAnswer["➡️ UNIDIRECTIONAL CONTRACT<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ⊗ Mock**<br/>🔵 Governed → N/A<br/>🔵 External → ⇄ Toggle"]
+    UniChoice --> UniAnswer["➡️ UNIDIRECTIONAL CONTRACT Test<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ⊗ Mock**<br/>🔵 Governed → N/A<br/>🔵 External → ⇄ Toggle"]
     
     AccChoice --> AccAnswer["🎯 ACCEPTANCE TEST<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓ Real<br/>🟢 Managed OOPD → ✓ Real (all)<br/>🔵 Unmanaged OOPD → ⊗ Mock"]
     
