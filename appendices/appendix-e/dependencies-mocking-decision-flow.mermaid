@@ -1,104 +1,64 @@
 graph TD
-    Legend["📖 LEGEND<br/>────────<br/>**IPD**: In-Process Dependency<br/><br/>**OOPD**: Out-of-Process Dependency<br/><br/>**Answers:**<br/><br/>**✓ Real**: Use actual dependency<br/>**⊗ Mock**: Use test double<br/>**⇄ Toggleable**: Mock dev, real verify<br/>**N/A**: Not applicable<br/><br/>**Note:** 'or' indicates context-dependent choice<br/>(stability, team preference, test reliability)"]
+    %% Reference boxes (no arrows to main flow)
+    Legend["📖 SYMBOLS<br/>────────<br/>**✓ Real**: Use actual dependency<br/>**⊗ Mock**: Use test double<br/>**⇄ Toggle**: Mock dev, real verify<br/>**N/A**: Not applicable"]
     
-    Info["💡 IMPLEMENTATION CATEGORIES<br/>────────<br/>**Observable Behavioral**: Business behavior<br/>(domain logic, use cases)<br/><br/>**Non-Observable Technical**: Infrastructure<br/>(adapters, repositories, controllers)<br/><br/>**Observable Technical**: Pure presentation<br/>(styling, animations, audio)<br/><br/>See Appendix D for details"]
+    DepTypes["🎨 DEPENDENCY TYPES<br/>────────<br/>🟣 Pure IPD: No side effects<br/>🟠 Impure IPD: Internal side effects<br/>🟢 Managed OOPD: Your resources<br/>🔵 Unmanaged OOPD: External systems"]
     
-    Start["❓ Should I mock this dependency?"]
+    Info["💡 IMPLEMENTATION TYPES<br/>────────<br/>**Observable Behavioral**:<br/>Business logic & use cases<br/><br/>**Non-Observable Technical**:<br/>Infrastructure & adapters<br/><br/>**Observable Technical**:<br/>Pure presentation (UI/UX)"]
     
-    Legend --> Start
-    Info --> Start
+    %% Main decision flow
+    Start["Should I mock this dependency?"]
     
-    Start --> Q1{"What are you building?"}
+    Start --> Q1{"What are you<br/>building?"}
     
-    Q1 -->|Observable Behavioral| Q2A["Which test type?"]
-    Q1 -->|Non-Observable Technical| Q2B["Which test type?"]
-    Q1 -->|Observable Technical| VisualAnswer["👁️ Visual/Sensory Validation<br/>────────<br/>No mocking applicable"]
+    Q1 -->|Observable<br/>Behavioral| BehaviorSplit{" "}
+    Q1 -->|Non-Observable<br/>Technical| TechSplit{" "}
+    Q1 -->|Observable<br/>Technical| Visual["👁️ Visual/Sensory Validation<br/>────<br/>No mocking applicable"]
     
-    Q2A --> UnitTest["🔬 Unit Test"]
-    Q2A --> AcceptanceTest["🎯 Acceptance Test"]
+    BehaviorSplit -->|Unit| UnitChoice["🔬 Unit Test"]
+    BehaviorSplit -->|Acceptance| AccChoice["🎯 Acceptance Test"]
     
-    Q2B --> IntegrationTest["🔌 Integration Test"]
-    Q2B --> ContractChoice{"Which Unmanaged<br/>OOPD type?"}
+    TechSplit -->|Integration| IntChoice["🔌 Integration Test"]
+    TechSplit -->|Contract| ContractRoute{"Unmanaged OOPD:<br/>Governed or External?"}
     
-    ContractChoice -->|Governed Unmanaged| BiContract["🤝 Bidirectional Contract"]
-    ContractChoice -->|External Unmanaged| UniContract["➡️ Unidirectional Contract"]
+    ContractRoute -->|Governed| BiChoice["🤝 Bidirectional Contract"]
+    ContractRoute -->|External| UniChoice["➡️ Unidirectional Contract"]
     
-    UnitTest --> UnitQ{"What's the dependency?"}
-    UnitQ -->|🟣 Pure IPD| UnitA1["✓ Real<br/>(deterministic, safe)"]
-    UnitQ -->|🟠 Impure IPD| UnitA2["⊗ Mock<br/>(side effects)"]
-    UnitQ -->|🟢 Managed OOPD| UnitA3["⊗ Mock<br/>(external resource)"]
-    UnitQ -->|🔵 Unmanaged OOPD| UnitA4["⊗ Mock<br/>(external service)"]
+    %% Compact answer nodes
+    UnitChoice --> UnitAnswer["🔬 UNIT TEST<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ⊗ Mock<br/>🟢 Managed OOPD → ⊗ Mock<br/>🔵 Unmanaged OOPD → ⊗ Mock"]
     
-    IntegrationTest --> IntQ{"What's the dependency?"}
-    IntQ -->|🟣 Pure IPD| IntA1["✓ Real<br/>(deterministic, safe)"]
-    IntQ -->|🟠 Impure IPD| IntA2["✓ Real or ⊗ Mock<br/>(if stable)"]
-    IntQ -->|🟢 Managed OOPD| IntA3["✓ Real<br/>(testing this contract!)"]
-    IntQ -->|🔵 Unmanaged OOPD| IntA4["⊗ Mock<br/>(not adapter's focus)"]
+    IntChoice --> IntAnswer["🔌 INTEGRATION TEST<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ✓ Real<br/>🔵 Unmanaged OOPD → ⊗ Mock"]
     
-    BiContract --> BiQ{"What's the dependency?"}
-    BiQ -->|🟣 Pure IPD| BiA1["✓ Real"]
-    BiQ -->|🟠 Impure IPD| BiA2["✓ Real or ⊗ Mock*<br/>(if stable)"]
-    BiQ -->|🟢 Managed OOPD| BiA3["⊗ Mock<br/>(focus on contract)"]
-    BiQ -->|🔵 Governed Unmanaged OOPD| BiA4["⇄ Toggleable<br/>(mock dev, real verify)"]
-    BiQ -->|🔵 External Unmanaged OOPD| BiA5["N/A<br/>(not applicable)"]
+    BiChoice --> BiAnswer["🤝 BIDIRECTIONAL CONTRACT<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ⊗ Mock**<br/>🔵 Governed → ⇄ Toggle<br/>🔵 External → N/A"]
     
-    UniContract --> UniQ{"What's the dependency?"}
-    UniQ -->|🟣 Pure IPD| UniA1["✓ Real"]
-    UniQ -->|🟠 Impure IPD| UniA2["✓ Real or ⊗ Mock*<br/>(if stable)"]
-    UniQ -->|🟢 Managed OOPD| UniA3["⊗ Mock<br/>(focus on contract)"]
-    UniQ -->|🔵 Governed Unmanaged OOPD| UniA4["N/A<br/>(not applicable)"]
-    UniQ -->|🔵 External Unmanaged OOPD| UniA5["⇄ Toggleable<br/>(mock dev, minimal checks)"]
+    UniChoice --> UniAnswer["➡️ UNIDIRECTIONAL CONTRACT<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓/⊗ (if stable)*<br/>🟢 Managed OOPD → ⊗ Mock**<br/>🔵 Governed → N/A<br/>🔵 External → ⇄ Toggle"]
     
-    AcceptanceTest --> AccQ{"What's the dependency?"}
-    AccQ -->|🟣 Pure IPD| AccA1["✓ Real<br/>(part of system)"]
-    AccQ -->|🟠 Impure IPD| AccA2["✓ Real<br/>(part of system)"]
-    AccQ -->|🟢 Managed OOPD| AccA3["✓ Real<br/>(all managed deps!)"]
-    AccQ -->|🔵 Unmanaged OOPD| AccA4["⊗ Mock<br/>(system isolation)"]
+    AccChoice --> AccAnswer["🎯 ACCEPTANCE TEST<br/>────────<br/>🟣 Pure IPD → ✓ Real<br/>🟠 Impure IPD → ✓ Real<br/>🟢 Managed OOPD → ✓ Real (all)<br/>🔵 Unmanaged OOPD → ⊗ Mock"]
     
-    style Legend fill:#fff9c4,stroke:#f9a825,stroke-width:3px,color:#000
-    style Info fill:#e3f2fd,stroke:#1976d2,stroke-width:3px,color:#000
-    style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000
+    %% Footnotes
+    Footnotes["* If stable and reliable<br/>** Focus on contract, not infrastructure"]
+    
+    %% Styling - minimal, functional only
+    style Legend fill:#fff9c4,stroke:#f9a825,stroke-width:2px,color:#000
+    style DepTypes fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000
+    style Info fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
+    style Footnotes fill:#f5f5f5,stroke:#999,stroke-width:1px,color:#666
+    
+    style Start fill:#f5f5f5,stroke:#333,stroke-width:3px,color:#000
     style Q1 fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-    style Q2A fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-    style Q2B fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style ContractChoice fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
+    style BehaviorSplit fill:#fff,stroke:#666,stroke-width:1px,color:#000
+    style TechSplit fill:#fff,stroke:#666,stroke-width:1px,color:#000
+    style ContractRoute fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
     
-    style UnitTest fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-    style IntegrationTest fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
-    style BiContract fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style UniContract fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
-    style AcceptanceTest fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style VisualAnswer fill:#f5f5f5,stroke:#666,stroke-width:2px,color:#000
+    style Visual fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
+    style UnitChoice fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style IntChoice fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style BiChoice fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style UniChoice fill:#fff,stroke:#333,stroke-width:2px,color:#000
+    style AccChoice fill:#fff,stroke:#333,stroke-width:2px,color:#000
     
-    style UnitQ fill:#e3f2fd,stroke:#1976d2,stroke-width:2px,color:#000
-    style IntQ fill:#e8f5e9,stroke:#388e3c,stroke-width:2px,color:#000
-    style BiQ fill:#fff3e0,stroke:#f57c00,stroke-width:2px,color:#000
-    style UniQ fill:#fce4ec,stroke:#c2185b,stroke-width:2px,color:#000
-    style AccQ fill:#f3e5f5,stroke:#7b1fa2,stroke-width:2px,color:#000
-    
-    style UnitA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style UnitA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style UnitA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style UnitA4 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
-    
-    style IntA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style IntA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style IntA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style IntA4 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
-    
-    style BiA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style BiA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style BiA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style BiA4 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
-    style BiA5 fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
-    
-    style UniA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style UniA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style UniA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style UniA4 fill:#f5f5f5,stroke:#999,stroke-width:2px,color:#000
-    style UniA5 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
-    
-    style AccA1 fill:#e1bee7,stroke:#7b1fa2,stroke-width:2px,color:#000
-    style AccA2 fill:#ffe0b2,stroke:#f57c00,stroke-width:2px,color:#000
-    style AccA3 fill:#c8e6c9,stroke:#388e3c,stroke-width:2px,color:#000
-    style AccA4 fill:#bbdefb,stroke:#1976d2,stroke-width:2px,color:#000
+    style UnitAnswer fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000
+    style IntAnswer fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000
+    style BiAnswer fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000
+    style UniAnswer fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000
+    style AccAnswer fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000
