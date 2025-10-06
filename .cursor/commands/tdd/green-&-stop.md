@@ -11,7 +11,7 @@ Enter GREEN phase as defined in the AAID rules file:
 
 1. Write ABSOLUTE MINIMUM code to pass current test(s)
    - Start with naïve code or hardcoding/faking (e.g., return "Hello")
-   - Continue hardcoding until tests force asbtraction/generalization
+   - Continue hardcoding until tests force abstraction/generalization
    - When tests "triangulate" (multiple examples pointing to a pattern), generalize
    - NO untested edge cases, validation, or future features
    - Simplified example: Test 1 expects 2+2=4? Return 4. Test 2 expects 3+3=6? Return 6.

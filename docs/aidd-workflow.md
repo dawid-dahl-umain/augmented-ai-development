@@ -346,7 +346,7 @@ For domain and technical work, the planning stage provides a roadmap of **_what_
 
 Think of it like navigation: Planning sets the destination, TDD finds the path.
 
-> **Modifying Untested Code?** Changing untested code in an existing codebase requires strategies (characterization tests, finding seams, etc) outside this guide's scope. In that case, see [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/).
+> **Modifying Untested Code?** Changing untested code in an existing codebase requires strategies (characterization tests, finding seams, etc) outside this guide's scope. In that case, see books like [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/).
 
 **Steps:**
 
@@ -931,9 +931,9 @@ The DSL provides business vocabulary (like `user` or `archive todo`), while the 
 
 Notice how unit tests directly test the class with mocks, while acceptance tests use this DSL layer to express tests in business terms.
 
-| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration tests verify a single infrastructure elements's technical contract by testing it with only its immediate managed dependency (e.g., a repository adapter with real database). Unmanaged dependencies are mocked. See [Appendix E](../appendices/appendix-e/dependencies-and-mocking.md) for complete dependency handling guidelines. |
+| 🔌                                                                                                                                                                                                                                                                                                                                                                                                                                                                                |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Note on Integration Testing**: While this guide focuses on unit testing through TDD, `AAID` also applies to integration testing. Integration tests verify a single infrastructure element's technical contract by testing it with only its immediate managed dependency (e.g., a repository adapter with real database). Unmanaged dependencies are mocked. See [Appendix E](../appendices/appendix-e/dependencies-and-mocking.md) for complete dependency handling guidelines. |
 
 In `AAID`, AI helps you rapidly write unit tests and implementations. Knowing the difference between unit and acceptance testing prevents you from mistaking 'technically correct code' for 'done features,' a crucial distinction in professional development.
 
@@ -994,9 +994,9 @@ Each command enforces these laws at the appropriate phase by referencing the [AA
 
 **In practice:** Since the rules file is automatically loaded by your IDE/CLI, you often won't need these commands; the AI will often follow the workflow from the rules alone. That said, the commands remain useful as explicit phase triggers when needed.
 
-| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                 |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Adding to Existing Projects**: These commands work for adding new features to any codebase (new or existing).<br><br>**Modifying Untested Code**: When changing existing untested code, first establish characterization tests (documenting current behavior) and find seams (testable injection points). See [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/). |
+| ☝️                                                                                                                                                                                                                                                                                                                                                                                                                                            |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Adding to Existing Projects**: These commands work for adding new features to any codebase (new or existing).<br><br>**Modifying Untested Code**: When changing existing untested code, first establish characterization tests (documenting current behavior) and find seams (testable injection points). See books like [Working Effectively with Legacy Code](https://www.oreilly.com/library/view/working-effectively-with/0131177052/). |
 
 <a id="appendix-b-investigation-commands"></a>
 
@@ -1189,7 +1189,7 @@ Ask user to clarify if unclear which type of work is being done
 
 1. Write ABSOLUTE MINIMUM code to pass current test(s)
    - Start with naïve code or hardcoding/faking (e.g., return "Hello")
-   - Continue hardcoding until tests force asbtraction/generalization
+   - Continue hardcoding until tests force abstraction/generalization
    - When tests "triangulate" (multiple examples pointing to a pattern), generalize
    - NO untested edge cases, validation, or future features
    - Simplified example: Test 1 expects 2+2=4? Return 4. Test 2 expects 3+3=6? Return 6.
