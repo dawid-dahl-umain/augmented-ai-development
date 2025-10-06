@@ -613,7 +613,7 @@ Scenario: ... # Next Scenario (follows same pattern with account creation)
 
 # Linked technical implementation (non-behavioral) tasks (not mapped to acceptance tests):
 # - UI Tasks: visual styling, screen reader accessibility, animations
-# - Technical Tasks: infrastructure, adapters, monitoring
+# - Technical Tasks: infrastructure elements (adapters, repositories, monitoring tools, etc.)
 ```
 
 > For more information on handling technical implementation details, see [Appendix D](../../appendix-d/handling-technical-implementation-details.md) of the main [AAID documentation](../../../docs/aidd-workflow.md).

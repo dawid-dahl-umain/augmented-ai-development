@@ -150,9 +150,9 @@ The exact combination varies by project.
 
 This specification package will then be used—almost religiously—to serve as the objective foundation for the `AAID` workflow, aligning development with the actual needs of the business.
 
-| ⚙️                                                                                                                                                                              |
-| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Technical requirements (infrastructure, adapters, styling, NFRs) are tracked as separate linked tasks within stories, keeping behavioral specs pure. [Learn more](#appendix-d). |
+| ⚙️                                                                                                                                                                             |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Technical requirements (infrastructure elements, styling, NFRs) are tracked as separate linked tasks within stories, keeping behavioral specs pure. [Learn more](#appendix-d). |
 
 ### From Specification to Development
 
@@ -288,7 +288,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
    Choose your development type early to load the right context:
 
    - **Domain/Business Logic**: Core behavior delivering business value
-   - **Technical Implementation**: Adapters, infrastructure, integrations, initializations (see [Appendix D](#appendix-d))
+   - **Technical Implementation**: Infrastructure elements—adapters (Hexagonal), repositories/gateways (Clean/DDD), controllers (MVC)—plus integrations and initializations (see [Appendix D](#appendix-d))
    - **Presentation/UI**: Visual styling, animations, audio (see [Appendix D](#appendix-d))
 
 3. **Add Specification Context** (specific to your development type)
@@ -304,7 +304,7 @@ Before any AI interaction, establish comprehensive context. The AI needs to unde
 4. **Add Relevant Code Context** (specific to your development type)
 
    - **For Domain/Business**: Domain dependencies, tests, similar features, pure function utils for similar logic
-   - **For Technical**: Existing adapters, infrastructure patterns, utils, integration points
+   - **For Technical**: Existing infrastructure elements, infrastructure patterns, utils, integration points
    - **For Presentation**: Components, design system, CSS framework, presentation-related config files
 
    | 🤖                                                                                                                                                                                                                                                                                            |
@@ -964,7 +964,7 @@ _Used in Stage **1: Context Providing** and **Stage 2: Planning**_
 | ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/project-context`                  | Establishes comprehensive project understanding with architecture, testing strategy, code style, etc<br><br> _**Note on context**: Since Commands in Cursor cannot currently directly reference files with `@` symbols inside the command files themselves, you'll need to include any necessary context when invoking the command. For example:_ `/project-context @README.md @docs/architecture.md`. _The command will then operate on the provided context._ | Stage 1 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/project-context.md)                  |
 | `/ai-roadmap-template`              | Creates high-level roadmap for domain/business logic features that guides TDD without prescribing implementation                                                                                                                                                                                                                                                                                                                                                | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-roadmap-template.md)              |
-| `/ai-technical-roadmap-template`    | Creates roadmap for technical implementation (adapters, infrastructure) - see [Appendix D](#appendix-d)                                                                                                                                                                                                                                                                                                                                                         | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-technical-roadmap-template.md)    |
+| `/ai-technical-roadmap-template`    | Creates roadmap for technical implementation (infrastructure elements: adapters, repositories, controllers, etc.) - see [Appendix D](#appendix-d)                                                                                                                                                                                                                                                                                                               | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-technical-roadmap-template.md)    |
 | `/ai-presentation-roadmap-template` | Creates roadmap for observable technical elements (pure UI/sensory) - see [Appendix D](#appendix-d)                                                                                                                                                                                                                                                                                                                                                             | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/planning/ai-presentation-roadmap-template.md) |
 | `/ai-acceptance-roadmap-template`   | Creates strategic roadmap for acceptance testing with isolation strategy - see [Appendix A](#appendix-a)                                                                                                                                                                                                                                                                                                                                                        | Stage 2 | [View](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/.cursor/commands/acceptance/ai-acceptance-roadmap-template.md) |
 
@@ -1108,7 +1108,7 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 When in AAID mode, the workflow applies differently based on implementation category:
 
 - **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
-- **Technical Implementation**: Adapters and infrastructure using integration/contract tests
+- **Technical Implementation**: Infrastructure elements using integration/contract tests
 - **Presentation/UI**: Pure visual styling and sensory feedback - NO TDD, validation only
 
 The TDD phases (RED/GREEN/REFACTOR) apply only to Domain and Technical Implementation work:
@@ -1280,7 +1280,7 @@ Look for "custom instructions", "custom rules", or "system prompt" settings
 
 ![Appendix D](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/appendices/10.webp?raw=true)
 
-The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—adapters, infrastructure, and presentation—are covered in Appendix D.
+The main guide above has focused on BDD/TDD for domain behavior. Technical implementation details—infrastructure elements and presentation—are covered in Appendix D.
 
 ![AAID implementation categories](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/aaid-implementation-categories-s.webp)
 

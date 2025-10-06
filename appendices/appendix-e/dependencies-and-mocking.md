@@ -108,7 +108,7 @@ Integration tests verify that a specific adapter correctly integrates with its i
 
 The test stays at the adapter layer. Domain logic and other adapters aren't involved in the test - not because they're mocked, but because integration tests have a narrow scope focused on a single adapter's technical contract.
 
-**Key principle:** Only the managed dependencies directly related to the adapter's responsibility are included. Testing an HTTP adapter includes the real HTTP server layer. Testing a repository adapter includes the real database. Other infrastructure and domain layers remain outside the test scope.
+**Key principle:** Only the managed dependencies directly related to the adapter's responsibility are included. Testing an HTTP adapter includes the real HTTP server layer. Testing a repository adapter includes the real database. Other infrastructure elements and domain layers remain outside the test scope.
 
 ### 🤝 Bidirectional Contract Tests
 
