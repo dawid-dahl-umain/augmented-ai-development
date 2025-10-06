@@ -86,6 +86,7 @@ Pre-written AI commands organized by purpose:
 2. **Have BDD Specs Available**: `AAID` is a spec-driven methodology. No specs, no `AAID`.
 3. **Set up a project/Select a project**: To build new features in a new or existing project, set up or select one with which to work
 4. **Add AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
+   - (Optional) Add Custom Slash Commands [.cursor/commands](.cursor/commands) into Cursor's `.cursor/commands/` or your tool's equivalent.
 5. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development. Use [diagram](aaid-workflow-diagram.mermaid) as a visual guide
 
 ## The AAID Workflow
