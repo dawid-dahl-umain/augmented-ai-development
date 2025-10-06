@@ -55,11 +55,16 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 
 ### 📚 **Appendices**
 
-- **Appendix A**: [Acceptance Testing with Four-Layer Model](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md) - Complete workflow for ATDD/BDD using Dave Farley's architecture
+- **Appendix A**: [Acceptance Testing with Four-Layer Model](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)
+  - Complete workflow for ATDD/BDD using Dave Farley's architecture
 - **Appendix B**: [Reusable prompts and AI commands](appendices/appendix-b/reusable-prompts.md)
+  - Pre-written AI commands organized by purpose to speed up development
 - **Appendix C**: [AI workflow rules for your IDE](appendices/appendix-c/aaid-ai-workflow-rules.md)
+  - Ready-to-use AI agent instructions that enforce the AAID TDD workflow discipline
 - **Appendix D**: [Handling technical implementation details](appendices/appendix-d/handling-technical-implementation-details.md)
-- **Appendix E**: [Dependencies and Mocking](appendices/appendix-e/dependencies-and-mocking.md) - Understanding the four dependency categories and how to handle them in different test types
+  - Understanding the three Implementation Categories and how to apply AAID to technical implementation details
+- **Appendix E**: [Dependencies and Mocking](appendices/appendix-e/dependencies-and-mocking.md)
+  - Understanding the four Dependency Categories and how to handle them in different test types
 
 ### ⚡ **Reusable Prompts**
 
