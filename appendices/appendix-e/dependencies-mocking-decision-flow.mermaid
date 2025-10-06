@@ -2,7 +2,7 @@ graph TD
     %% Reference boxes (no arrows to main flow)
     Legend["📖 SYMBOLS<br/>────────<br/>**✓ Real**: Use actual dependency<br/>**⊗ Mock**: Use test double<br/>**⇄ Toggle**: Mock dev, real verify<br/>**N/A**: Not applicable"]
     
-    DepTypes["🎨 DEPENDENCY TYPES<br/>────────<br/>🟣 Pure IPD: No side effects<br/>🟠 Impure IPD: Internal side effects<br/>🟢 Managed OOPD: Your resources<br/>🔵 Unmanaged OOPD: External systems"]
+    DepTypes["🎨 DEPENDENCY TYPES<br/>────────<br/>**IPD** = In-Process Dependency<br/>**OOPD** = Out-of-Process Dependency<br/><br/>🟣 Pure IPD: No side effects<br/>🟠 Impure IPD: Internal side effects<br/>🟢 Managed OOPD: Your resources<br/>🔵 Unmanaged OOPD: External systems"]
     
     Info["💡 IMPLEMENTATION TYPES<br/>────────<br/>**Observable Behavioral**:<br/>Business logic & use cases<br/><br/>**Non-Observable Technical**:<br/>Infrastructure & adapters<br/><br/>**Observable Technical**:<br/>Pure presentation (UI/UX)"]
     
@@ -11,15 +11,15 @@ graph TD
     
     Start --> Q1{"What are you<br/>building?"}
     
-    Q1 -->|Observable<br/>Behavioral| BehaviorSplit{" "}
-    Q1 -->|Non-Observable<br/>Technical| TechSplit{" "}
+    Q1 -->|Observable<br/>Behavioral| BehaviorSplit{"Test scope?"}
+    Q1 -->|Non-Observable<br/>Technical| TechSplit{"Dependency<br/>category?"}
     Q1 -->|Observable<br/>Technical| Visual["👁️ Visual/Sensory Validation<br/>────<br/>No mocking applicable"]
     
-    BehaviorSplit -->|Unit| UnitChoice["🔬 Unit Test"]
-    BehaviorSplit -->|Acceptance| AccChoice["🎯 Acceptance Test"]
+    BehaviorSplit -->|Single unit| UnitChoice["🔬 Unit Test"]
+    BehaviorSplit -->|Full system| AccChoice["🎯 Acceptance Test"]
     
-    TechSplit -->|Integration| IntChoice["🔌 Integration Test"]
-    TechSplit -->|Contract| ContractRoute{"Unmanaged OOPD:<br/>Governed or External?"}
+    TechSplit -->|Managed OOPD| IntChoice["🔌 Integration Test"]
+    TechSplit -->|Unmanaged OOPD| ContractRoute{"Governed or External?"}
     
     ContractRoute -->|Governed| BiChoice["🤝 Bidirectional Contract"]
     ContractRoute -->|External| UniChoice["➡️ Unidirectional Contract"]
