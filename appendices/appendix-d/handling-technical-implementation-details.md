@@ -207,7 +207,7 @@ Scenario: User archives completed todo
   And it no longer appears in my active list
 ```
 
-The performance, security, and technical constraints belong in the linked technical tasks, not in the BDD scenarios. Specifically:
+The performance, security, and technical constraints belong in the linked technical tasks. Specifically:
 
 - NFRs like accessibility or responsiveness are detailed within **Linked Presentation/UI Tasks**
 - NFRs like performance or security are detailed within **Linked Technical Tasks**
@@ -272,7 +272,7 @@ References:
 - Figma link; design tokens
 ```
 
-The key principle is to keep NFRs **out** of BDD scenarios while ensuring they're **visible** and **testable** in the linked technical tasks. How you structure the technical task tickets themselves is flexible. Teams can organize NFRs within acceptance criteria, dedicated NFR sections, checklists, or any format that fits their workflow and tooling.
+Keep NFRs **out** of BDD scenarios while ensuring they're **visible** and **testable** in the linked technical tasks. How you structure the technical task tickets themselves is flexible. Teams can organize NFRs within acceptance criteria, dedicated NFR sections, checklists, or any format that fits their workflow and tooling.
 
 ## Practical Workflow Integration
 
