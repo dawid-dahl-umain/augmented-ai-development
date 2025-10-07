@@ -161,7 +161,8 @@ Title: User archives completed todos
 
 User Story:
 
-As a user, I want to archive completed todos, so that my active list stays clean and I can focus on current tasks.
+As a user, I want to archive completed todos, so that my active list stays clean
+and I can focus on current tasks.
 
 Acceptance Criteria:
 
