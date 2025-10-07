@@ -157,8 +157,15 @@ Specifications include:
 This shows how a user story and its linked technical tasks would appear in project management tools like Jira:
 
 ```markdown
-Story: User archives completed todos
-BDD Scenarios: [behavioral specifications]
+Title: User archives completed todos
+
+User Story:
+
+As a user, I want to archive completed todos, so that my active list stays clean and I can focus on current tasks.
+
+Acceptance Criteria:
+
+<< BDD scenarios: system behavioral specifications >>
 
 Linked Presentation/UI Tasks:
 

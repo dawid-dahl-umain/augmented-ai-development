@@ -595,6 +595,7 @@ Transform BDD scenarios with natural language DSL. Structure requirements like t
 Title: User archives completed todos
 
 User Story:
+
 As a user, I want to archive completed todos,
 so that my active list stays clean.
 
