@@ -180,6 +180,8 @@ Linked Technical Tasks:
 - TECH-107: Implement batch archive job for bulk operations (if complex)
 ```
 
+> See the main article for this user story example, [but with the BDD scenarios included](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/docs/aidd-workflow.md#prerequisite-spec-to-dev).
+
 ### How Non-Functional Requirements (NFRs) Fit In
 
 [NFRs](https://en.wikipedia.org/wiki/Non-functional_requirement) (performance, security, accessibility, etc.) are handled as technical requirements, not business behaviors. They are specified _inside_ the technical tasks linked to a story, never in BDD scenarios.
