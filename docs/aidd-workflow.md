@@ -14,6 +14,7 @@ _Professional TDD for AI-Augmented Software Development_
 - [Built on Proven Foundations](#built-on-proven-foundations)
 - [Developer Mindset](#developer-mindset)
 - [Prerequisite: Product Discovery & Specification Phase](#prerequisite)
+  - [From Specification to Development](#prerequisite-spec-to-dev)
 - [Getting Started With AAID](#getting-started-with-aaid)
 - [AAID Workflow Diagram](#workflow-diagram)
 - [AAID Development Stages](#development-stages)
@@ -153,6 +154,8 @@ This specification package will then be used—almost religiously—to serve as 
 | ⚙️                                                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | Technical requirements (infrastructure elements, styling, NFRs) are tracked as separate linked tasks within stories, keeping behavioral specs pure. [Learn more](#appendix-d). |
+
+<a id="prerequisite-spec-to-dev"></a>
 
 ### From Specification to Development
 
@@ -1292,7 +1295,7 @@ The main guide above has focused on BDD/TDD for domain behavior. Technical imple
 
 ![Appendix E](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/main/assets/appendices/11.webp)
 
-Once you've identified your test type from the [Implementation Categories](../appendices/appendix-d/handling-technical-implementation-details.md#aaid-implementation-matrix-build-types-and-verification), this reference clarifies how to properly handle the dependencies of what you're building.
+Once you've identified your test type from the [Implementation Categories](../appendices/appendix-d/handling-technical-implementation-details.md#aaid-implementation-matrix-build-types-and-verification), this reference clarifies how to properly handle the dependencies of what you're testing.
 
 It covers the four dependency categories (Pure In-Process, Impure In-Process, Managed Out-of-Process, Unmanaged Out-of-Process) and shows how each test type (unit, integration, contract, acceptance) handles them differently.
 
