@@ -58,7 +58,7 @@ Stages 1-3 use normal AI assistance. Stage 4 enforces strict TDD discipline as d
 When in AAID mode, the workflow applies differently based on implementation category:
 
 - **Domain/Business Logic**: Core business behavior using unit tests with mocks (default focus)
-- **Technical Implementation**: Adapters and infrastructure using integration/contract tests
+- **Technical Implementation**: Infrastructure elements using integration/contract tests
 - **Presentation/UI**: Pure visual styling and sensory feedback - NO TDD, validation only
 
 The TDD phases (RED/GREEN/REFACTOR) apply only to Domain and Technical Implementation work:
