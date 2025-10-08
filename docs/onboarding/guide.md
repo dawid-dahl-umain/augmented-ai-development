@@ -16,7 +16,7 @@ _A gentle introduction to Augmented AI Development_
 
 **What you get**: AI's productivity without sacrificing code quality or your understanding.
 
-**Time needed**: ~1 hour to learn the concepts, then you'll practice on real features.
+**Time needed**: ~45 minutes to learn concepts, then reference the full guide as needed.
 
 **Ready?** Start at Level 0 below ↓
 
@@ -39,9 +39,8 @@ Think of it like a video game tutorial: start at Level 0, work your way up, and 
 - [Level 1: The Developer Mindset (5 minutes)](./levels/1.md)
 - [Level 2: How AAID Actually Works (~5 minutes)](./levels/2.md)
 - [Level 3: Visual Overview of the Workflow (5-10 minutes)](./levels/3.md)
-- [Level 4: Walk Through a Simple Example (15-30 minutes)](./levels/4.md)
-- [Level 5: Ready to Go Deeper? (30-60 minutes)](./levels/5.md)
-- [Level 6: Know What You'll Need (as needed)](./levels/6.md)
+- [Level 4: See TDD Catch Real AI Mistakes (10-15 minutes)](./levels/4.md)
+- [Level 5: Ready to Go Deeper? (5-10 minutes)](./levels/5.md)
 - [Ready to Start for Real?](./levels/get-started.md)
 
 ---

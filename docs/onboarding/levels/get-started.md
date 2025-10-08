@@ -1,9 +1,9 @@
 ## Ready to Start for Real?
 
-| Level 0 | Level 1 |   Level 2    | Level 3 | Level 4 |  Level 5  | Level 6 |   Start    |
-| :-----: | :-----: | :----------: | :-----: | :-----: | :-------: | :-----: | :--------: |
-|   ✅    |   ✅    |      ✅      |   ✅    |   ✅    |    ✅     |   ✅    | 📍 **YOU** |
-| Problem | Mindset | How It Works | Visual  | Example | Deep Dive | Topics  | **Setup**  |
+| Level 0 | Level 1 |   Level 2    | Level 3 |    Level 4    |    Level 5     |   Start    |
+| :-----: | :-----: | :----------: | :-----: | :-----------: | :------------: | :--------: |
+|   ✅    |   ✅    |      ✅      |   ✅    |      ✅       |       ✅       | 📍 **YOU** |
+| Problem | Mindset | How It Works | Visual  | **TDD Value** | **Essentials** | **Setup**  |
 
 > 🎉 **Congratulations!** You've completed the conceptual onboarding. You now understand what AAID is, why it matters, and how it works. Now it's time to actually set it up and use it in your project.
 
