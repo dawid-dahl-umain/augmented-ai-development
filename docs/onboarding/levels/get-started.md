@@ -1,4 +1,4 @@
-## Ready to Start: Your AAID Journey Begins
+## Ready to Start: Let's Get to Work
 
 | Level 0 | Level 1 |   Level 2    | Level 3 |    Level 4     |  Level 5  |  Level 6  |   Start    |
 | :-----: | :-----: | :----------: | :-----: | :------------: | :-------: | :-------: | :--------: |
@@ -6,6 +6,8 @@
 | Problem | Mindset | How It Works | Visual  | TDD Catches AI | Your Work | Demo Repo | **Ready!** |
 
 **⏱️ Time: 5 minutes for setup + your own pace for the main guide**
+
+![Ready to Start](../../../assets/onboarding/start.webp)
 
 > 🎉 **Congratulations!** You've completed the AAID onboarding. You understand the problem, the mindset, how it works, seen TDD catch real AI mistakes, know it works for your situation, and seen an actual demo repository.
 

@@ -2,27 +2,23 @@
 
 _A gentle introduction to Augmented AI Development_
 
----
+![AAID Onboarding Guide](../../assets/onboarding/guide.webp)
 
-> 📷 **[Image Generation Prompt]**: Create a welcoming illustration showing a learning journey as a game-like level progression map. Show 8 connected nodes arranged in an ascending path from bottom-left to top-right: Levels 0-6 as progressive stepping stones, then "Ready to Start" at the top with a flag or star. Each node should have a subtle number badge. Small icons representing the content (problem/solution, brain, gears, workflow, TDD shield, FAQ bubbles, demo screen, rocket launch) should float near their respective nodes. A friendly AI holographic assistant guides from the side. Use a clean, professional graphic style with a light background and tech-blue accent colors. The overall mood should convey an achievable learning journey with clear progression and support.
-
-**Welcome!** You're here because you (or your team) want to use AI coding assistants like Cursor safely and professionally. This guide teaches you **AAID** (Augmented AI Development): a framework that combines AI speed with quality control.
-
----
+**Welcome!** You're here because you (or your team) want to use AI coding assistants like Cursor safely and professionally. This guide teaches you **AAID** (Augmented AI Development): a workflow that combines AI speed with quality control.
 
 ## 🚀 Too Busy? Quick Summary
 
 **What you'll learn**: A disciplined workflow for AI-assisted coding where AI generates code fast, but YOU review every step and stay in control.
 
-**Why it matters**: Without structure, AI coding leads to bugs you don't understand. `AAID` prevents this while keeping AI's speed benefits.
+**Why it matters**: Without structure, AI coding leads to unsafe, buggy and unmaintainable code. It also slows you down, due to all the extra debugging needed. `AAID` prevents this.
 
-**What you get**: AI's productivity without sacrificing code quality or your understanding.
+**What you get**: It unlocks AI's actual productivity potential, without sacrificing code quality or your understanding.
 
-**Time needed**: ~60 minutes to complete the onboarding, 2-3 features to get comfortable, fluent after 2-3 weeks of daily use.
+**Time needed**: ~60 minutes to complete the onboarding, 2-3 features to get comfortable, fairly fluent after 2-3 weeks of daily use.
+
+> That said, **Test-Driven Development**, which `AAID` builds on, is an art. And like any art form, there's always something new to discover. The basics are quick to learn, early wins come fast, but the journey toward mastery will keep your work interesting for years to come.
 
 **Ready?** Start at Onboarding Level 0 below ↓
-
----
 
 ## What Are Onboarding Levels?
 
@@ -43,12 +39,12 @@ Think of it like a video game tutorial: start at Level 0, work your way up, and 
 - [Level 1: The Developer Mindset (5 minutes)](./levels/1.md)
 - [Level 2: How AAID Actually Works (~5 minutes)](./levels/2.md)
 - [Level 3: Visual Overview of the Workflow (5-10 minutes)](./levels/3.md)
-- [Level 4: See TDD Catch Real AI Mistakes (15 minutes)](./levels/4.md)
+- [Level 4: See TDD Catch AI Mistakes (15 minutes)](./levels/4.md)
 - [Level 5: Will This Work for Me? (5 minutes)](./levels/5.md)
-- [Level 6: See It in Action - The Demo Repository (5-10 minutes)](./levels/6.md)
+- [Level 6: See It in Action - The Demo Repository (10 minutes)](./levels/6.md)
 
 ### Ready to Start
 
-- [Ready to Start: Your AAID Journey Begins](./levels/get-started.md)
+- [Ready to Start: Let's Get to Work](./levels/get-started.md)
 
 ---
