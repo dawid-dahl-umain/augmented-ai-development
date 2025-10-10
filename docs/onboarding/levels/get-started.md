@@ -1,88 +1,76 @@
-## Ready to Start for Real?
+## Ready to Start: Your AAID Journey Begins
 
-| Level 0 | Level 1 |   Level 2    | Level 3 |    Level 4    |    Level 5     |   Start    |
-| :-----: | :-----: | :----------: | :-----: | :-----------: | :------------: | :--------: |
-|   ✅    |   ✅    |      ✅      |   ✅    |      ✅       |       ✅       | 📍 **YOU** |
-| Problem | Mindset | How It Works | Visual  | **TDD Value** | **Essentials** | **Setup**  |
+| Level 0 | Level 1 |   Level 2    | Level 3 |    Level 4     |  Level 5  |  Level 6  |   Start    |
+| :-----: | :-----: | :----------: | :-----: | :------------: | :-------: | :-------: | :--------: |
+|   ✅    |   ✅    |      ✅      |   ✅    |       ✅       |    ✅     |    ✅     | 📍 **YOU** |
+| Problem | Mindset | How It Works | Visual  | TDD Catches AI | Your Work | Demo Repo | **Ready!** |
 
-> 🎉 **Congratulations!** You've completed the conceptual onboarding. You now understand what AAID is, why it matters, and how it works. Now it's time to actually set it up and use it in your project.
+**⏱️ Time: 5 minutes for setup + your own pace for the main guide**
 
-If you've made it this far, you understand the AAID concepts. Now it's time to actually set it up and use it in your project.
-
-### Next Steps
-
-1. **Set up AAID in your project**  
-   → See [Getting Started With AAID](../../aidd-workflow.md#getting-started-with-aaid) in the main guide
-
-   - Add the workflow rules
-   - Add reusable commands (optional but recommended)
-   - Keep the workflow diagram handy
-
-2. **Read the complete workflow guide**  
-   → [AAID: Augmented AI Development - Full Guide](../../aidd-workflow.md)
-
-   - Detailed explanations of each stage
-   - Real-world examples
-   - Common pitfalls and solutions
-
-3. **See it in action**  
-   → [TicTacToe Demo Repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo)
-
-   - 100% AI-generated code using AAID
-   - Unit tests and acceptance tests
-   - Hexagonal architecture example
-
-4. **Practice with a simple feature**
-   - Pick a small, well-specified feature
-   - Follow the 4-stage workflow
-   - Do complete RED/GREEN/REFACTOR cycles
-   - Review every phase yourself
-
-### What Makes AAID Different
-
-Other AI workflows:
-
-- ❌ Generate massive code dumps
-- ❌ Use checkbox "task lists" (unverifiable)
-- ❌ No mandatory review points
-- ❌ Trust AI judgment for "done"
-
-AAID:
-
-- ✅ Small, focused steps
-- ✅ Automated tests (objective, re-runnable)
-- ✅ Mandatory review after every phase
-- ✅ You decide what's "done"
-
-### Remember the Mindset
-
-1. 🧠 **Don't check your brain at the door** - Understand every line
-2. 🪜 **Incremental steps** - One test, one feature, one refactor at a time
-
-### The Business Case
-
-With AAID, you get:
-
-- **Speed**: AI handles code generation
-- **Stability**: TDD ensures quality
-- **Understanding**: Reviews keep you in control
-
-DORA proves speed and stability aren't trade-offs. With AAID, you get both.
-
-**That's the augmented advantage.**
+> 🎉 **Congratulations!** You've completed the AAID onboarding. You understand the problem, the mindset, how it works, seen TDD catch real AI mistakes, know it works for your situation, and seen an actual demo repository.
 
 ---
 
-✅ **Progress: 100% complete** | You're ready to use AAID!
+## 🚀 Quick Setup
+
+### Step 1: Add the Workflow Rules
+
+Save the [AAID rules](../../../appendices/appendix-c/aaid-ai-workflow-rules.md) to your project:
+
+- **Cursor**: `.cursor/rules/aaid.mdc`
+- **Claude Code**: `CLAUDE.md` in project root
+- **Other AI tools**: Check their docs for "custom instructions" location
+
+### Step 2: Add Commands (Optional but Recommended)
+
+Copy [reusable prompts](../../../appendices/appendix-b/reusable-prompts.md) for shortcuts like `/red-&-stop`:
+
+- **Cursor**: `.cursor/commands/` directory
+- **Claude Code**: `.claude/commands/` directory
+
+### Step 3: Bookmark the Workflow
+
+Keep the [AAID workflow diagram](../../../aaid-workflow-diagram.mermaid) handy as your reference.
 
 ---
 
-## Questions
+## 📖 Next Steps
 
-- **Have questions?** Check out the
-  - [AAID repository](https://github.com/dawid-dahl-umain/augmented-ai-development)
-  - Or reach out to dawid.dahl@umain.com
+**Ready to code?** → Start with [Getting Started With AAID](../../aidd-workflow.md#getting-started-with-aaid) in the main guide
+
+**Want deeper understanding?** → Read the [complete AAID guide](../../aidd-workflow.md) (45 min)
+
+**Have specific questions?** Check the appendices:
+
+- [Implementation Categories](../../../appendices/appendix-d/handling-technical-implementation-details.md) (frontend, backend, infrastructure)
+- [Dependencies and Mocking](../../../appendices/appendix-e/dependencies-and-mocking.md)
+- [Acceptance Testing](../../../appendices/appendix-a/unit-testing-and-acceptance-testing.md)
 
 ---
 
-⬅️ Back to the main onboarding guide: [AAID Workflow and Guide](../guide.md)
+## 🎯 Your First Feature
+
+Pick a small, well-specified feature and follow the workflow:
+
+1. **Stage 1**: Provide context
+2. **Stage 2**: Plan with AI
+3. **Stage 3**: Start TDD
+4. **Stage 4**: RED → Review → GREEN → Review → REFACTOR → Review → Repeat
+
+Remember: The rhythm becomes natural after 2-3 features.
+
+---
+
+✅ **Onboarding Complete!** | You're ready to use `AAID`
+
+---
+
+### Questions or Issues?
+
+- **Repository**: [github.com/dawid-dahl-umain/augmented-ai-development](https://github.com/dawid-dahl-umain/augmented-ai-development)
+- **Demo**: [TicTacToe Implementation](https://github.com/dawid-dahl-umain/augmented-ai-development-demo)
+- **Contact**: dawid.dahl@umain.com
+
+---
+
+⬅️ Back to [AAID Onboarding Guide](../guide.md) | → Forward to [Main AAID Guide](../../aidd-workflow.md)
