@@ -3,7 +3,7 @@ graph TD
     
     Start --> ContextPhase["📚 Stage 1: <br> CONTEXT PROVIDING"]
     
-    ContextPhase --> C1["Add High-Level Context<br/>(README, architecture docs, code style guide)<br/>@project-context"]
+    ContextPhase --> C1["Add High-Level Context<br/>(README, architecture docs, code style guide)<br/>/project-context"]
     
     C1 --> BuildChoice{"What are you<br/>building?"}
     
@@ -31,9 +31,9 @@ graph TD
     
     RoadmapChoice{"Select Roadmap Type<br/>Based on Work"}
     
-    RoadmapChoice -->|Domain/Business| P4A["Request Feature Roadmap<br/>@ai-roadmap-template<br/>(Saved to /ai-roadmaps)"]
-    RoadmapChoice -->|Technical Implementation| P4B["Request Technical Roadmap<br/>@ai-technical-roadmap-template<br/>(Saved to /ai-roadmaps/technical)"]
-    RoadmapChoice -->|Presentation/UI| P4C["Request Presentation Roadmap<br/>@ai-presentation-roadmap-template<br/>(Saved to /ai-roadmaps/presentation)"]
+    RoadmapChoice -->|Domain/Business| P4A["Request Feature Roadmap<br/>/ai-roadmap-template<br/>(Saved to /ai-roadmaps)"]
+    RoadmapChoice -->|Technical Implementation| P4B["Request Technical Roadmap<br/>/ai-technical-roadmap-template<br/>(Saved to /ai-roadmaps/technical)"]
+    RoadmapChoice -->|Presentation/UI| P4C["Request Presentation Roadmap<br/>/ai-presentation-roadmap-template<br/>(Saved to /ai-roadmaps/presentation)"]
     
     P4A --> P5["📋 Review Roadmap Carefully"]
     P4B --> P5
@@ -72,7 +72,7 @@ graph TD
     
     %% RED PHASE
     CycleStart --> Red["🔴 RED PHASE: Write Failing Test"]
-    Red --> R1["Collaborate with AI to Write Test<br/>(@red-&-stop)"]
+    Red --> R1["Collaborate with AI to Write Test<br/>(/red-&-stop)"]
     R1 --> R2{"Did test fail<br/>as expected?"}
     R2 -->|Yes| RedReview
     R2 -->|No| R3["Debug/Fix test until it fails correctly<br/>"]
@@ -85,7 +85,7 @@ graph TD
     
     %% GREEN PHASE
     Green["🟢 GREEN PHASE: Make Test Pass"]
-    Green --> G1["Collaborate with AI to Write Code<br/>(@green-&-stop)"]
+    Green --> G1["Collaborate with AI to Write Code<br/>(/green-&-stop)"]
     G1 --> G2{"Did all tests pass?"}
     G2 -->|Yes| GreenReview
     G2 -->|No| G3["Debug/Fix code until test passes<br/>"]
@@ -98,7 +98,7 @@ graph TD
     
     %% REFACTOR PHASE
     Refactor["🧼 REFACTOR PHASE: Improve Code"]
-    Refactor --> RF1["Collaborate with AI to Refactor<br/>(@refactor-&-stop)"]
+    Refactor --> RF1["Collaborate with AI to Refactor<br/>(/refactor-&-stop)"]
     RF1 --> RF2{"Do all tests still pass?"}
     RF2 -->|Yes| RefactorReview
     RF2 -->|No| RF3["AI stops. User chooses:<br/>Fix issue or revert to green<br/>"]

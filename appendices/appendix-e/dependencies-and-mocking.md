@@ -16,12 +16,12 @@ Once you've determined your test type from the Implementation Matrix, use this g
 - [Dependency Handling Matrix](#dependency-handling-matrix)
 - [Decision Flow Diagram](#decision-flow-diagram)
 - [Understanding Each Test Type](#understanding-each-test-type)
-  - [Unit Tests](#-unit-tests)
-  - [Integration Tests](#-integration-tests)
-  - [Bidirectional Contract Tests](#-bidirectional-contract-tests)
-  - [Unidirectional Contract Tests](#️-unidirectional-contract-tests)
-  - [Acceptance Tests](#-acceptance-tests)
-  - [Visual/Sensory Validation](#️-visualsensory-validation)
+  - [Unit Tests](#unit-tests)
+  - [Integration Tests](#integration-tests)
+  - [Bidirectional Contract Tests](#bidirectional-contract-tests)
+  - [Unidirectional Contract Tests](#unidirectional-contract-tests)
+  - [Acceptance Tests](#acceptance-tests)
+  - [Visual/Sensory Validation](#visualsensory-validation)
 - [The Test Pyramid in Practice](#the-test-pyramid-in-practice)
 
 ## Dependency Categories
@@ -98,9 +98,13 @@ This diagram visualizes the Dependency Handling Matrix as an interactive decisio
 
 ## Understanding Each Test Type
 
+<a id="unit-tests"></a>
+
 ### 🔬 Unit Tests
 
 Unit tests verify domain logic in complete isolation. They mock all external dependencies to keep tests fast (milliseconds) and focused solely on business rules. If a test needs real database access or network calls, it's not a unit test.
+
+<a id="integration-tests"></a>
 
 ### 🔌 Integration Tests
 
@@ -109,6 +113,8 @@ Integration tests verify that a specific adapter correctly integrates with its i
 The test stays at the adapter layer. Domain logic and other adapters aren't involved in the test - not because they're mocked, but because integration tests have a narrow scope focused on a single adapter's technical contract.
 
 **Key principle:** Only the managed dependencies directly related to the adapter's responsibility are included. Testing an HTTP adapter includes the real HTTP server layer. Testing a repository adapter includes the real database. Other infrastructure elements and domain layers remain outside the test scope.
+
+<a id="bidirectional-contract-tests"></a>
 
 ### 🤝 Bidirectional Contract Tests
 
@@ -130,6 +136,8 @@ Contract testing follows the traditional [Pact](https://docs.pact.io/)-style app
 
 **Key characteristic:** The governance boundary enables bidirectional verification. Both consumer and provider participate in contract validation.
 
+<a id="unidirectional-contract-tests"></a>
+
 ### ➡️ Unidirectional Contract Tests
 
 Unidirectional contract tests verify that your consumer correctly implements an external API's contract when the provider cannot participate in verification. They apply to **External Unmanaged OOPD** dependencies outside your organizational/governance boundary.
@@ -150,14 +158,17 @@ Contract testing adapts for providers you don't control through a consumer-focus
 
 When running checks against the real external API:
 
-- Focus on read-only operations where possible to avoid side effects
-- Use sandbox environments when available
-- Mutating operations (create/update/delete) should preferably be avoided. They are inherently undeterministic actions, and polluting the external service with garbage data or mutations is not polite
+- Heavily prioritize read-only operations to avoid side effects
+  - Mutations (create/update/delete) are inherently undeterministic actions when working with public APIs; it will make your testing brittle and not add confidence.
+  - Polluting an external service with garbage data and mutations is not polite
+- Use sandbox environments when available (if so, test mutations too)
 - Keep these minimal verification tests separate from your main test suite
 
 This two-part approach maintains speed and reliability (mocked tests) while catching breaking changes early (minimal real checks).
 
 **Key characteristic:** The governance boundary limits verification to consumer-side only—you cannot verify the provider's implementation.
+
+<a id="acceptance-tests"></a>
 
 ### 🎯 Acceptance Tests
 
@@ -166,6 +177,8 @@ Acceptance tests verify complete business requirements through the full system, 
 `AAID` structures these tests using Dave Farley's Four-Layer Model (Executable Specs, DSL, Protocol Drivers, SUT). The DSL translates BDD scenarios into executable specifications, while protocol drivers handle the technical interaction with the system. All managed dependencies (database, cache, queues) run real; only unmanaged ones (third-party APIs) are mocked for test suite stability.
 
 See [Appendix A: AAID Acceptance Testing Workflow](../appendix-a/docs/aaid-acceptance-testing-workflow.md) for the complete architectural pattern.
+
+<a id="visualsensory-validation"></a>
 
 ### 👁️ Visual/Sensory Validation
 

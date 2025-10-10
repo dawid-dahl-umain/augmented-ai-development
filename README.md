@@ -28,26 +28,34 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 
 ## Quick Links
 
+- **[🚀 Start Here: Onboarding Guide](docs/onboarding/guide.md)** - Gentle introduction to AAID (~60 minutes, 7 progressive levels)
 - **[Complete AAID Guide](docs/aidd-workflow.md)** - The full methodology and workflow
 - **[Complete AAID Acceptance Testing Guide](appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md)** - Using Dave Farley's Four-Layer Model for ATDD/BDD
   - **[Acceptance Testing Workflow Diagram](appendices/appendix-a/aaid-at-workflow.diagram.mermaid)** - Visual representation of the `AAID` Acceptance Testing process
-- **[Demo Repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo)** - TicTacToe CLI developed using the AAID workflow, demonstrating the Four-Layer Model, test isolation patterns, and hexagonal architecture
+- **[Demo Repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo)** - TicTacToe CLI developed using the `AAID` workflow, demonstrating the Four-Layer Model, test isolation patterns, and hexagonal architecture
 - **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the `AAID` process
 
 ## Repository Structure
 
 ```
-├── docs/              # Complete AAID methodology and workflow guide
-├── appendices/        # Supporting documentation
-├── .cursor/commands/  # Cursor slash commands (copy to other tools' custom-command folders)
+├── docs/
+│   ├── onboarding/       # Gentle introduction to AAID
+│   └── aidd-workflow.md  # Complete AAID methodology guide
+├── appendices/           # Supporting documentation
+├── .cursor/commands/     # Cursor slash commands (copy to other tools' custom-command folders)
 │   ├── planning/
 │   ├── tdd/
 │   ├── investigation/
 │   └── misc/
-└── rules/             # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
+└── rules/                # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
 ```
 
 ## Core Components
+
+### 🚀 **Onboarding**
+
+- **[`docs/onboarding/guide.md`](docs/onboarding/guide.md)**: Gentle introduction to AAID with 7 progressive levels (~60 minutes total)
+  - Start here if you're new to AAID or TDD
 
 ### 📙 **Main Guide**
 
@@ -82,12 +90,13 @@ Pre-written AI commands organized by purpose:
 
 ## Getting Started
 
-1. **Read the Guide**: Start with [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the complete methodology
-2. **Have BDD Specs Available**: `AAID` is a spec-driven methodology. No specs, no `AAID`.
-3. **Set up a project/Select a project**: To build new features in a new or existing project, set up or select one with which to work
-4. **Add AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
+1. **🚀 New to AAID?**: Start with the [Onboarding Guide](docs/onboarding/guide.md) (~60 minutes) for a gentle introduction
+2. **Read the Complete Guide**: [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the full methodology and reference material
+3. **Have BDD Specs Available**: `AAID` is a spec-driven methodology. No specs, no `AAID`.
+4. **Set up a project/Select a project**: To build new features in a new or existing project, set up or select one with which to work
+5. **Add AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
    - (Optional) Add Custom Slash Commands [.cursor/commands](.cursor/commands) into Cursor's `.cursor/commands/` or your tool's equivalent.
-5. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development. Use [diagram](aaid-workflow-diagram.mermaid) as a visual guide
+6. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development. Use [diagram](aaid-workflow-diagram.mermaid) as a visual guide
 
 ## The AAID Workflow
 
@@ -108,7 +117,7 @@ Each phase includes specific commands, review checkpoints, and quality gates to 
 
 ## Who This Is For
 
-`AAID` is for developers building **maintainable software** - whether professional engineers or personal project builders expecting longevity. If you need quick scripts or throwaway prototypes, simpler AI approaches work better.
+`AAID` is for developers building **maintainable software**; whether professional engineers or personal project builders expecting longevity. If you need quick scripts or throwaway prototypes, simpler AI approaches work better.
 
 **You need:**
 
