@@ -33,7 +33,7 @@ While the main `AAID` guide focuses on BDD/TDD for business logic and system **b
 
 ### The Three Implementation Categories
 
-The `AAID` framework divides all development work into three implementation categories to maintain clear separation of concerns:
+The `AAID` workflow divides all development work into three implementation categories to maintain clear separation of concerns:
 
 - **🎯 Observable Behavioral**: Business behavior that users can observe (tracked in BDD scenarios)
 - **👁️ Observable Technical**: Pure presentation elements that users experience through any sense but aren't behavior (visual styling, audio feedback, screen reader announcements, haptic patterns)
@@ -310,7 +310,7 @@ Alternative approaches for specific situations:
 
 ### Stage 4: TDD Cycle
 
-The framework adapts based on what you're building:
+The workflow recommends adapting based on what you're building:
 
 - **Building domain logic?** → Unit tests with mocks (as described in main guide)
 - **Building Non-Observable Technical?** → Integration/contract tests based on dependency type

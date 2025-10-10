@@ -6,7 +6,7 @@ _Professional TDD for AI-Augmented Software Development_
 
 ![AAID Augmented Being](https://raw.githubusercontent.com/dawid-dahl-umain/augmented-ai-development/refs/heads/main/assets/aaid-ai-workflow-h.webp)
 
-> **📋 Repository Purpose**: This repository contains support resources for developers who want to follow the `AAID` framework. The main methodology is introduced in our [dev.to article](https://dev.to/dawiddahl/aaid-augmented-ai-development-50c9) (also available in the repo [here](./docs/aidd-workflow.md)) with detailed resources, templates, and tools provided here.
+> **📋 Repository Purpose**: This repository contains support resources for developers who want to follow the `AAID` workflow. The main methodology is introduced in our [dev.to article](https://dev.to/dawiddahl/aaid-augmented-ai-development-50c9) (also available in the repo [here](./docs/aidd-workflow.md)) with detailed resources, templates, and tools provided here.
 
 ## What is AAID?
 
