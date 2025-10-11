@@ -272,7 +272,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 This workflow adapts `AAID` (Augmented AI Development) principles for acceptance testing:
 
-1. 🧠 - **Don't check your brain at the door**: Understand every generated line
+1. 🧠 - **Don't abandon your brain**: Understand every generated line
 2. 🪜 - **Incremental steps**: One phase at a time, with reviews between
 3. 🦾 - **AI as augmentation**: You architect, AI generates, you review
 

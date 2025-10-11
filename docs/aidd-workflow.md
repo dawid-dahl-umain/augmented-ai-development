@@ -111,9 +111,9 @@ These battle-tested practices become your foundation that guides AI-assisted dev
 
 Success with `AAID` requires a specific mindset:
 
-1: **🧠 Don't check your brain at the door**
+1: **🧠 Don't abandon your brain**
 
-You need to comprehend every line of code, every test, every refactoring. The AI generates the code, but you decide what stays, what changes, what is removed, and why.
+You need to stay engaged with, and comprehend, every line of code, every test, every refactoring. The AI generates the code, but you decide what stays, what changes, what is removed, and why.
 
 Without this understanding, you're just _hoping_ things will work, which is sure to spell disaster in any real-world project.
 
