@@ -39,7 +39,7 @@ Think of it like a video game tutorial: start at Level 0, work your way up, and 
 - [Level 1: The Developer Mindset (5 minutes)](./levels/1.md)
 - [Level 2: How AAID Actually Works (~5 minutes)](./levels/2.md)
 - [Level 3: Visual Overview of the Workflow (5-10 minutes)](./levels/3.md)
-- [Level 4: See TDD Catch AI Mistakes (15 minutes)](./levels/4.md)
+- [Level 4: See TDD Catch AI Mistakes (20 minutes)](./levels/4.md)
 - [Level 5: Will This Work for Me? (5 minutes)](./levels/5.md)
 - [Level 6: See It in Action - The Demo Repository (10 minutes)](./levels/6.md)
 
