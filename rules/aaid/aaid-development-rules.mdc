@@ -165,6 +165,7 @@ Ask user to clarify if unclear which type of work is being done
    - Prefer pure functions. Isolate side effects at boundaries (I/O, DB, network)
    - Remove duplication (DRY), improve naming, simplify logic
    - If no improvements needed, state "No refactoring needed" explicitly
+   - If improvements found, suggest them and ask user approval before implementing
 2. When refactoring changes the design/API:
    - Update tests to use the new design
    - Remove old code that only exists to keep old tests passing
