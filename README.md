@@ -131,6 +131,13 @@ Each phase includes specific commands, review checkpoints, and quality gates to 
 - Specific tech stack knowledge
 - Deep AI expertise
 
+## Contributing
+
+Interested in contributing?
+
+1. Read the [collaboration guidelines](https://github.com/dawid-dahl-umain/aaid-collaboration)
+2. Contact dawid.dahl@umain.com
+
 ---
 
 _**AAID**: Professional TDD for AI-Augmented Software Development_
