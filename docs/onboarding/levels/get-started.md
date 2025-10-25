@@ -1,9 +1,9 @@
 ## Ready to Start: Let's Get to Work
 
-| Level 0 | Level 1 |   Level 2    | Level 3 |    Level 4     |  Level 5  |  Level 6  |   Start    |
-| :-----: | :-----: | :----------: | :-----: | :------------: | :-------: | :-------: | :--------: |
-|   ✅    |   ✅    |      ✅      |   ✅    |       ✅       |    ✅     |    ✅     | 📍 **YOU** |
-| Problem | Mindset | How It Works | Visual  | TDD Catches AI | Your Work | Demo Repo | **Ready!** |
+| Level 0 | Level 1 |   Level 2    |    Level 3     | Level 4 |    Level 5     |  Level 6  |  Level 7  |   Start    |
+| :-----: | :-----: | :----------: | :------------: | :-----: | :------------: | :-------: | :-------: | :--------: |
+|   ✅    |   ✅    |      ✅      |       ✅       |   ✅    |       ✅       |    ✅     |    ✅     | 📍 **YOU** |
+| Problem | Mindset | How It Works | The Three Ways | Visual  | TDD Catches AI | Your Work | Demo Repo | **Ready!** |
 
 **⏱️ Time: 5 minutes for setup + your own pace for the main guide**
 

@@ -14,7 +14,7 @@ _A gentle introduction to Augmented AI Development_
 
 **What you get**: It unlocks AI's actual productivity potential, without sacrificing code quality or your understanding.
 
-**Time needed**: ~60 minutes to complete the onboarding, 2-3 features to get comfortable, fairly fluent after 2-3 weeks of daily use.
+**Time needed**: ~70 minutes to complete the onboarding, 2-3 features to get comfortable, fairly fluent after 2-3 weeks of daily use.
 
 > That said, **Test-Driven Development**, which `AAID` builds on, is an art. And like any art form, there's always something new to discover. The basics are quick to learn, early wins come fast, but the journey toward mastery will keep your work interesting for years to come.
 
@@ -33,15 +33,16 @@ Think of it like a video game tutorial: start at Level 0, work your way up, and 
 
 ## Your Onboarding Path
 
-### Core Journey (Levels 0-6)
+### Core Journey (Levels 0-7)
 
 - [Level 0: The Problem & Solution (2-3 minutes)](./levels/0.md)
 - [Level 1: The Developer Mindset (5 minutes)](./levels/1.md)
 - [Level 2: How AAID Actually Works (~5 minutes)](./levels/2.md)
-- [Level 3: Visual Overview of the Workflow (5-10 minutes)](./levels/3.md)
-- [Level 4: See TDD Catch AI Mistakes (20 minutes)](./levels/4.md)
-- [Level 5: Will This Work for Me? (5 minutes)](./levels/5.md)
-- [Level 6: See It in Action - The Demo Repository (10 minutes)](./levels/6.md)
+- [Level 3: The Three Ways to Build (5-7 minutes)](./levels/3.md)
+- [Level 4: Visual Overview of the Workflow (5-10 minutes)](./levels/4.md)
+- [Level 5: See TDD Catch AI Mistakes (20 minutes)](./levels/5.md)
+- [Level 6: Will This Work for Me? (5 minutes)](./levels/6.md)
+- [Level 7: See It in Action - The Demo Repository (10 minutes)](./levels/7.md)
 
 ### Ready to Start
 
