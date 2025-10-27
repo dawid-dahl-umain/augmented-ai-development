@@ -11,8 +11,6 @@
 
 > 🎉 **Congratulations!** You've completed the AAID onboarding. You understand the problem, the mindset, how it works, seen TDD catch real AI mistakes, know it works for your situation, and seen an actual demo repository.
 
----
-
 ## ⚠️ Before You Start
 
 AAID is a feature development workflow. You need:
@@ -28,8 +26,6 @@ AAID is a feature development workflow. You need:
 - ✅ Development environment ready
 
 > **Note**: AAID doesn't set up your project infrastructure. Use framework generators (`create-vite`, `create-next-app`, etc.) or set up tooling manually before starting AAID.
-
----
 
 ## 🚀 Quick Setup
 
