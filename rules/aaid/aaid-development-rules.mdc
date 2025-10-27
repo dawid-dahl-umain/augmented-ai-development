@@ -197,6 +197,7 @@ In all cases:
 
 ## Critical Rules
 
+- **ALWAYS run tests after every code change** - check codebase test configuration if you don't know how
 - **NEVER skip REFACTOR phase** - even if no changes needed, must explicitly complete it
 - **ALWAYS STOP AND AWAIT USER REVIEW between phases** - this is mandatory
 - State persists between messages - remember current phase and test progress
