@@ -15,7 +15,13 @@
 
 ## ⚠️ Before You Start
 
-AAID is a feature development workflow. You need a working project first:
+AAID is a feature development workflow. You need:
+
+**Specifications ready:**
+
+- ✅ BDD scenarios (minimum), plus user stories, architecture docs, etc. as needed (see [prerequisite details](../../aidd-workflow.md#prerequisite))
+
+**Working project:**
 
 - ✅ Test runner configured (Vitest, Jest, etc.)
 - ✅ Basic tooling set up (linter, formatter, TypeScript/build tools, etc)
