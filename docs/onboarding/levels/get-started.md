@@ -13,6 +13,18 @@
 
 ---
 
+## ⚠️ Before You Start
+
+AAID is a feature development workflow. You need a working project first:
+
+- ✅ Test runner configured (Vitest, Jest, etc.)
+- ✅ Basic tooling set up (linter, formatter, TypeScript/build tools, etc)
+- ✅ Development environment ready
+
+> **Note**: AAID doesn't set up your project infrastructure. Use framework generators (`create-vite`, `create-next-app`, etc.) or set up tooling manually before starting AAID.
+
+---
+
 ## 🚀 Quick Setup
 
 ### Step 1: Add the Workflow Rules
