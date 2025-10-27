@@ -44,8 +44,8 @@ Think of it like a video game tutorial: start at Level 0, work your way up, and 
 - [Level 6: Will This Work for Me? (5 minutes)](./levels/6.md)
 - [Level 7: See It in Action - The Demo Repository (10 minutes)](./levels/7.md)
 
-### Ready to Start
+### After Completing All Levels
 
-- [Ready to Start: Let's Get to Work](./levels/get-started.md)
+- [Ready to Start: Let's Get to Work](./levels/get-started.md) ← Setup and first steps
 
 ---
