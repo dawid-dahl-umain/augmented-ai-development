@@ -470,21 +470,16 @@ import { Page } from "playwright"
 import { ProtocolDriver } from "./interface"
 
 export class UIDriver implements ProtocolDriver {
-  private currentUserEmail?: string
-
   constructor(private page: Page) {}
 
+  // Creates account boundary - all operations happen within this account context
   async hasAccount(email: string): Promise<void> {
     try {
       await this.page.goto("/register")
       await this.page.fill('[data-testid="email"]', email)
       await this.page.fill('[data-testid="password"]', "test-password")
       await this.page.click('[data-testid="register-submit"]')
-
-      // Wait for successful registration/login (functional isolation established)
       await this.page.waitForSelector('[data-testid="user-menu"]')
-
-      this.currentUserEmail = email
     } catch (error) {
       throw new Error(
         `Unable to create account for '${email}': ${error.message}`
@@ -492,63 +487,17 @@ export class UIDriver implements ProtocolDriver {
     }
   }
 
+  // Complex flow: create + complete todo, with assertion
   async hasCompletedTodo(name: string, description: string): Promise<void> {
-    try {
-      await this.page.goto("/todos")
-      await this.page.fill('[data-testid="new-todo-name"]', name)
-      if (description) {
-        await this.page.fill('[data-testid="new-todo-desc"]', description)
-      }
-      await this.page.click('[data-testid="add-todo"]')
-
-      // Wait for todo to appear
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`)
-
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="complete"]`
-      )
-
-      // Verify completion state
-      const isCompleted = await this.page
-        .locator(`[data-testid="todo-${name}"]`)
-        .getAttribute("data-completed")
-
-      // Assertion happens here in the driver
-      if (isCompleted !== "true") {
-        throw new Error(`Failed to create completed todo '${name}'`)
-      }
-    } catch (error) {
-      if (
-        error instanceof Error &&
-        error.message.includes("Failed to create")
-      ) {
-        throw error
-      }
-      throw new Error(
-        `Unable to create completed todo '${name}': ${error.message}`
-      )
-    }
+    // Navigate, fill form, create todo, mark complete, verify state
+    // Throws Error if any step fails or completion verification fails
   }
 
-  async archives(name: string): Promise<void> {
-    try {
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="archive"]`
-      )
-
-      // Wait for todo to disappear from active list
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
-        state: "hidden",
-        timeout: 5000
-      })
-    } catch (error) {
-      throw new Error(`Failed to archive todo '${name}': ${error.message}`)
-    }
-  }
-
-  // ... other interface methods
+  // ... other interface methods following the same pattern
 }
 ```
+
+Key driver responsibilities: implements `ProtocolDriver` interface, throws standard `Error` on failures, hides complex flows, establishes/uses account boundaries.
 
 | ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                              |
 | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
