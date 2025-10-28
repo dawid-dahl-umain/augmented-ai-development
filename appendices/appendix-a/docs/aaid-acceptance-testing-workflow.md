@@ -33,6 +33,8 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
     - [Core DSL Utilities](#core-utilities)
     - [Domain-Specific DSL Classes](#dsl-classes)
   - [Layer 3: Protocol Drivers & Stubs](#layer-3-protocol-drivers)
+    - [Protocol Driver Interface](#protocol-driver-interface)
+    - [Protocol Driver Factory](#protocol-driver-factory)
     - [Protocol Drivers](#protocol-drivers)
     - [External System Stubs](#external-stubs)
   - [Layer 4: System Under Test](#layer-4-sut)
@@ -238,9 +240,11 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 - Translate abstract commands from DSL into concrete interactions with system's interfaces
 - One driver per protocol: each communication channel (UI, API, CLI, message queue) gets its own dedicated driver class
+- Implement a common `ProtocolDriver` interface: enables protocol abstraction and runtime switching
 - Handle specifics of communication protocol (HTTP requests, browser automation, message queues)
 - Contains ALL assertions and failures: This is where pass/fail decisions are made
-- Uses test framework's fail mechanism directly: e.g., `expect.fail()` in Vitest
+- Framework-agnostic failures: throw standard `Error` (not framework-specific methods like `expect.fail()`)
+- DSL depends only on the interface: never imports concrete driver implementations
 - Each operation should be atomic and reliable
 - Hide complex flows: `hasAccount` may involve register + login, establishing the functional isolation boundary for all subsequent operations
 
@@ -460,13 +464,15 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 **Example implementation:**
 
 ```typescript
-// Protocol Driver - Contains ALL assertions and failures
-export class UIDriver {
+// protocol-driver/ui.driver.ts
+
+import { Page } from "playwright"
+import { ProtocolDriver } from "./interface"
+
+export class UIDriver implements ProtocolDriver {
   private currentUserEmail?: string
 
   constructor(private page: Page) {}
-
-  // Method names preferably match DSL method names exactly
 
   async hasAccount(email: string): Promise<void> {
     try {
@@ -480,14 +486,19 @@ export class UIDriver {
 
       this.currentUserEmail = email
     } catch (error) {
-      expect.fail(`Unable to create account for '${email}': ${error.message}`)
+      throw new Error(
+        `Unable to create account for '${email}': ${error.message}`
+      )
     }
   }
 
-  async hasCompletedTodo(name: string, desc: string): Promise<void> {
+  async hasCompletedTodo(name: string, description: string): Promise<void> {
     try {
       await this.page.goto("/todos")
       await this.page.fill('[data-testid="new-todo-name"]', name)
+      if (description) {
+        await this.page.fill('[data-testid="new-todo-desc"]', description)
+      }
       await this.page.click('[data-testid="add-todo"]')
 
       // Wait for todo to appear
@@ -502,12 +513,20 @@ export class UIDriver {
         .locator(`[data-testid="todo-${name}"]`)
         .getAttribute("data-completed")
 
-      // ASSERTION happens here in the driver
+      // Assertion happens here in the driver
       if (isCompleted !== "true") {
-        expect.fail(`Failed to create completed todo '${name}'`)
+        throw new Error(`Failed to create completed todo '${name}'`)
       }
     } catch (error) {
-      expect.fail(`Unable to create completed todo '${name}': ${error.message}`)
+      if (
+        error instanceof Error &&
+        error.message.includes("Failed to create")
+      ) {
+        throw error
+      }
+      throw new Error(
+        `Unable to create completed todo '${name}': ${error.message}`
+      )
     }
   }
 
@@ -523,9 +542,11 @@ export class UIDriver {
         timeout: 5000
       })
     } catch (error) {
-      expect.fail(`Failed to archive todo '${name}': ${error.message}`)
+      throw new Error(`Failed to archive todo '${name}': ${error.message}`)
     }
   }
+
+  // ... other interface methods
 }
 ```
 
@@ -576,9 +597,13 @@ acceptance-test/
 │   ├── index.ts              # Main DSL exports
 │   └── [concept].dsl.ts      # Domain concepts
 ├── protocol-driver/          # Layer 3: System interaction
-│   ├── stubs/
-│   │   └── [external].stub.ts
-│   └── [protocol].driver.ts
+│   ├── interface.ts          # ProtocolDriver interface
+│   ├── factory.ts            # Protocol driver factory
+│   ├── ui.driver.ts          # UI implementation (Playwright, etc.)
+│   ├── api.driver.ts         # API implementation (HTTP client)
+│   ├── cli.driver.ts         # CLI implementation (process spawn)
+│   └── stubs/
+│       └── [external].stub.ts
 └── sut/                      # Layer 4: System setup
     └── setup.ts
 ```
@@ -659,12 +684,15 @@ The transformation follows a 1:1 mapping pattern:
 
 import { beforeEach, describe, it } from "vitest"
 import { Dsl } from "../dsl"
+import { createProtocolDriver } from "../protocol-driver/factory"
 
 describe("User archives completed todos", () => {
   let dsl: Dsl
 
   beforeEach(() => {
-    dsl = new Dsl()
+    const driver = createProtocolDriver(process.env.TEST_PROTOCOL || "ui")
+
+    dsl = new Dsl(driver)
   })
 
   describe("Archive a completed todo", () => {
@@ -723,11 +751,17 @@ describe("User archives completed todos", () => {
 })
 ```
 
-Instantiating `new Dsl()` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired drivers, so aliasing and state never leak between scenarios. Each test then establishes its own functional isolation boundary by creating a unique user account.
+Instantiating `new Dsl(driver)` inside `beforeEach` guarantees every test receives a fresh `DslContext` and freshly wired driver, so aliasing and state never leak between scenarios. Each test then establishes its own functional isolation boundary by creating a unique user account.
 
 | ☝️                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | When writing executable specs, always create the DSL inside the suite's setup (for example with `let dsl: Dsl;` followed by a `beforeEach` that instantiates it). Avoid storing DSL instances in shared modules; keeping the instantiation local to each suite is the test author's responsibility and is what guarantees isolation. |
+
+**Protocol Selection:**
+
+The test file imports the factory function from `protocol-driver/factory.ts`, which enables runtime protocol selection via environment variable. The test logic remains identical across all protocols - the same executable specifications work with UI testing (Playwright), API testing (HTTP client), or CLI testing (process spawn) without any changes to the test code.
+
+> **Test Runner Independence**: The test file imports `describe`/`it`/`beforeEach` from your chosen test runner (Vitest, Jest, etc.). The DSL and Protocol Drivers remain framework-agnostic by using JavaScript's standard Promise contract: driver methods return `Promise<void>` that either resolves (test passes) or rejects when an `Error` is thrown (test fails). All test runners handle this identically. Exception: Cypress combines test runner and automation into one package.
 
 <a id="layer-2-dsl"></a>
 
@@ -818,7 +852,7 @@ DSL methods must read like natural language, matching the BDD scenarios. They co
 
 import { DslContext } from "./utils/DslContext"
 import { Params } from "./utils/Params"
-import { UIDriver } from "../protocol-driver/ui.driver"
+import { ProtocolDriver } from "../protocol-driver/interface"
 
 interface AccountParams {
   email?: string
@@ -834,11 +868,10 @@ interface ArchiveParams {
 }
 
 export class UserDsl {
-  private driver: UIDriver
-
-  constructor(private context: DslContext, driver: UIDriver) {
-    this.driver = driver
-  }
+  constructor(
+    private context: DslContext,
+    private driver: ProtocolDriver // ← Depends on interface, not concrete implementation
+  ) {}
 
   // Named to match BDD: "Given the user has an account"
   async hasAccount(args: AccountParams = {}): Promise<void> {
@@ -878,12 +911,13 @@ export class UserDsl {
 ```typescript
 // dsl/todo.dsl.ts
 
-export class TodoDsl {
-  private driver: UIDriver
+import { ProtocolDriver } from "../protocol-driver/interface"
 
-  constructor(private context: DslContext, driver: UIDriver) {
-    this.driver = driver
-  }
+export class TodoDsl {
+  constructor(
+    private context: DslContext,
+    private driver: ProtocolDriver // ← Depends on interface, not concrete implementation
+  ) {}
 
   // Named to match BDD: "Then X should be in archived todos"
   async confirmInArchive(args: { name?: string }): Promise<void> {
@@ -911,22 +945,20 @@ export class TodoDsl {
 import { DslContext } from "./utils/DslContext"
 import { UserDsl } from "./user.dsl"
 import { TodoDsl } from "./todo.dsl"
-import { UIDriver } from "../protocol-driver/ui.driver"
+import { ProtocolDriver } from "../protocol-driver/interface"
 
 export class Dsl {
   public readonly user: UserDsl
   public readonly todo: TodoDsl
 
-  constructor() {
+  constructor(driver: ProtocolDriver) {
+    // ← Accepts driver via dependency injection
     const context = new DslContext()
 
-    // Inject the connection mechanism into protocol drivers to interact with the production-like SUT
-    // (e.g., browser page, HTTP endpoint, message queue connection)
-
-    const uiDriver = new UIDriver(global.page)
-
-    this.user = new UserDsl(context, uiDriver)
-    this.todo = new TodoDsl(context, uiDriver)
+    // Wire domain DSL classes with the injected protocol driver
+    // Driver can be UI (Playwright), API (HTTP client), CLI (process spawn), etc.
+    this.user = new UserDsl(context, driver)
+    this.todo = new TodoDsl(context, driver)
   }
 }
 ```
@@ -941,146 +973,135 @@ Encapsulating DSL domain objects in a class ensures each test receives a fresh `
 
 <a id="protocol-drivers"></a>
 
+#### Protocol Driver Interface
+
+The `ProtocolDriver` interface defines all operations that tests can perform, enabling protocol abstraction and runtime switching:
+
+```typescript
+// protocol-driver/interface.ts
+
+export interface ProtocolDriver {
+  // Account Management
+  hasAccount(email: string): Promise<void>
+
+  // User Operations
+  hasCompletedTodo(name: string, description: string): Promise<void>
+  hasIncompleteTodo(name: string, description: string): Promise<void>
+  hasArchivedTodo(name: string): Promise<void>
+  archives(name: string): Promise<void>
+  attemptsToArchive(name: string): Promise<void>
+  restores(name: string): Promise<void>
+
+  // Verification Operations
+  confirmInArchive(name: string): Promise<void>
+  confirmNotInActive(name: string): Promise<void>
+  confirmInActive(name: string): Promise<void>
+  confirmErrorMessage(): Promise<void>
+}
+```
+
+**Key Principles:**
+
+- **Single contract**: All protocol implementations (UI, API, CLI) implement the same interface
+- **Operation-based**: Methods represent business operations and verifications
+- **DSL dependency**: DSL depends only on this interface, never concrete implementations
+- **Runtime selection**: Tests can switch protocols via environment variable without code changes
+
+#### Protocol Driver Factory
+
+The factory function centralizes protocol driver instantiation, enabling runtime selection without duplicating code across test files:
+
+```typescript
+// protocol-driver/factory.ts
+
+import { ProtocolDriver } from "./interface"
+import { UIDriver } from "./ui.driver"
+import { APIDriver } from "./api.driver"
+import { CLIDriver } from "./cli.driver"
+
+export const createProtocolDriver = (protocol: string): ProtocolDriver => {
+  switch (protocol) {
+    case "ui":
+      return new UIDriver(global.page)
+    case "api":
+      return new APIDriver(process.env.API_BASE_URL || "http://localhost:3000")
+    case "cli":
+      return new CLIDriver()
+    default:
+      throw new Error(`Unknown protocol: ${protocol}`)
+  }
+}
+```
+
+**Usage in tests:**
+
+```typescript
+import { createProtocolDriver } from "../protocol-driver/factory"
+
+beforeEach(() => {
+  const driver = createProtocolDriver(process.env.TEST_PROTOCOL || "ui")
+
+  dsl = new Dsl(driver)
+})
+```
+
+Run tests with different protocols:
+
+- `TEST_PROTOCOL=ui npm test` (default)
+- `TEST_PROTOCOL=api npm test`
+- `TEST_PROTOCOL=cli npm test`
+
 #### Protocol Drivers
 
-Protocol Drivers handle the technical interaction with the system AND all pass/fail logic:
+Protocol Drivers handle the technical interaction with the system AND all pass/fail logic. They implement the `ProtocolDriver` interface and throw standard `Error` for failures:
 
 ```typescript
 // protocol-driver/ui.driver.ts
 
-import { Page } from "@playwright/test"
-import { expect } from "vitest"
+import { Page } from "playwright"
+import { ProtocolDriver } from "./interface"
 
-export class UIDriver {
-  private currentUserEmail?: string
-
+export class UIDriver implements ProtocolDriver {
   constructor(private page: Page) {}
 
-  // === Account Management ===
-
-  /**
-   * Creates unique user account: all test operations happen within this user's context.
-   * The DSL layer aliases the email (e.g., user@test.com → user@test.com1, user@test.com2),
-   * so tests can run in parallel against the same database without interfering.
-   */
+  // Action methods perform operations and throw on failure
   async hasAccount(email: string): Promise<void> {
     try {
       await this.page.goto("/register")
       await this.page.fill('[data-testid="email"]', email)
       await this.page.fill('[data-testid="password"]', "test-password")
       await this.page.click('[data-testid="register-submit"]')
-
-      // Wait for successful registration/login
       await this.page.waitForSelector('[data-testid="user-menu"]')
-
-      this.currentUserEmail = email
     } catch (error) {
-      expect.fail(`Unable to create account for '${email}': ${error.message}`)
-    }
-  }
-
-  // === User Operations ===
-
-  /**
-   * Create todo and mark as completed
-   * This represents a complete user action from business perspective
-   */
-  async hasCompletedTodo(name: string, description: string): Promise<void> {
-    try {
-      await this.page.goto("/todos")
-      await this.page.fill('[data-testid="new-todo-name"]', name)
-      if (description) {
-        await this.page.fill('[data-testid="new-todo-desc"]', description)
-      }
-      await this.page.click('[data-testid="add-todo"]')
-
-      // Wait for todo to appear
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`)
-
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="complete"]`
+      throw new Error(
+        `Unable to create account for '${email}': ${error.message}`
       )
-
-      // Verify completion state
-      const isCompleted = await this.page
-        .locator(`[data-testid="todo-${name}"]`)
-        .getAttribute("data-completed")
-
-      if (isCompleted !== "true") {
-        expect.fail(`Todo '${name}' was not marked as completed`)
-      }
-    } catch (error) {
-      if (error.message.includes("expect.fail")) throw error
-      expect.fail(`Unable to create completed todo '${name}': ${error.message}`)
     }
   }
 
-  async archives(name: string): Promise<void> {
-    try {
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="archive"]`
-      )
-
-      // Wait for todo to disappear from active list
-      await this.page.waitForSelector(`[data-testid="todo-${name}"]`, {
-        state: "hidden",
-        timeout: 5000
-      })
-    } catch (error) {
-      expect.fail(`Failed to archive todo '${name}': ${error.message}`)
-    }
-  }
-
-  async attemptsToArchive(name: string): Promise<void> {
-    // Note: This doesn't fail even if archive doesn't succeed
-    // because we're testing the attempt, not the success
-    try {
-      await this.page.click(
-        `[data-testid="todo-${name}"] [data-testid="archive"]`
-      )
-      // Give it a moment to process
-      await this.page.waitForTimeout(500)
-    } catch (error) {
-      // Clicking the button failed - that's a real problem
-      expect.fail(`Could not attempt to archive '${name}': ${error.message}`)
-    }
-  }
-
-  // === Todo Verification ===
-
+  // Verification methods check state and throw if assertion fails
   async confirmInArchive(name: string): Promise<void> {
     await this.page.goto("/todos/archived")
     const count = await this.page.locator(`text="${name}"`).count()
 
     if (count === 0) {
-      expect.fail(`Todo '${name}' not found in archive`)
+      throw new Error(`Todo '${name}' not found in archive`)
     }
   }
 
-  async confirmNotInActive(name: string): Promise<void> {
-    await this.page.goto("/todos")
-    const count = await this.page
-      .locator(`[data-testid="todo-${name}"]`)
-      .count()
-
-    if (count > 0) {
-      expect.fail(`Todo '${name}' should not be in active todos but was found`)
-    }
-  }
-
-  async confirmErrorMessage(): Promise<void> {
-    const errorVisible = await this.page
-      .locator('[data-testid="error-message"]')
-      .isVisible()
-
-    if (!errorVisible) {
-      expect.fail("Expected error message was not displayed")
-    }
-  }
+  // ... other methods following the same pattern
 }
 ```
 
-> **For Larger Systems**: Consider composing the driver internally while maintaining a single driver interface. See the demo repository for [an example](https://github.com/dawid-dahl-umain/augmented-ai-development-demo/blob/main/acceptance-test/dsl/index.ts) of this approach.
+**Key Principles:**
+
+- Implements `ProtocolDriver` interface for all operations
+- Throws standard `Error` with descriptive messages (framework-agnostic)
+- Atomic operations: each method fully succeeds or clearly fails
+- Hides complex flows: `hasAccount` may involve register + login
+- Clear error context helps debugging
+
+> **Full Example**: See complete UIDriver implementation with all operations in the [demo repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo).
 
 <a id="external-stubs"></a>
 
@@ -1161,16 +1182,19 @@ The SUT is your actual application running in a test environment:
 4. **Object Parameters**: Type-safe objects for flexibility
 5. **Aliasing Infrastructure**: Uses `params.alias()` to make identifiers unique for test isolation
 6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
+7. **Interface Dependency**: Depends ONLY on `ProtocolDriver` interface, never concrete implementations
 
 **🔌 Protocol Drivers**:
 
-1. **Contains All Assertions**: Use `expect.fail()` or your framework's fail mechanism
-2. **Atomic Operations**: Each method either fully succeeds or fails clearly
-3. **Hide Complex Flows**: `hasAuthorisedAccount` may involve register + login
-4. **Handle System Boundaries**: Interact with SUT through its normal interfaces
-5. **Clear Error Messages**: Include context in failure messages
-6. **External System Stubs**: Stub ONLY third-party dependencies you don't control
-7. **Never stub internal systems**: Your database, cache, queues are part of your system
+1. **Implement Interface**: All drivers implement the `ProtocolDriver` interface
+2. **Framework-Agnostic Assertions**: Throw standard `Error` (not framework-specific methods like `expect.fail()`)
+3. **Contains All Assertions**: This is where pass/fail decisions are made
+4. **Atomic Operations**: Each method either fully succeeds or fails clearly
+5. **Hide Complex Flows**: `hasAccount` may involve register + login
+6. **Handle System Boundaries**: Interact with SUT through its normal interfaces
+7. **Clear Error Messages**: Include context in failure messages
+8. **External System Stubs**: Stub ONLY third-party dependencies you don't control
+9. **Never stub internal systems**: Your database, cache, queues are part of your system
 
 #### Naming Conventions
 
@@ -1213,13 +1237,53 @@ async createTodo(name: string): Promise<boolean> {
   }
 }
 
-// GOOD: Driver handles assertions directly
+// GOOD: Driver handles assertions directly with framework-agnostic Error
 async createTodo(name: string): Promise<void> {
   try {
     // ...
   } catch (error) {
-    expect.fail(`Failed to create todo '${name}': ${error.message}`);
+    throw new Error(`Failed to create todo '${name}': ${error.message}`);
   }
+}
+```
+
+**❌ Framework-Specific Assertions:**
+
+```typescript
+// BAD: Using test framework's assertion methods
+import { expect } from "vitest"
+
+async confirmInArchive(name: string): Promise<void> {
+  const count = await this.page.locator(`text="${name}"`).count()
+  if (count === 0) {
+    expect.fail(`Todo '${name}' not found`)  // Couples to test framework
+  }
+}
+
+// GOOD: Framework-agnostic with standard Error
+async confirmInArchive(name: string): Promise<void> {
+  const count = await this.page.locator(`text="${name}"`).count()
+  if (count === 0) {
+    throw new Error(`Todo '${name}' not found`)  // Works with any framework
+  }
+}
+```
+
+**❌ DSL Depends on Concrete Driver:**
+
+```typescript
+// BAD: DSL imports and depends on concrete implementation
+import { UIDriver } from "../protocol-driver/ui.driver"
+
+export class UserDsl {
+  constructor(private context: DslContext, private driver: UIDriver) {}
+}
+
+// GOOD: DSL depends only on interface
+import { ProtocolDriver } from "../protocol-driver/interface"
+
+export class UserDsl {
+  constructor(private context: DslContext, private driver: ProtocolDriver) {}
 }
 ```
 
@@ -1292,8 +1356,10 @@ async hasCompletedTodo(args: TodoParams = {}) {
 **Layer Implementation:**
 
 - [ ] Test Cases use only DSL methods with Gherkin comments
+- [ ] DSL depends ONLY on `ProtocolDriver` interface (not concrete implementations)
 - [ ] DSL contains NO logic or assertions - just parameter handling and isolation
-- [ ] All assertions and failures in Protocol Drivers using `expect.fail()`
+- [ ] All Protocol Drivers implement `ProtocolDriver` interface
+- [ ] All assertions and failures in Protocol Drivers throw standard `Error`
 - [ ] Each layer has clear, single responsibility
 
 **Test Quality:**
@@ -1343,7 +1409,9 @@ DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
 ```
 Test Case:  Uses DSL methods only
 DSL:        Translate business language into system interactions + test isolation handling
-Driver:     Technical interaction with SUT + expect.fail()
+            Depends on ProtocolDriver interface
+Driver:     Technical interaction with SUT + throw Error()
+            Implements ProtocolDriver interface
 SUT:        Your actual system
 ```
 
@@ -1455,10 +1523,12 @@ This roadmap ensures alignment on the testing approach before implementation beg
 
 This blueprint combines Dave Farley's Four-Layer Model with a disciplined AI workflow to create acceptance tests that:
 
-- **Survive refactoring** through clear layer separation
+- **Survive refactoring** through clear layer separation and interface-based abstraction
+- **Work across protocols** via runtime selection (UI, API, CLI) without changing test code
+- **Remain framework-agnostic** by throwing standard `Error` instead of framework-specific assertions
 - **Run in parallel** with comprehensive isolation (system-level, functional, temporal)
 - **Mirror business requirements** using natural language DSL
 - **Increase speed without sacrificing quality** through AI assistance and human review
 - **Provide confidence** through automated business verification
 
-The AI augmentation accelerates the Acceptance Test implementation process, while the mandatory human review checkpoints ensure quality. The result is an automated Definition of Done using tests that business people can read, developers can maintain, and that reliably verify the system meets the specified requirements.
+The AI augmentation accelerates the Acceptance Test implementation process, while the mandatory human review checkpoints ensure quality. The result is an automated Definition of Done using tests that business people can read, developers can maintain, and that reliably verify the system meets the specified requirements across any protocol or test framework.
