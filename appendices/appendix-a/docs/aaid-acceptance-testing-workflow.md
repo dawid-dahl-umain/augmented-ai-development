@@ -118,9 +118,9 @@ BDD creates shared understanding through **communication and collaboration** bet
 **Given-When-Then Format (Gherkin):**
 
 ```gherkin
-Given the user has a completed todo "Buy milk"     # Initial context
+Given the user has a completed todo "Buy milk"     # Initial app state
 When they archive "Buy milk"                       # Action taken
-Then "Buy milk" should be in archived todos        # Expected outcome
+Then "Buy milk" should be in archived todos        # Expected app state after action has occurred
 And "Buy milk" should not be in active todos       # Additional outcome
 ```
 
