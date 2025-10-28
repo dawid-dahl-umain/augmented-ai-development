@@ -920,7 +920,17 @@ Encapsulating DSL domain objects in a class ensures each test receives a fresh `
 
 ![Layer 3: Protocol Drivers & Stubs](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/14.webp?raw=true)
 
-<a id="protocol-drivers"></a>
+Layer 3 handles all technical interaction with the system AND all verification logic. This layer translates abstract DSL commands into concrete system operations through protocol-specific drivers.
+
+**Key Responsibilities:**
+
+- Implement `ProtocolDriver` interface for protocol abstraction
+- Handle technical communication (HTTP requests, browser automation, CLI commands)
+- Contain all assertions and failure logic (throw standard `Error`)
+- Support multiple protocols (UI, API, CLI) through runtime selection
+- Stub external third-party systems for deterministic testing
+
+<a id="protocol-driver-interface"></a>
 
 #### Protocol Driver Interface
 
@@ -955,6 +965,8 @@ export interface ProtocolDriver {
 - **Operation-based**: Methods represent business operations and verifications
 - **DSL dependency**: DSL depends only on this interface, never concrete implementations
 - **Runtime selection**: Tests can switch protocols via environment variable without code changes
+
+<a id="protocol-driver-factory"></a>
 
 #### Protocol Driver Factory
 
@@ -1000,9 +1012,11 @@ Run tests with different protocols:
 - `TEST_PROTOCOL=api npm test`
 - `TEST_PROTOCOL=cli npm test`
 
+<a id="protocol-drivers"></a>
+
 #### Protocol Drivers
 
-Protocol Drivers handle the technical interaction with the system AND all pass/fail logic. They implement the `ProtocolDriver` interface and throw standard `Error` for failures:
+Each protocol (UI, API, CLI) has its own driver implementation that handles the specifics of that communication channel:
 
 ```typescript
 // protocol-driver/ui.driver.ts
