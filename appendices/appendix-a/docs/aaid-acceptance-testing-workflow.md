@@ -716,7 +716,7 @@ describe("User archives completed todos", () => {
 
   describe("Attempt to archive an incomplete todo", () => {
     it("should not archive an incomplete todo", async () => {
-      // Given (account creation follows same pattern)
+      // Given
       await dsl.user.hasAccount({ email: "user@test.com" })
 
       // And
@@ -735,7 +735,7 @@ describe("User archives completed todos", () => {
 
   describe("Restore an archived todo", () => {
     it("should restore an archived todo", async () => {
-      // Given (account creation follows same pattern)
+      // Given
       await dsl.user.hasAccount({ email: "user@test.com" })
 
       // And

@@ -14,8 +14,8 @@ When this mode is active, ignore the default AAID/TDD rules for matching accepta
 **Four-Layer Model:**
 
 - Layer 1: Executable Specs (test cases) - WHAT in business language, only calls DSL
-- Layer 2: DSL (Domain-Specific Language) - translates business language to driver calls, NO assertions
-- Layer 3: Protocol Drivers + Stubs - HOW system is accessed, contains ALL assertions/failures
+- Layer 2: DSL (Domain-Specific Language) - translates business language to driver calls, NO assertions, depends only on ProtocolDriver interface
+- Layer 3: Protocol Drivers + Stubs - HOW system is accessed, implements ProtocolDriver interface, contains ALL assertions/failures (throws Error)
 - Layer 4: SUT (System Under Test) - your actual deployed system (includes your DB, cache, services)
 
 **Isolation (enables parallel & repeated test runs):**
@@ -42,8 +42,8 @@ And they have a completed todo "Buy milk"
 becomes:
 
 ```typescript
-await dsl.user.hasAccount({ email: "user@test.com" });
-await dsl.user.hasCompletedTodo({ name: "Buy milk" });
+await dsl.user.hasAccount({ email: "user@test.com" })
+await dsl.user.hasCompletedTodo({ name: "Buy milk" })
 ```
 
 ## Primary Goal
@@ -69,6 +69,27 @@ Transform BDD scenarios (Given-When-Then format) into executable acceptance test
 3. **Stage 3: Three-Phase Cycle** - Phase 1 → 2 → 3 with review after each
 4. **Stage 4: Complete** - Repeat or confirm done
 
+## Required Infrastructure
+
+Before starting Phase 1, verify these exist (check context/codebase):
+
+**Core Utilities:**
+
+- `DslContext` class: manages aliasing/sequences for test isolation
+- `Params` helper class: extracts parameters with `.alias()` and `.optional()` methods
+
+**DSL Structure:**
+
+- Domain-specific DSL classes (e.g., `UserDsl`, `TodoDsl`): extracted from BDD domain concepts, depend on `ProtocolDriver` interface
+- Main `Dsl` class: composes domain DSL objects (e.g., `dsl.user`, `dsl.todo`), accepts `ProtocolDriver` in constructor
+
+**Protocol Abstraction:**
+
+- `ProtocolDriver` interface: defines contract all drivers implement
+- Factory function: `createProtocolDriver(protocol: string)` for runtime driver selection
+
+**If missing:** Ask user to either (1) provide these files/implementations in context, or (2) request you create them. Do NOT proceed to Phase 1 without this infrastructure.
+
 ## Three-Phase Test Cycle
 
 Stop for review after every phase. Remember the current phase between messages.
@@ -77,15 +98,20 @@ Stop for review after every phase. Remember the current phase between messages.
 
 - Map each BDD line to exactly one DSL call (see transformation example above)
 - Use only `// Given`, `// When`, `// Then`, `// And`, `// But` comments in executable specs
+- Test file pattern: `let dsl: Dsl` + `beforeEach(() => { dsl = new Dsl(createProtocolDriver(...)) })` - guarantees fresh DSL/context per test
+- Test file imports test runner functions (Vitest/Jest: `describe`, `it`, `beforeEach`) - minimal coupling at test file level only
+- Test file imports factory: `createProtocolDriver(process.env.TEST_PROTOCOL || "ui")` for runtime protocol selection
 - First action in each test: create account boundary (e.g., `dsl.user.hasAccount({ email: "..." })`)
 - DSL methods: use `params.alias()` for identifiers, `params.optional()` for defaults
 - Output: failing spec plus DSL layer skeleton → stop for review
 
 ### 🟢 Phase 2 · Protocol Driver Implementation
 
-- Implement driver methods matching DSL names exactly, ensuring atomic success/failure and polling (no sleeps)
+- Implement driver class that implements `ProtocolDriver` interface
+- Driver methods match DSL names exactly, ensuring atomic success/failure and polling (no sleeps)
 - Stub only external third-party systems (see stubbing rules above)
-- All assertions/failures go in driver using `expect.fail()` or test framework's fail mechanism
+- All assertions/failures throw standard `Error` (framework-agnostic: works with any test runner)
+- Use factory pattern to create drivers: `createProtocolDriver(protocol)` enables runtime protocol selection
 - Output: specs passing through the driver (or report failures) → stop for review
 
 ### 🧼 Phase 3 · Refine & Validate Isolation
@@ -100,7 +126,9 @@ Stop for review after every phase. Remember the current phase between messages.
 - Use `params.optional()` for non-essential parameters to keep DSL calls readable and business-focused
 - Each test must create its own domain partition (e.g., unique account) as first step
 - DSL names mirror BDD wording exactly (`hasCompletedTodo`, `archives`, `confirmInArchive`)
-- Driver methods do not return booleans; they fail directly via test framework or succeed silently
+- DSL depends ONLY on `ProtocolDriver` interface, never concrete driver implementations
+- Driver methods return `Promise<void>`: resolve on success, throw `Error` on failure (no booleans)
+- All Protocol Drivers implement `ProtocolDriver` interface for runtime protocol switching
 - Multi-step flows hidden in driver (e.g., `hasAccount` does register + login internally)
 - Polling with timeouts for async operations; no arbitrary `sleep()` calls
 
