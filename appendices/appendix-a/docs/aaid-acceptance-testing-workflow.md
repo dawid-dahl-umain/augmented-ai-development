@@ -36,6 +36,7 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
     - [Protocol Driver Interface](#protocol-driver-interface)
     - [Protocol Driver Factory](#protocol-driver-factory)
     - [Protocol Drivers](#protocol-drivers)
+    - [Assertion Mechanism](#assertion-mechanism)
     - [External System Stubs](#external-stubs)
   - [Layer 4: System Under Test](#layer-4-sut)
 - [Best Practices & Anti-Patterns](#best-practices)
@@ -464,7 +465,7 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 **Example implementation:**
 
 ```typescript
-// protocol-driver/ui.driver.ts
+// protocol-driver/ui/driver.ts
 
 import { Page } from "playwright"
 import { ProtocolDriver } from "./interface"
@@ -535,7 +536,7 @@ Key driver responsibilities: implements `ProtocolDriver` interface, throws stand
 
 ### Project Structure
 
-```
+```text
 acceptance-test/
 ├── executable-specs/         # Layer 1: Test cases
 │   └── [feature].spec.ts
@@ -548,9 +549,12 @@ acceptance-test/
 ├── protocol-driver/          # Layer 3: System interaction
 │   ├── interface.ts          # ProtocolDriver interface
 │   ├── factory.ts            # Protocol driver factory
-│   ├── ui.driver.ts          # UI implementation (Playwright, etc.)
-│   ├── api.driver.ts         # API implementation (HTTP client)
-│   ├── cli.driver.ts         # CLI implementation (process spawn)
+│   ├── ui/
+│   │   └── driver.ts         # UI implementation (Playwright, etc.)
+│   ├── api/
+│   │   └── driver.ts         # API implementation (HTTP client)
+│   ├── cli/
+│   │   └── driver.ts         # CLI implementation (process spawn)
 │   └── stubs/
 │       └── [external].stub.ts
 └── sut/                      # Layer 4: System setup
@@ -976,9 +980,9 @@ The factory function centralizes protocol driver instantiation, enabling runtime
 // protocol-driver/factory.ts
 
 import { ProtocolDriver } from "./interface"
-import { UIDriver } from "./ui.driver"
-import { APIDriver } from "./api.driver"
-import { CLIDriver } from "./cli.driver"
+import { UIDriver } from "./ui/driver"
+import { APIDriver } from "./api/driver"
+import { CLIDriver } from "./cli/driver"
 
 export const createProtocolDriver = (protocol: string): ProtocolDriver => {
   switch (protocol) {
@@ -1019,7 +1023,7 @@ Run tests with different protocols:
 Each protocol (UI, API, CLI) has its own driver implementation that handles the specifics of that communication channel:
 
 ```typescript
-// protocol-driver/ui.driver.ts
+// protocol-driver/ui/driver.ts
 
 import { Page } from "playwright"
 import { ProtocolDriver } from "./interface"
@@ -1065,6 +1069,26 @@ export class UIDriver implements ProtocolDriver {
 - Clear error context helps debugging
 
 > **Full Example**: See complete UIDriver implementation with all operations in the [demo repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo).
+
+<a id="assertion-mechanism"></a>
+
+#### Assertion Mechanism
+
+All verification logic lives in Layer 3 (Protocol Driver). Methods starting with `confirm` (e.g., `confirmInArchive`, `confirmWinner`) verify state by throwing `Error` on failure or completing without throwing on success.
+
+**Flow Through Layers:**
+
+```text
+Success: Layer 1 → Layer 2 → Layer 3 completes → Promise resolves → Test passes
+
+Failure: Layer 1 → Layer 2 → Layer 3 throws Error → Promise rejects → Test fails
+```
+
+**Why This Matters:**
+
+Drivers throw plain `Error` objects rather than framework-specific assertions (no `expect.fail()`, `assert.throws()`, etc.). This keeps protocol drivers framework-agnostic and enables a single executable specification file to run across all protocols (UI, API, CLI) without modification.
+
+Switch protocols via environment variable. When using browser automation libraries (e.g., Playwright, Puppeteer), they function as tools within the driver; your test runner (Vitest, Jest, etc.) still handles test execution and catches the rejected promises.
 
 <a id="external-stubs"></a>
 
@@ -1236,7 +1260,7 @@ async confirmInArchive(name: string): Promise<void> {
 
 ```typescript
 // BAD: DSL imports and depends on concrete implementation
-import { UIDriver } from "../protocol-driver/ui.driver"
+import { UIDriver } from "../protocol-driver/ui/driver"
 
 export class UserDsl {
   constructor(private context: DslContext, private driver: UIDriver) {}
