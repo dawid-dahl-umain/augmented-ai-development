@@ -151,7 +151,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 - Each test creates its own unique data boundary (e.g., user account, customer record, workspace)
 - All test operations happen within that partition's context (e.g., todos belong to that specific user)
-- DSL methods use `params.alias()` to make identifiers unique: "user@test.com" → "user@test.com1", "user@test.com2", etc.
+- DSL methods use `params.alias()` to make identifiers unique: "<user@test.com>" → "user@test.com1", "user@test.com2", etc.
 - Tests share the same deployed system and database but operate in their own isolated test scopes, enabling safe parallel execution
 - Example:
   - For a school management app, each test might create a whole new school with all its various business logic entities and rules
@@ -164,7 +164,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 - Combines with functional isolation to ensure deterministic behavior across runs
 - Uses proxy-naming technique: the test uses stable names, the test infrastructure (DSL layer) maps to unique aliases per run
-  - Account identifiers: "user@test.com" → "user@test.com1" (run 1), "user@test.com2" (run 2)
+  - Account identifiers: "<user@test.com>" → "user@test.com1" (run 1), "user@test.com2" (run 2)
   - Data within account: "Buy milk" → "Buy milk1" (run 1), "Buy milk2" (run 2)
 - Optional: treat time as an external dependency via a controllable clock to keep tests deterministic
 
@@ -209,7 +209,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 ### Layer Responsibilities
 
-#### ✅ Layer 1: Test Cases (Executable Specifications)
+#### ✅ Layer 1 Responsibilities: Test Cases (Executable Specifications)
 
 **Purpose:** Express acceptance criteria in business language
 
@@ -220,7 +220,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - Never references technical implementation
 - Maps 1:1 to BDD scenarios
 
-#### 🗣️ Layer 2: Domain-Specific Language (DSL)
+#### 🗣️ Layer 2 Responsibilities: Domain-Specific Language (DSL)
 
 **Purpose:** Translate business language into system interactions, while handling test isolation and keeping executable specifications free of technical details
 
@@ -232,7 +232,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - **Pure translation layer**: NO assertions, NO failures, NO business or verification logic
 - **Simply calls Protocol Driver**: Transforms business language to driver calls
 
-#### 🔌 Layer 3: Protocol Drivers & Stubs
+#### 🔌 Layer 3 Responsibilities: Protocol Drivers & Stubs
 
 **Purpose:** Handle all technical interaction with system AND all verification logic
 
@@ -255,7 +255,7 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - Allow tests to define specific responses
 - Ensure tests are predictable and reliable
 
-#### 🏭 Layer 4: System Under Test (SUT)
+#### 🏭 Layer 4 Responsibilities: System Under Test (SUT)
 
 **Purpose:** The actual application being tested
 
@@ -307,20 +307,20 @@ The diagram distinguishes the three review-driven phases of the workflow, lightl
 
 Before any AI interaction, establish comprehensive context:
 
-**1. Add Project Context**
+#### 1. Add Project Context
 
 - Existing acceptance test structure and patterns
 - DSL conventions already in use
 - Protocol driver implementations
 - Test framework setup
 
-**2. Add BDD Scenarios**
+#### 2. Add BDD Scenarios
 
 - User stories with Given-When-Then scenarios
 - Ubiquitous Language glossary
 - Business rules and constraints
 
-**3. Add Technical Context**
+#### 3. Add Technical Context
 
 - System architecture overview
 - Documentation on how to [map from requirements to executable specifications](#mapping-from-requirements-to-executable-specs)
@@ -337,7 +337,7 @@ Before any AI interaction, establish comprehensive context:
 
 Collaborate with AI to analyze BDD scenarios and plan implementation. The output of this stage is a **Protocol Driver Strategy Roadmap** that represents your shared understanding with the AI about how to implement the acceptance tests.
 
-**1. Extract Domain Concepts from BDD Scenarios**
+#### 1. Extract Domain Concepts from BDD Scenarios
 
 Identify the key domain objects (nouns from Ubiquitous Language) that will become DSL elements:
 
@@ -345,7 +345,7 @@ Identify the key domain objects (nouns from Ubiquitous Language) that will becom
 - These become the main DSL objects that group related actions and assertions
 - Each object represents a key concept from your business domain
 
-**2. Choose Protocol Driver Type**
+#### 2. Choose Protocol Driver Type
 
 Based on your system's interfaces, for example:
 
@@ -354,7 +354,7 @@ Based on your system's interfaces, for example:
 - **CLI testing**: Process spawning
 - **Message testing**: Queue clients
 
-**3. Create Protocol Driver Strategy Roadmap**
+#### 3. Create Protocol Driver Strategy Roadmap
 
 Use the [template](#driver-strategy-roadmap) to document how tests will interact with the system:
 
