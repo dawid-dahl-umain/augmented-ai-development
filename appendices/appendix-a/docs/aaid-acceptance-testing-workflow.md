@@ -714,7 +714,7 @@ Instantiating `new Dsl(driver)` inside `beforeEach` guarantees every test receiv
 
 The test file imports the factory function from `protocol-driver/factory.ts`, which enables runtime protocol selection via environment variable. The test logic remains identical across all protocols - the same executable specifications work with UI testing (Playwright), API testing (HTTP client), or CLI testing (process spawn) without any changes to the test code.
 
-> **Test Runner Independence**: The test file imports `describe`/`it`/`beforeEach` from your chosen test runner (Vitest, Jest, etc.). The DSL and Protocol Drivers remain framework-agnostic by using JavaScript's standard Promise contract: driver methods return `Promise<void>` that either resolves (test passes) or rejects when an `Error` is thrown (test fails). All test runners handle this identically. Exception: Cypress combines test runner and automation into one package.
+> **Test Runner Independence**: The test file imports `describe`/`it`/`beforeEach` from your chosen test runner (Vitest, Jest, etc.). The DSL and Protocol Drivers remain framework-agnostic by using JavaScript's standard Promise contract: driver methods return `Promise<void>` that either resolves (test passes) or rejects when an `Error` is thrown (test fails). All test runners handle this identically.
 
 <a id="layer-2-dsl"></a>
 
