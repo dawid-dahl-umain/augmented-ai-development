@@ -45,7 +45,7 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
 - [Validation & Reference](#validation-reference)
   - [Validation Checklist](#validation-checklist)
   - [Quick Reference](#quick-reference)
-- [Protocol Driver Strategy Roadmap Template](#driver-strategy-roadmap)
+- [Acceptance Test Strategy Roadmap Template](#driver-strategy-roadmap)
 
 <a id="prerequisites-overview"></a>
 
@@ -336,7 +336,7 @@ Before any AI interaction, establish comprehensive context:
 
 ### Stage 2: Planning & Analysis
 
-Collaborate with AI to analyze BDD scenarios and plan implementation. The output of this stage is a **Protocol Driver Strategy Roadmap** that represents your shared understanding with the AI about how to implement the acceptance tests.
+Collaborate with AI to analyze BDD scenarios and plan implementation. The output of this stage is an **Acceptance Test Strategy Roadmap** that represents your shared understanding with the AI about how to implement the acceptance tests.
 
 #### 1. Extract Domain Concepts from BDD Scenarios
 
@@ -355,7 +355,7 @@ Based on your system's interfaces, for example:
 - **CLI testing**: Process spawning
 - **Message testing**: Queue clients
 
-#### 3. Create Protocol Driver Strategy Roadmap
+#### 3. Create Acceptance Test Strategy Roadmap
 
 Use the [template](#driver-strategy-roadmap) to document how tests will interact with the system:
 
@@ -1339,7 +1339,7 @@ async hasCompletedTodo(args: TodoParams = {}) {
 
 - [ ] Context provided (Stage 1)
 - [ ] Domain concepts extracted from BDD scenarios (Stage 2)
-- [ ] Protocol Driver Strategy documented with connection details (Stage 2)
+- [ ] Acceptance Test Strategy documented with connection details (Stage 2)
 - [ ] Each phase reviewed before proceeding
 - [ ] All four layers implemented
 
@@ -1407,7 +1407,7 @@ SUT:        Your actual system
 
 <a id="driver-strategy-roadmap"></a>
 
-## Protocol Driver Strategy Roadmap Template
+## Acceptance Test Strategy Roadmap Template
 
 Use this template in Stage 2 Planning to document how tests will interact with the system:
 
