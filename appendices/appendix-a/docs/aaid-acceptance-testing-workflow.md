@@ -549,6 +549,7 @@ acceptance-test/
 ├── protocol-driver/          # Layer 3: System interaction
 │   ├── interface.ts          # ProtocolDriver interface
 │   ├── factory.ts            # Protocol driver factory
+│   ├── index.ts              # Runtime protocol selection helpers
 │   ├── ui/
 │   │   └── driver.ts         # UI implementation (Playwright, etc.)
 │   ├── api/
