@@ -4,7 +4,7 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
 
 🔻
 
-![AAID AT Workflow Cover](../../../assets/aaid-ai-workflow-h.webp)
+![AAID AT Workflow Cover](../../../assets/aaid-at-ai-workflow-h.webp)
 
 ## Table of Contents
 
