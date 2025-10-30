@@ -539,13 +539,13 @@ Key driver responsibilities: implements `ProtocolDriver` interface, throws stand
 ```text
 acceptance-test/
 ├── executable-specs/         # Layer 1: Test cases
-│   └── [feature].spec.ts
+│   └── acceptance.spec.ts
 ├── dsl/                      # Layer 2: Business vocabulary
 │   ├── utils/
 │   │   ├── DslContext.ts     # Manages aliases & sequences
 │   │   └── Params.ts         # Parameter parsing helper
 │   ├── index.ts              # Main DSL exports
-│   └── [concept].dsl.ts      # Domain concepts
+│   └── [concept].ts          # Domain concepts
 ├── protocol-driver/          # Layer 3: System interaction
 │   ├── interface.ts          # ProtocolDriver interface
 │   ├── factory.ts            # Protocol driver factory
@@ -568,6 +568,8 @@ acceptance-test/
 ![Layer 1: Executable Specifications](https://github.com/dawid-dahl-umain/augmented-ai-development/blob/main/assets/layers/12.webp?raw=true)
 
 Transform BDD scenarios with natural language DSL. Structure requirements like this (adjust the headings if your organization uses a different naming convention):
+
+Maintain a single executable spec file (for example `acceptance.spec.ts`) that exercises every protocol; when a protocol cannot drive a scenario, guard it with the runner's skip helper such as `test.skipIf(...)`.
 
 ```gherkin
 Title: User archives completed todos
@@ -633,7 +635,7 @@ describe("<Feature>", () => {
 The transformation follows a 1:1 mapping pattern:
 
 ```typescript
-// executable-specs/archive-todos.spec.ts
+// executable-specs/acceptance.spec.ts
 
 import { beforeEach, describe, it } from "vitest"
 import { Dsl } from "../dsl"
@@ -714,7 +716,7 @@ Instantiating `new Dsl(driver)` inside `beforeEach` guarantees every test receiv
 
 The test file imports the factory function from `protocol-driver/factory.ts`, which enables runtime protocol selection via environment variable. The test logic remains identical across all protocols - the same executable specifications work with UI testing (Playwright), API testing (HTTP client), or CLI testing (process spawn) without any changes to the test code.
 
-> **Test Runner Independence**: The test file imports `describe`/`it`/`beforeEach` from your chosen test runner (Vitest, Jest, etc.). The DSL and Protocol Drivers remain framework-agnostic by using JavaScript's standard Promise contract: driver methods return `Promise<void>` that either resolves (test passes) or rejects when an `Error` is thrown (test fails). All test runners handle this identically.
+Even when a protocol driver wraps Playwright or another browser tool, the executable spec stays inside Vitest or Jest. The runner marks the scenario as passed when the driver method completes without returning a value (the promise resolves), and marks it as failed only if the driver throws a plain `Error`. That single convention keeps the spec runner-agnostic across every protocol.
 
 <a id="layer-2-dsl"></a>
 
@@ -801,7 +803,7 @@ type ParamsArgs = Record<string, string | string[]>
 DSL methods must read like natural language, matching the BDD scenarios. They contain NO business or verification logic - just isolation handling and driver calls:
 
 ```typescript
-// dsl/user.dsl.ts
+// dsl/user.ts
 
 import { DslContext } from "./utils/DslContext"
 import { Params } from "./utils/Params"
@@ -862,7 +864,7 @@ export class UserDsl {
 ```
 
 ```typescript
-// dsl/todo.dsl.ts
+// dsl/todo.ts
 
 import { ProtocolDriver } from "../protocol-driver/interface"
 
@@ -896,8 +898,8 @@ export class TodoDsl {
 // dsl/index.ts
 
 import { DslContext } from "./utils/DslContext"
-import { UserDsl } from "./user.dsl"
-import { TodoDsl } from "./todo.dsl"
+import { UserDsl } from "./user"
+import { TodoDsl } from "./todo"
 import { ProtocolDriver } from "../protocol-driver/interface"
 
 export class Dsl {
