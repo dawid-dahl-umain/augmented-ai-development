@@ -42,9 +42,6 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
 - [Best Practices & Anti-Patterns](#best-practices)
   - [Critical Implementation Rules](#critical-rules)
   - [Common Anti-Patterns](#anti-patterns)
-- [Validation & Reference](#validation-reference)
-  - [Validation Checklist](#validation-checklist)
-  - [Quick Reference](#quick-reference)
 - [Acceptance Test Strategy Roadmap Template](#driver-strategy-roadmap)
 
 <a id="prerequisites-overview"></a>
@@ -1325,84 +1322,6 @@ async hasCompletedTodo(args: TodoParams = {}) {
 
   return this.driver.hasCompletedTodo(name);  // Uses the account this driver instance stored
 }
-```
-
-<a id="validation-reference"></a>
-
-## Validation & Reference
-
-<a id="validation-checklist"></a>
-
-### Validation Checklist
-
-**AI Workflow Validation:**
-
-- [ ] Context provided (Stage 1)
-- [ ] Domain concepts extracted from BDD scenarios (Stage 2)
-- [ ] Acceptance Test Strategy documented with connection details (Stage 2)
-- [ ] Each phase reviewed before proceeding
-- [ ] All four layers implemented
-
-**Layer Implementation:**
-
-- [ ] Test Cases use only DSL methods with Gherkin comments
-- [ ] DSL depends ONLY on `ProtocolDriver` interface (not concrete implementations)
-- [ ] DSL contains NO logic or assertions - just parameter handling and isolation
-- [ ] All Protocol Drivers implement `ProtocolDriver` interface
-- [ ] All assertions and failures in Protocol Drivers throw standard `Error`
-- [ ] Each layer has clear, single responsibility
-
-**Test Quality:**
-
-- [ ] DSL reads like natural language from BDD scenarios
-- [ ] Each BDD line maps to exactly one DSL call
-- [ ] Clear failure messages from Protocol Drivers
-- [ ] Tests run in parallel without interference
-- [ ] Internal systems (database, cache) NOT stubbed
-
-**Isolation Verification:**
-
-- [ ] System-level: External third-party dependencies stubbed
-- [ ] Functional: Each test creates its own natural boundaries (e.g., accounts, products) without sharing with other tests
-- [ ] Temporal: Proxy-naming produces unique aliases (e.g., "user@test.com1", "Buy milk2") allowing same test to run repeatedly
-
-<a id="quick-reference"></a>
-
-### Quick Reference
-
-**AI Workflow Phases:**
-
-```
-🔴 Phase 1: Generate Executable Spec & DSL → Review
-🟢 Phase 2: Implement Protocol Driver & SUT → Review
-🧼 Phase 3: Refactor Layers & Validate → Review
-```
-
-**BDD to DSL Transformation Pattern:**
-
-```
-BDD:  Given the user has an account
-DSL:  await dsl.user.hasAccount({ email: "user@test.com" })
-
-BDD:  And they have a completed todo "Buy milk"
-DSL:  await dsl.user.hasCompletedTodo({ name: "Buy milk" })
-
-BDD:  When they archive "Buy milk"
-DSL:  await dsl.user.archives({ todo: "Buy milk" })
-
-BDD:  Then "Buy milk" should be in archived todos
-DSL:  await dsl.todo.confirmInArchive({ name: "Buy milk" })
-```
-
-**Layer Responsibilities:**
-
-```
-Test Case:  Uses DSL methods only
-DSL:        Translate business language into system interactions + test isolation handling
-            Depends on ProtocolDriver interface
-Driver:     Technical interaction with SUT + throw Error()
-            Implements ProtocolDriver interface
-SUT:        Your actual system
 ```
 
 <a id="driver-strategy-roadmap"></a>
