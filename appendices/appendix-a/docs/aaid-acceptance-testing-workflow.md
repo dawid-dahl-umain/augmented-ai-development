@@ -548,8 +548,8 @@ acceptance-test/
 │   └── [concept].ts          # Domain concepts
 ├── protocol-driver/          # Layer 3: System interaction
 │   ├── interface.ts          # ProtocolDriver interface
-│   ├── factory.ts            # Protocol driver factory
-│   ├── index.ts              # Runtime protocol selection helpers
+│   ├── factory.ts            # Protocol Driver factory
+│   ├── index.ts              # Main Protocol Driver exports
 │   ├── ui/
 │   │   └── driver.ts         # UI implementation (Playwright, etc.)
 │   ├── api/
