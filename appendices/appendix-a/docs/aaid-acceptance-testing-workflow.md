@@ -1259,30 +1259,47 @@ After working through the examples and understanding how the four layers interac
 
 ### Layer Implementation Rules
 
-| Layer                            | Guideline                     | Example / Why It Matters                                                                                                                   |
-| -------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| **✅ Executable Specifications** | Only Gherkin comments         | Use `// Given`, `// When`, `// Then`, `// And`, `// But` - nothing else                                                                    |
-|                                  | No explanatory comments       | DSL methods are self-documenting; avoid `// This creates a user`                                                                           |
-|                                  | 1:1 BDD mapping               | Each BDD line maps to exactly one DSL call                                                                                                 |
-|                                  | Business readable             | Non-technical stakeholders should understand the test flow                                                                                 |
-| **🗣️ DSL Layer**                 | Natural language methods      | Method names match BDD scenarios exactly: `hasCompletedTodo`, not `createCompleted`                                                        |
-|                                  | Business-friendly vocabulary  | Use `confirmInArchive`, not `assertInArchive`                                                                                              |
-|                                  | Pure translation              | Transform business language to driver calls - no logic, no assertions                                                                      |
-|                                  | Object parameters             | Type-safe params for flexibility: `hasAccount({ email: "user@test.com" })`                                                                 |
-|                                  | Aliasing for isolation        | Use `params.alias()` to make identifiers unique across tests and runs                                                                      |
-|                                  | Sensible defaults             | Use `params.optional()` for technical details that don't matter in each scenario                                                           |
-|                                  | Interface dependency only     | DSL depends on `ProtocolDriver` interface, never concrete driver implementations                                                           |
-| **🔌 Protocol Drivers**          | Implement interface           | All drivers (UI, API, CLI) implement the same `ProtocolDriver` interface                                                                   |
-|                                  | Framework-agnostic assertions | Throw standard `Error`, not `expect.fail()` - keeps tests portable                                                                         |
-|                                  | All assertions here           | Protocol Driver is where pass/fail decisions are made, not DSL                                                                             |
-|                                  | Atomic operations             | Each method fully succeeds or fails clearly with descriptive error                                                                         |
-|                                  | Hide complex flows            | `hasAccount` might register + login - driver handles the complexity                                                                        |
-|                                  | Handle system boundaries      | Interact through normal interfaces (HTTP, UI, CLI) as real users would                                                                     |
-|                                  | Clear error messages          | Include context: `Unable to create account for 'user@test.com': ...`                                                                       |
-|                                  | Stub only external systems    | Stub third-party APIs; never stub your own database, cache, or services                                                                    |
-| **Naming Conventions**           | DSL method names              | Use business language: `hasCompletedTodo`, not `createTodo`                                                                                |
-|                                  | Assertion prefix              | Verification methods use `confirm`: `confirmInArchive`, not `assertInArchive`                                                              |
-|                                  | Driver-DSL alignment          | Driver methods preferably match DSL names (`dsl.hasAccount()` → `driver.hasAccount()`); arguments differ naturally (objects vs primitives) |
+#### ✅ Executable Specifications
+
+| Guideline               | Example / Why It Matters                                                |
+| ----------------------- | ----------------------------------------------------------------------- |
+| Only Gherkin comments   | Use `// Given`, `// When`, `// Then`, `// And`, `// But` - nothing else |
+| No explanatory comments | DSL methods are self-documenting; avoid `// This creates a user`        |
+| 1:1 BDD mapping         | Each BDD line maps to exactly one DSL call                              |
+| Business readable       | Non-technical stakeholders should understand the test flow              |
+
+#### 🗣️ DSL Layer
+
+| Guideline                    | Example / Why It Matters                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------- |
+| Natural language methods     | Method names match BDD scenarios exactly: `hasCompletedTodo`, not `createCompleted` |
+| Business-friendly vocabulary | Use `confirmInArchive`, not `assertInArchive`                                       |
+| Pure translation             | Transform business language to driver calls; no logic, no assertions                |
+| Object parameters            | Type-safe params for flexibility: `hasAccount({ email: "user@test.com" })`          |
+| Aliasing for isolation       | Use `params.alias()` to make identifiers unique across tests and runs               |
+| Sensible defaults            | Use `params.optional()` for technical details that don't matter in each scenario    |
+| Interface dependency only    | DSL depends on `ProtocolDriver` interface, never concrete driver implementations    |
+
+#### 🔌 Protocol Drivers
+
+| Guideline                     | Example / Why It Matters                                                 |
+| ----------------------------- | ------------------------------------------------------------------------ |
+| Implement interface           | All drivers (UI, API, CLI) implement the same `ProtocolDriver` interface |
+| Framework-agnostic assertions | Throw standard `Error`, not `expect.fail()` - keeps tests portable       |
+| All assertions here           | Protocol Driver is where pass/fail decisions are made, not DSL           |
+| Atomic operations             | Each method fully succeeds or fails clearly with descriptive error       |
+| Hide complex flows            | `hasAccount` might register + login - driver handles the complexity      |
+| Handle system boundaries      | Interact through normal interfaces (HTTP, UI, CLI) as real users would   |
+| Clear error messages          | Include context: `Unable to create account for 'user@test.com': ...`     |
+| Stub only external systems    | Stub third-party APIs; never stub your own database, cache, or services  |
+
+#### Naming Conventions
+
+| Guideline            | Example / Why It Matters                                                                                                                   |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| DSL method names     | Use business language: `hasCompletedTodo`, not `createTodo`                                                                                |
+| Assertion prefix     | Verification methods use `confirm`: `confirmInArchive`, not `assertInArchive`                                                              |
+| Driver-DSL alignment | Driver methods preferably match DSL names (`dsl.hasAccount()` → `driver.hasAccount()`); arguments differ naturally (objects vs primitives) |
 
 <a id="anti-patterns"></a>
 
