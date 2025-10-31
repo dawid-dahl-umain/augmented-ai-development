@@ -101,6 +101,7 @@ Unlike most other AI-driven workflows, `AAID` doesn't try to reinvent product di
 - **Daniel Terhorst-North**'s Behavior-Driven Development (BDD) methodology
 - **Gojko Adzic**'s Specification by Example methodology
 - **Aslak Hellesøy**'s BDD and Gherkin syntax for executable specifications
+- **Eric Evans**'s Domain-Driven Design and Ubiquitous Language
 - **Martin Fowler**'s work on refactoring, evolutionary design, and Domain-Specific Languages
 - And more.
 
