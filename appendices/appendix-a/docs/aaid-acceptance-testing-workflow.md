@@ -39,10 +39,11 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
     - [Assertion Mechanism](#assertion-mechanism)
     - [External System Stubs](#external-stubs)
   - [Layer 4: System Under Test](#layer-4-sut)
-- [Best Practices & Anti-Patterns](#best-practices)
-  - [Critical Implementation Rules](#critical-rules)
-  - [Common Anti-Patterns](#anti-patterns)
 - [Acceptance Test Strategy Roadmap Template](#driver-strategy-roadmap)
+- [Implementation Rules & Anti-Patterns](#best-practices)
+  - [Layer Implementation Rules](#critical-rules)
+  - [Common Anti-Patterns](#anti-patterns)
+- [Summary](#summary)
 
 <a id="prerequisites-overview"></a>
 
@@ -1144,50 +1145,144 @@ The SUT is your actual application running in a test environment:
 - **Optimize for testing**: Fast startup, test data cleanup strategies
 - **Support concurrent testing**: Handle multiple test runs simultaneously
 
+<a id="driver-strategy-roadmap"></a>
+
+## Acceptance Test Strategy Roadmap Template
+
+Use this template in Stage 2 Planning to document how tests will interact with the system:
+
+```markdown
+# Acceptance Testing Strategy: [Feature Name]
+
+## System Understanding
+
+**What are we testing?**
+
+- Business capability: [What user need does this serve?]
+- User perspective: [Who uses this and what are they trying to achieve?]
+
+## Connection Strategy
+
+- **Protocol Type**: [UI/API/CLI/Message Queue]
+- **Framework/Tools**: [Playwright/REST client/Process spawn/etc]
+- **Entry Points**: [Specific URLs/endpoints/commands]
+- **Authentication**: [How tests authenticate if needed]
+
+## Test Isolation Strategy
+
+### System-Level Isolation
+
+- **System boundaries**: [Where does our system start/end?]
+- **External dependencies to stub** (third-party only):
+  - [Service name]: [Why we need to control it]
+- **NOT stubbing**: [Our database, cache, queues - they're part of our system]
+
+### Functional Isolation (Parallel Execution Safety)
+
+- **Natural boundaries**: [What domain concepts create natural boundaries? E.g., user accounts, customer records, product catalogs, workspaces - each test will create its own]
+- **Why this matters**: Tests run in parallel against the same database without interfering; each operates in its own isolated boundary
+- **Strategy**: First action in each test should create a fresh boundary (e.g., new user account, new customer record)
+
+### Temporal Isolation (Repeatability)
+
+- **Proxy-naming approach**: Use aliasing technique to give identifiers unique suffixes for each test run
+- **What gets aliased**: [List all identifiers: account emails, usernames, product IDs, order numbers, todo names, etc.]
+- **Why this matters**: Same test can run multiple times with deterministic results. "user@test.com" becomes "user@test.com1" (run 1), "user@test.com2" (run 2), etc.
+
+## Notes
+
+[Important considerations or open questions for implementation]
+```
+
+### Example Generated Roadmap
+
+Here's an example of how the AI should fill out this roadmap for a todo archive feature:
+
+```markdown
+# Acceptance Testing Strategy: Todo Archive Feature
+
+## System Understanding
+
+**What are we testing?**
+
+- Business capability: Users can archive completed todos to keep their active list focused
+- User perspective: Users want to declutter their workspace while preserving completed work
+
+## Connection Strategy
+
+- **Protocol Type**: UI
+- **Framework/Tools**: Playwright
+- **Entry Points**:
+  - Main app: http://localhost:3000/todos
+  - Archive view: http://localhost:3000/todos/archived
+- **Authentication**: Tests create and log in with new user per test
+
+## Test Isolation Strategy
+
+### System-Level Isolation
+
+- **System boundaries**: Todo web application (frontend + backend + database)
+- **External dependencies to stub** (third-party only):
+  - EmailService: Need deterministic behavior for archive notifications
+  - AnalyticsAPI: External tracking service we don't control
+- **NOT stubbing**: PostgreSQL database, Redis cache (part of our system)
+
+### Functional Isolation (Parallel Execution Safety)
+
+- **Natural boundaries**: User accounts (each test creates its own user)
+- **Why this matters**: Tests run in parallel against the same database without interfering; each operates in its own account boundary
+- **Strategy**: First action in each test should create a fresh user account
+
+### Temporal Isolation (Repeatability)
+
+- **Proxy-naming approach**: Use aliasing to give identifiers unique suffixes for each test run
+- **What gets aliased**:
+  - Account identifiers: emails → "user@test.com1" (run 1), "user@test.com2" (run 2)
+  - Todo names: "Buy milk" → "Buy milk1" (run 1), "Buy milk2" (run 2)
+- **Why this matters**: Same test can run multiple times with deterministic results without colliding with previous data
+
+## Notes
+
+- Archive retention policy doesn't affect test behavior
+- Email notification stubbing needs careful sequencing for batch operations
+```
+
+This roadmap ensures alignment on the testing approach before implementation begins.
+
 <a id="best-practices"></a>
 
-## Best Practices & Anti-Patterns
+## Implementation Rules & Anti-Patterns
+
+After working through the examples and understanding how the four layers interact, use this section as a reference when implementing your own acceptance tests.
 
 <a id="critical-rules"></a>
 
-### Critical Implementation Rules
+### Layer Implementation Rules
 
-#### Layer Separation Rules
-
-**✅ Executable Specifications**:
-
-1. **ONLY Gherkin comments**: `// Given`, `// When`, `// Then`, `// And`, `// But`
-2. **NO explanatory comments**: DSL should be self-explanatory
-3. **BDD mapping**: Each BDD line maps to a DSL call
-4. **Business readable**: Non-technical people should understand
-
-**🗣️ DSL Layer**:
-
-1. **Natural Language**: Methods match BDD scenarios exactly
-2. **Business Readable**: `hasCompletedTodo` not `createCompleted`, `confirmInArchive` not `assertInArchive`
-3. **Pure Translation**: Transform business language to driver calls
-4. **Object Parameters**: Type-safe objects for flexibility
-5. **Aliasing Infrastructure**: Uses `params.alias()` to make identifiers unique for test isolation
-6. **Sensible Defaults**: Optional parameters with business-appropriate defaults
-7. **Interface Dependency**: Depends ONLY on `ProtocolDriver` interface, never concrete implementations
-
-**🔌 Protocol Drivers**:
-
-1. **Implement Interface**: All drivers implement the `ProtocolDriver` interface
-2. **Framework-Agnostic Assertions**: Throw standard `Error` (not framework-specific methods like `expect.fail()`)
-3. **Contains All Assertions**: This is where pass/fail decisions are made
-4. **Atomic Operations**: Each method either fully succeeds or fails clearly
-5. **Hide Complex Flows**: `hasAccount` may involve register + login
-6. **Handle System Boundaries**: Interact with SUT through its normal interfaces
-7. **Clear Error Messages**: Include context in failure messages
-8. **External System Stubs**: Stub ONLY third-party dependencies you don't control
-9. **Never stub internal systems**: Your database, cache, queues are part of your system
-
-#### Naming Conventions
-
-- DSL methods use natural business language: `hasCompletedTodo` not `createTodo`
-- Assertions use `confirm` prefix: `confirmInArchive` not `assertInArchive`
-- Protocol driver method names preferably match DSL method names exactly (e.g., `dsl.hasAccount()` → `driver.hasAccount()`). Method arguments naturally differ: DSL takes object parameters, driver takes primitives. Minor pragmatic deviations in naming are acceptable if they improve technical clarity.
+| Layer                            | Guideline                     | Example / Why It Matters                                                                                                                   |
+| -------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| **✅ Executable Specifications** | Only Gherkin comments         | Use `// Given`, `// When`, `// Then`, `// And`, `// But` - nothing else                                                                    |
+|                                  | No explanatory comments       | DSL methods are self-documenting; avoid `// This creates a user`                                                                           |
+|                                  | 1:1 BDD mapping               | Each BDD line maps to exactly one DSL call                                                                                                 |
+|                                  | Business readable             | Non-technical stakeholders should understand the test flow                                                                                 |
+| **🗣️ DSL Layer**                 | Natural language methods      | Method names match BDD scenarios exactly: `hasCompletedTodo`, not `createCompleted`                                                        |
+|                                  | Business-friendly vocabulary  | Use `confirmInArchive`, not `assertInArchive`                                                                                              |
+|                                  | Pure translation              | Transform business language to driver calls - no logic, no assertions                                                                      |
+|                                  | Object parameters             | Type-safe params for flexibility: `hasAccount({ email: "user@test.com" })`                                                                 |
+|                                  | Aliasing for isolation        | Use `params.alias()` to make identifiers unique across tests and runs                                                                      |
+|                                  | Sensible defaults             | Use `params.optional()` for technical details that don't matter in each scenario                                                           |
+|                                  | Interface dependency only     | DSL depends on `ProtocolDriver` interface, never concrete driver implementations                                                           |
+| **🔌 Protocol Drivers**          | Implement interface           | All drivers (UI, API, CLI) implement the same `ProtocolDriver` interface                                                                   |
+|                                  | Framework-agnostic assertions | Throw standard `Error`, not `expect.fail()` - keeps tests portable                                                                         |
+|                                  | All assertions here           | Protocol Driver is where pass/fail decisions are made, not DSL                                                                             |
+|                                  | Atomic operations             | Each method fully succeeds or fails clearly with descriptive error                                                                         |
+|                                  | Hide complex flows            | `hasAccount` might register + login - driver handles the complexity                                                                        |
+|                                  | Handle system boundaries      | Interact through normal interfaces (HTTP, UI, CLI) as real users would                                                                     |
+|                                  | Clear error messages          | Include context: `Unable to create account for 'user@test.com': ...`                                                                       |
+|                                  | Stub only external systems    | Stub third-party APIs; never stub your own database, cache, or services                                                                    |
+| **Naming Conventions**           | DSL method names              | Use business language: `hasCompletedTodo`, not `createTodo`                                                                                |
+|                                  | Assertion prefix              | Verification methods use `confirm`: `confirmInArchive`, not `assertInArchive`                                                              |
+|                                  | Driver-DSL alignment          | Driver methods preferably match DSL names (`dsl.hasAccount()` → `driver.hasAccount()`); arguments differ naturally (objects vs primitives) |
 
 <a id="anti-patterns"></a>
 
@@ -1324,109 +1419,7 @@ async hasCompletedTodo(args: TodoParams = {}) {
 }
 ```
 
-<a id="driver-strategy-roadmap"></a>
-
-## Acceptance Test Strategy Roadmap Template
-
-Use this template in Stage 2 Planning to document how tests will interact with the system:
-
-```markdown
-# Acceptance Testing Strategy: [Feature Name]
-
-## System Understanding
-
-**What are we testing?**
-
-- Business capability: [What user need does this serve?]
-- User perspective: [Who uses this and what are they trying to achieve?]
-
-## Connection Strategy
-
-- **Protocol Type**: [UI/API/CLI/Message Queue]
-- **Framework/Tools**: [Playwright/REST client/Process spawn/etc]
-- **Entry Points**: [Specific URLs/endpoints/commands]
-- **Authentication**: [How tests authenticate if needed]
-
-## Test Isolation Strategy
-
-### System-Level Isolation
-
-- **System boundaries**: [Where does our system start/end?]
-- **External dependencies to stub** (third-party only):
-  - [Service name]: [Why we need to control it]
-- **NOT stubbing**: [Our database, cache, queues - they're part of our system]
-
-### Functional Isolation (Parallel Execution Safety)
-
-- **Natural boundaries**: [What domain concepts create natural boundaries? E.g., user accounts, customer records, product catalogs, workspaces - each test will create its own]
-- **Why this matters**: Tests run in parallel against the same database without interfering; each operates in its own isolated boundary
-- **Strategy**: First action in each test should create a fresh boundary (e.g., new user account, new customer record)
-
-### Temporal Isolation (Repeatability)
-
-- **Proxy-naming approach**: Use aliasing technique to give identifiers unique suffixes for each test run
-- **What gets aliased**: [List all identifiers: account emails, usernames, product IDs, order numbers, todo names, etc.]
-- **Why this matters**: Same test can run multiple times with deterministic results. "user@test.com" becomes "user@test.com1" (run 1), "user@test.com2" (run 2), etc.
-
-## Notes
-
-[Important considerations or open questions for implementation]
-```
-
-### Example Generated Roadmap
-
-Here's an example of how the AI should fill out this roadmap for a todo archive feature:
-
-```markdown
-# Acceptance Testing Strategy: Todo Archive Feature
-
-## System Understanding
-
-**What are we testing?**
-
-- Business capability: Users can archive completed todos to keep their active list focused
-- User perspective: Users want to declutter their workspace while preserving completed work
-
-## Connection Strategy
-
-- **Protocol Type**: UI
-- **Framework/Tools**: Playwright
-- **Entry Points**:
-  - Main app: http://localhost:3000/todos
-  - Archive view: http://localhost:3000/todos/archived
-- **Authentication**: Tests create and log in with new user per test
-
-## Test Isolation Strategy
-
-### System-Level Isolation
-
-- **System boundaries**: Todo web application (frontend + backend + database)
-- **External dependencies to stub** (third-party only):
-  - EmailService: Need deterministic behavior for archive notifications
-  - AnalyticsAPI: External tracking service we don't control
-- **NOT stubbing**: PostgreSQL database, Redis cache (part of our system)
-
-### Functional Isolation (Parallel Execution Safety)
-
-- **Natural boundaries**: User accounts (each test creates its own user)
-- **Why this matters**: Tests run in parallel against the same database without interfering; each operates in its own account boundary
-- **Strategy**: First action in each test should create a fresh user account
-
-### Temporal Isolation (Repeatability)
-
-- **Proxy-naming approach**: Use aliasing to give identifiers unique suffixes for each test run
-- **What gets aliased**:
-  - Account identifiers: emails → "user@test.com1" (run 1), "user@test.com2" (run 2)
-  - Todo names: "Buy milk" → "Buy milk1" (run 1), "Buy milk2" (run 2)
-- **Why this matters**: Same test can run multiple times with deterministic results without colliding with previous data
-
-## Notes
-
-- Archive retention policy doesn't affect test behavior
-- Email notification stubbing needs careful sequencing for batch operations
-```
-
-This roadmap ensures alignment on the testing approach before implementation begins.
+<a id="summary"></a>
 
 ## Summary
 
