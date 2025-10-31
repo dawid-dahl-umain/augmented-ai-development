@@ -1293,6 +1293,16 @@ After working through the examples and understanding how the four layers interac
 | Clear error messages          | Include context: `Unable to create account for 'user@test.com': ...`     |
 | Stub only external systems    | Stub third-party APIs; never stub your own database, cache, or services  |
 
+#### 🏭 System Under Test
+
+| Guideline                | Example / Why It Matters                                                                     |
+| ------------------------ | -------------------------------------------------------------------------------------------- |
+| Deploy production-like   | Same architecture, technologies, and configuration as production                             |
+| Include internal systems | Use real database, cache, message queues; everything you control is part of the SUT          |
+| Stub only external APIs  | Third-party payment gateways, email services; verify with contract tests before releases     |
+| Optimize for testing     | Fast startup, handle concurrent test data from parallel runs                                 |
+| Accept test data         | Tests create isolated boundaries (accounts, workspaces); discard SUT between test suite runs |
+
 #### Naming Conventions
 
 | Guideline            | Example / Why It Matters                                                                                                                   |
