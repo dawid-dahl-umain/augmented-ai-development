@@ -83,13 +83,61 @@ This blueprint combines Dave Farley's Four-Layer Model for acceptance testing wi
 
 **Acceptance Testing** verifies that a system meets business requirements from an external user's perspective. It serves as an automated, objective Definition of Done.
 
+> [!NOTE]
+> Notice: Not incorrect per-se, but with DevOps and influence from Jez Humble, I wouldn't be so quick
+> to say that acceptance tests are a definition-of-done, to the bone.
+> If you as a programmer, are only every responsible for just "pushing stuff out the door", then yes.
+> But I think Dave and Jez would agree, that the job of a developer isn't just to push stuff out the door,
+> but it's to achieve some kind of objective/benefit/goal. So in that case, the definition-of-done
+> would be "when I have observed this feature impact on our users, and verified its expected result". 
+> But I understand most developers don't take this kind of responsibility, and they're happy to yield 
+> their work as soon as the feature is merged to master :D In which case, yea, acceptance tests can be 
+> the DoD for them.
+
 **Key Characteristics:**
 
-- **Defines behavior**: Specifies WHAT the system does, not HOW
-- **Uses business language**: Written in terms stakeholders understand
-- **Provides automated verification**: User story is complete only when acceptance tests pass
-- **Creates living documentation**: Tests document actual system behavior
-- **Forms executable specifications**: Tests ARE the specification in code
+- **Defining behaviour, not implementation**: Expresses the expected outcome, not means of achieving it.
+- **Uses business language**: Stakeholders and non-technical people can read it and make sense of it,
+ also spot mistakes and suggest corrections or ideas.
+
+These three are so close in meaning, that it's hard for me to actually talk about them in isolation.
+
+- **automated verification**: The existence/absence of an expected feature can be unambiguously determined by the acceptance suite. 
+- **executable specification**: Describes the desired behaviour, so precisely that it can execute.
+- **living documentation**: Provides a documentation of the system, that is kept in-sync with the live system.
+
+> [!NOTE]
+> Notice: Also everything is correct. The only thing I would be picky is this part:
+> "User story is complete only when acceptance tests pass". It kinda suggests that
+> a user story is: an item of work, a task to be done, something that you schedule to complete,
+> an entry in a ticketing system to work on, and then complete and sign off. I don't think
+> that's right. A user story is a description of a user's, well, story :D It's just a 
+> description of what the user does. I don't think it makes sense to talk about them 
+> like "I need to pick up a user story", "I need to implement a user story", 
+> "I need to deploy a user story", it doesn't make much sense to me. The story just *is*. 
+> Think of it as a statement that is always right, like a trygonometric identity, 
+> the fact that water boils at 100*, that mammals have 4 legs. Would it make sense to say 
+> "I need to pick up that mammals have 4 legs", "I need to deploy mammals have 4 legs",
+> "I didn't finish that mammals have 4 legs yesterday"? Doesn't make sense to me too :D
+> 
+> Now, big, old corporations structure their work around task items. Someone creates
+> a list of "things to be done", keeps them in a list (jira, slack list, trello), 
+> and then developer "picks it up", works on it, and then declares it as finished.
+> 
+> With "agile transformation", when people were talking about user stories, they were
+> completely different things. A *user story* wasn't a synonym for a work item. 
+> But that's what big, old corporations did, they acquired the term *user story*, 
+> but nonetheless worked in the same way, where they would be placed in a 
+> task keeping software, would be picked up by programmers, worked on, and then deployed, 
+> and then it would be marked as "ready"/"done".
+> 
+> But just because an acceptance test passes, doesn't necessarily mean that the user 
+> received the benefit that the story promises. If you want to split work as tasks
+> among programmers, that's fine, but they're not user stories.
+> 
+> Long story short I would remove 
+> "**Provides automated verification**: User story is complete only when acceptance tests pass"
+> and rewrite it as something else. I suggested a rewrite above. 
 
 **Acceptance Testing vs E2E Testing:**
 
@@ -101,6 +149,28 @@ This blueprint combines Dave Farley's Four-Layer Model for acceptance testing wi
 | **Failure Indicates**     | Business logic problems     | Could be anything       |
 | **Speed**                 | Fast enough for CI/CD       | Often too slow          |
 | **Reliability**           | Deterministic               | Can be flaky            |
+
+
+> [!NOTE]
+> Info: Everything here is correct. Minor notes:
+> 
+> **Failure Indicates**: 
+> AT: business logic problems, build failed, integrations aren't compatible,
+> deploy or workflow problems, ui changed, system so slow that tests timeout,
+> flaky acceptance tests, persistence problems, local or remote setup invalid, 
+> data migration problem. Invalid implementation, in case of web: invalid html/css/js, etc.
+> Basically, anything that stops the user from getting value/benefits.
+> E2E: Same, + failure due to the external systems.
+> 
+> Or in other words:
+> 
+> AT: could be anything, but only stuff in our control
+> E2E: could be anything, but also stuff outside our control
+> 
+> **Speed**: Fast enough for CI/CD, if bottlenecks are removed.
+> 
+> **Reliability**: Deterministic, if done correctly (because ATs, if done incorrectly may not be deterministic)
+
 
 <a id="bdd"></a>
 
@@ -125,6 +195,9 @@ And "Buy milk" should not be in active todos       # Additional outcome
 
 <a id="test-isolation"></a>
 
+> [!NOTE]
+> Notice: Everything here is correct.
+
 ### The Three Levels of Test Isolation
 
 Per Dave Farley's definition, three levels of isolation are essential for reliable and fast acceptance testing.
@@ -144,6 +217,18 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 
 > For detailed guidance on which dependencies to mock versus use real in different test types, see [Appendix E: Dependencies and Mocking](../../appendix-e/dependencies-and-mocking.md).
 
+> [!NOTE]
+> Points 1, 3 and 4 are correct.
+> Notice: Point 2, is sort of true, but not fully. If a 3rd party is very reliable,
+> then if it never causes problems in your acceptance tests, you can keep it. 
+> If it's a cdn of some kind, or a service that you can use to load fonts or icons 
+> for your webpage, a process that executes locally, if it's so reliable it never fails,
+> then stubbing them might be an investment that won't pay off.
+> On the other hand, if something does cause problems, then you should stub it, 
+> even if it's on your local machine, like time or your file system.
+> 
+> I would say: Stub everything capable of **breaking your acceptance tests outside your control**. Keep everything else.
+
 #### 2. Functional Isolation
 
 **Run many tests in any order, in parallel, or individually against the same production-like system (e.g. with its real database) without interference:**
@@ -156,6 +241,11 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
   - For a school management app, each test might create a whole new school with all its various business logic entities and rules
   - For e-commerce, each test might create a unique customer and their products
 - After a test run is over, your system will contain accumulated test data. That's okay! Discard the test SUT and start fresh for the next run
+
+> [!NOTE]
+> Info: Everything here is correct.
+> Notice: Discarding the SUT after the suite can be done, but it's not necessary. 
+> If partitioning is done correctly, another test suite can run freely.
 
 #### 3. Temporal Isolation
 
@@ -172,6 +262,9 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 > This is the one intentional piece of shared state: it enables temporal isolation and deterministic numbering without manual cleanup. When you restart the test runner, the process terminates and the OS reclaims all process memory (including the static `globalSequenceNumbers` map), so the new process starts with a fresh empty map.
 
 <a id="four-layer-architecture"></a>
+
+> [!NOTE]
+> Info: Everything here is correct.
 
 ## The Four-Layer Model Architecture
 
@@ -219,6 +312,9 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - Never references technical implementation
 - Maps 1:1 to BDD scenarios
 
+> [!NOTE]
+> Info: Everything here is correct.
+
 #### 🗣️ Layer 2 Responsibilities: Domain-Specific Language (DSL)
 
 **Purpose:** Translate business language into system interactions, while handling test isolation and keeping executable specifications free of technical details
@@ -230,6 +326,9 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - **Isolation infrastructure**: Uses methods like `params.alias()` to implement functional and temporal test isolation, to enable safe parallel test execution
 - **Pure translation layer**: NO assertions, NO failures, NO business or verification logic
 - **Simply calls Protocol Driver**: Transforms business language to driver calls
+
+> [!NOTE]
+> Info: Everything here is correct.
 
 #### 🔌 Layer 3 Responsibilities: Protocol Drivers & Stubs
 
@@ -254,6 +353,9 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - Allow tests to define specific responses
 - Ensure tests are predictable and reliable
 
+> [!NOTE]
+> Info: Everything here is correct.
+
 #### 🏭 Layer 4 Responsibilities: System Under Test (SUT)
 
 **Purpose:** The actual application being tested
@@ -266,6 +368,9 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 - Accept concurrent test data
 
 <a id="ai-workflow"></a>
+
+> [!NOTE]
+> Info: Everything here is correct.
 
 ## AI-Augmented Workflow
 
