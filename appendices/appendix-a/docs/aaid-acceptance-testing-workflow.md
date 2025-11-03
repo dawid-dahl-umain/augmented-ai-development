@@ -142,7 +142,7 @@ These three are so close in meaning, that it's hard for me to actually talk abou
 > non-questionable. It's a small description. Where-as the "tasks", when completed,
 > can turn out to be invalid/unecessary/failed-experiment/in-need-of-revert/buggy/not-fulfilling-the-need.
 > So the user story is like an expression of expected user benefit, and a task can be thought
-> of as a solitary attempt to achieve that.
+> of as a solitary attempt to achieve that, but it might not.
 > 
 > But just because an acceptance test passes, doesn't necessarily mean that the user 
 > received the benefit that the story promises. If you want to split work as tasks
