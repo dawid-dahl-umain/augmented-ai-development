@@ -85,7 +85,8 @@ This blueprint combines Dave Farley's Four-Layer Model for acceptance testing wi
 
 > [!NOTE]
 > Notice: Not incorrect per-se, but with DevOps and influence from Jez Humble, I wouldn't be so quick
-> to say that acceptance tests are a definition-of-done, to the bone.
+> to say that acceptance tests are a definition-of-done, to the bone. I mean, they're necessary
+> but not sufficient.
 > If you as a programmer, are only every responsible for just "pushing stuff out the door", then yes.
 > But I think Dave and Jez would agree, that the job of a developer isn't just to push stuff out the door,
 > but it's to achieve some kind of objective/benefit/goal. So in that case, the definition-of-done
