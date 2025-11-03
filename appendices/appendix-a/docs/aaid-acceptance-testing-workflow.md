@@ -122,7 +122,7 @@ These three are so close in meaning, that it's hard for me to actually talk abou
 > "I didn't finish that mammals have 4 legs yesterday"? Doesn't make sense to me too :D
 > 
 > Now, big, old corporations structure their work around task items. Someone creates
-> a list of "things to be done", keeps them in a list (jira, slack list, trello), 
+> a list of "things to be done", keeps them in a list (jira, slack list, trello),
 > and then developer "picks it up", works on it, and then declares it as finished.
 > 
 > With "agile transformation", when people were talking about user stories, they were
@@ -130,7 +130,19 @@ These three are so close in meaning, that it's hard for me to actually talk abou
 > But that's what big, old corporations did, they acquired the term *user story*, 
 > but nonetheless worked in the same way, where they would be placed in a 
 > task keeping software, would be picked up by programmers, worked on, and then deployed, 
-> and then it would be marked as "ready"/"done".
+> and then it would be marked as "ready"/"done". You can keep user stories in your
+> jira if you'd like, and that's fine. But as soon as people assign "statuses" to it,
+> as if "this story is in progress", "this is implemented", then they're being
+> transmorgified into task items. Don't get me wrong, you can *link*
+> multiple task items to a user story, and those task items can be progress/implemented/deployed.
+> So you can see, story of "As a winning user, I place my final move, to be declared the winner of the game"
+> can never be "implemented" or "deployed". It's just a description. But it can be assigned
+> multiple tasks, such as "show window when winning", "gather user input", and *these tasks*
+> can be implemented/deployed/in-progress. The difference is, that the user story is
+> non-questionable. It's a small description. Where-as the "tasks", when completed,
+> can turn out to be invalid/unecessary/failed-experiment/in-need-of-revert/buggy/not-fulfilling-the-need.
+> So the user story is like an expression of expected user benefit, and a task can be thought
+> of as a solitary attempt to achieve that.
 > 
 > But just because an acceptance test passes, doesn't necessarily mean that the user 
 > received the benefit that the story promises. If you want to split work as tasks
