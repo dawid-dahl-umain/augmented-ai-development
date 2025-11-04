@@ -138,9 +138,11 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
 **Be very specific about the boundaries of your system-under-test:**
 
 - Test at your system boundary using its normal interfaces directly
-- Use stubs **only** for external third-party dependencies to capture assertions or inject inputs
-- Consider contract testing for external dependencies; mock during development, toggle to real calls before releases to verify the contract
-- Critical: Do not stub your own database, cache, or internal services; they are part of the SUT and must be exercised in a production-like environment, which is why isolation is mandatory.
+- **Stub only what can break tests outside your control:**
+  - External third-party dependencies (to capture assertions or inject inputs)
+  - Unpredictable elements like time/clock or filesystem (for deterministic tests)
+- **Do not stub your own database, cache, or internal services** - they are part of the SUT and must be exercised in a production-like environment
+- Consider contract testing for external dependencies: stub during development, toggle to real calls before releases to verify the contract
 
 > For detailed guidance on which dependencies to mock versus use real in different test types, see [Appendix E: Dependencies and Mocking](../../appendix-e/dependencies-and-mocking.md).
 
