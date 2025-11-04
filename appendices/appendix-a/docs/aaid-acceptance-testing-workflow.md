@@ -85,22 +85,22 @@ This blueprint combines Dave Farley's Four-Layer Model for acceptance testing wi
 
 **Key Characteristics:**
 
-- **Defines behavior**: Specifies WHAT the system does, not HOW
-- **Uses business language**: Written in terms stakeholders understand
-- **Provides automated verification**: User story is complete only when acceptance tests pass
-- **Creates living documentation**: Tests document actual system behavior
+- **Defining behaviour, not implementation**: Expresses the expected outcome, not means of achieving it
+- **Uses business language**: Stakeholders and non-technical people can read it and make sense of it, also spot mistakes and suggest corrections or ideas
+- **Provides automated verification**: User story is satisfied only when acceptance tests pass
+- **Creates living documentation**: Provides a documentation of the system, that is kept in-sync with the live system
 - **Forms executable specifications**: Tests ARE the specification in code
 
 **Acceptance Testing vs E2E Testing:**
 
-| Aspect                    | Acceptance Testing          | E2E Testing             |
-| ------------------------- | --------------------------- | ----------------------- |
-| **Scope**                 | Tests via system boundaries | Tests entire deployment |
-| **External Dependencies** | Stubs third-party systems   | Uses real systems       |
-| **Internal Dependencies** | Uses real database/cache    | Uses real everything    |
-| **Failure Indicates**     | Business logic problems     | Could be anything       |
-| **Speed**                 | Fast enough for CI/CD       | Often too slow          |
-| **Reliability**           | Deterministic               | Can be flaky            |
+| Aspect                    | Acceptance Testing                     | E2E Testing                           |
+| ------------------------- | -------------------------------------- | ------------------------------------- |
+| **Scope**                 | Tests via system boundaries            | Tests entire deployment               |
+| **External Dependencies** | Stubs third-party systems              | Uses real systems                     |
+| **Internal Dependencies** | Uses real database/cache               | Uses real everything                  |
+| **Failure Indicates**     | Issues within your control             | Issues within or outside your control |
+| **Speed**                 | Fast enough for CI/CD (when optimized) | Often too slow                        |
+| **Reliability**           | Deterministic (when properly isolated) | Can be flaky                          |
 
 <a id="bdd"></a>
 
@@ -644,7 +644,9 @@ describe("User archives completed todos", () => {
   let dsl: Dsl
 
   beforeEach(() => {
-    const driver = createProtocolDriver(process.env.TEST_PROTOCOL || "ui")
+    const driver = createProtocolDriver(
+      process.env.ACCEPTANCE_TEST_PROTOCOL || "ui"
+    )
 
     dsl = new Dsl(driver)
   })
@@ -1005,7 +1007,9 @@ export const createProtocolDriver = (protocol: string): ProtocolDriver => {
 import { createProtocolDriver } from "../protocol-driver/factory"
 
 beforeEach(() => {
-  const driver = createProtocolDriver(process.env.TEST_PROTOCOL || "ui")
+  const driver = createProtocolDriver(
+    process.env.ACCEPTANCE_TEST_PROTOCOL || "ui"
+  )
 
   dsl = new Dsl(driver)
 })
@@ -1013,9 +1017,9 @@ beforeEach(() => {
 
 Run tests with different protocols:
 
-- `TEST_PROTOCOL=ui npm test` (default)
-- `TEST_PROTOCOL=api npm test`
-- `TEST_PROTOCOL=cli npm test`
+- `ACCEPTANCE_TEST_PROTOCOL=ui npm test` (default)
+- `ACCEPTANCE_TEST_PROTOCOL=api npm test`
+- `ACCEPTANCE_TEST_PROTOCOL=cli npm test`
 
 <a id="protocol-drivers"></a>
 

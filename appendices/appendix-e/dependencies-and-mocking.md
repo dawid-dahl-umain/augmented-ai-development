@@ -71,7 +71,7 @@ Now for the key question: how does each test type handle the four dependency cat
 | 🔌 **Integration Tests**             | Real     | Real or Mocked\* | **Real** (only direct dependencies of adapter) | Mocked                                                    | Mocked                                               |
 | 🤝 **Bidirectional Contract Tests**  | Real     | Real or Mocked\* | Mocked\*\*                                     | **Toggleable** (mocked for dev, real with provider state) | Not applicable                                       |
 | ➡️ **Unidirectional Contract Tests** | Real     | Real or Mocked\* | Mocked\*\*                                     | Not applicable                                            | **Toggleable** (mocked for dev, minimal real checks) |
-| 🎯 **Acceptance Tests**              | Real     | Real             | Real (all managed dependencies)                | Mocked                                                    | Mocked                                               |
+| 🎯 **Acceptance Tests**              | Real     | Real or Mocked\* | Real (all managed dependencies)                | Mocked                                                    | Mocked                                               |
 | 👁️ **Visual/Sensory Validation**     | N/A      | N/A              | N/A                                            | N/A                                                       | N/A                                                  |
 
 > \* _Impure IPD may be real in integration and contract tests if stable and doesn't compromise test reliability_

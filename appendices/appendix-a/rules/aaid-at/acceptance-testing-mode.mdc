@@ -24,8 +24,9 @@ Why isolation matters: Acceptance tests run against production-like SUT with rea
 
 - **Functional isolation**: Each test creates unique domain partition (e.g., user account with aliased email)
 - **Temporal isolation**: `params.alias("email")` takes `"user@test.com"` from args → returns `"user@test.com1"`, `"user@test.com2"`, etc.
-- Alias: account identifiers (emails, usernames), data names (todo names, order IDs)
-- Don't alias: passwords, descriptions, roles (use `params.optional()` for defaults)
+- Alias identifiers that establish boundaries or must stay unique (emails, usernames, todo names, order IDs)
+- Use `params.optional()` for descriptive or non-unique fields (passwords, descriptions, roles)
+- Use `params.optionalSequence()` for deterministic sequential values and `params.optionalList()` for list defaults when scenarios omit them
 
 **Stubbing:**
 
@@ -65,7 +66,7 @@ Transform BDD scenarios (Given-When-Then format) into executable acceptance test
 ## Acceptance Testing Workflow Sequence
 
 1. **Stage 1: Context** - Gather project/feature context, BDD scenarios, architecture
-2. **Stage 2: Planning** - Extract domain concepts, choose driver type, outline isolation
+2. **Stage 2: Planning** - Extract domain concepts, choose driver type, outline isolation. If an Acceptance Test Strategy Roadmap exists, review it; otherwise ask whether to generate one before entering Phase 1.
 3. **Stage 3: Three-Phase Cycle** - Phase 1 → 2 → 3 with review after each
 4. **Stage 4: Complete** - Repeat or confirm done
 
@@ -100,9 +101,9 @@ Stop for review after every phase. Remember the current phase between messages.
 - Use only `// Given`, `// When`, `// Then`, `// And`, `// But` comments in executable specs
 - Test file pattern: `let dsl: Dsl` + `beforeEach(() => { dsl = new Dsl(createProtocolDriver(...)) })` - guarantees fresh DSL/context per test
 - Test file imports test runner functions (Vitest/Jest: `describe`, `it`, `beforeEach`) - minimal coupling at test file level only
-- Test file imports factory: `createProtocolDriver(process.env.TEST_PROTOCOL || "ui")` for runtime protocol selection
+- Test file imports factory: `createProtocolDriver(process.env.ACCEPTANCE_TEST_PROTOCOL || "ui")` for runtime protocol selection
 - First action in each test: create account boundary (e.g., `dsl.user.hasAccount({ email: "..." })`)
-- DSL methods: use `params.alias()` for identifiers, `params.optional()` for defaults
+- DSL methods: use `params.alias()` for identifiers and `params.optional()`/`params.optionalSequence()`/`params.optionalList()` for defaults
 - Output: failing spec plus DSL layer skeleton → stop for review
 
 ### 🟢 Phase 2 · Protocol Driver Implementation
@@ -116,14 +117,14 @@ Stop for review after every phase. Remember the current phase between messages.
 
 ### 🧼 Phase 3 · Refine & Validate Isolation
 
-- Verify system, functional, and temporal isolation
+- Verify system, functional, and temporal isolation by running specs in parallel and re-running a scenario to confirm deterministic results
 - Keep DSL natural language, remove duplication, ensure layer separation
 - Output: polished four-layer solution with tests green → stop for final review
 
 ## Critical Rules
 
 - Always use `params.alias()` for identifiers (emails, usernames, todo names, order IDs) - enables parallel execution and repeatable runs
-- Use `params.optional()` for non-essential parameters to keep DSL calls readable and business-focused
+- Use `params.optional()` for non-essential parameters and `params.optionalSequence()`/`params.optionalList()` when defaults must stay deterministic or ordered
 - Each test must create its own domain partition (e.g., unique account) as first step
 - DSL names mirror BDD wording exactly (`hasCompletedTodo`, `archives`, `confirmInArchive`)
 - DSL depends ONLY on `ProtocolDriver` interface, never concrete driver implementations
