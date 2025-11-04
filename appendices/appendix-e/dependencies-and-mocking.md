@@ -74,7 +74,7 @@ Now for the key question: how does each test type handle the four dependency cat
 | 🎯 **Acceptance Tests**              | Real     | Real or Mocked\* | Real (all managed dependencies)                | Mocked                                                    | Mocked                                               |
 | 👁️ **Visual/Sensory Validation**     | N/A      | N/A              | N/A                                            | N/A                                                       | N/A                                                  |
 
-> \* _Impure IPD may be real in integration and contract tests if stable and doesn't compromise test reliability_
+> \* _Impure IPD may be real in integration, contract, and acceptance tests if stable and doesn't compromise test reliability (e.g., mock time/clock for determinism)_
 
 > \*\* _Contract test adapters often have no managed dependencies since they focus on external service interaction. When present (e.g., caching, logging), mock them to keep tests focused on the contract_
 
