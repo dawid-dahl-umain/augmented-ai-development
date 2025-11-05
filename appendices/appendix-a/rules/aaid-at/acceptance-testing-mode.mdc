@@ -1,7 +1,7 @@
 ---
 description: Acceptance Testing Mode overrides standard AAID instructions for acceptance-testing-blueprint
 globs:
-  - acceptance-test/**
+  - test/acceptance/**
 alwaysApply: false
 ---
 
@@ -104,6 +104,7 @@ Stop for review after every phase. Remember the current phase between messages.
 - Test file imports factory: `createProtocolDriver(process.env.ACCEPTANCE_TEST_PROTOCOL || "ui")` for runtime protocol selection
 - First action in each test: create account boundary (e.g., `dsl.user.hasAccount({ email: "..." })`)
 - DSL methods: use `params.alias()` for identifiers and `params.optional()`/`params.optionalSequence()`/`params.optionalList()` for defaults
+- DSL calls driver methods that don't exist yet - compilation failures count as valid RED state per TDD's Three Laws
 - Output: failing spec plus DSL layer skeleton → stop for review
 
 ### 🟢 Phase 2 · Protocol Driver Implementation

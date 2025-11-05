@@ -407,6 +407,7 @@ The cycle follows three phases lightly mirroring the TDD RED/GREEN/REFACTOR patt
 - DSL layer with natural language methods
 - Implements isolation strategy from Stage 2: uses `params.alias()` to make user-provided identifiers unique
 - Keeps tests readable: uses `params.optional()`, `params.optionalSequence()`, and `params.optionalList()` to provide defaults
+- DSL calls driver methods that don't exist yet; compilation failures are valid RED state per TDD's [Three Laws](https://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html)
 
 **Example generation:**
 
