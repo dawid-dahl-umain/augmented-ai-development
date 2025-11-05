@@ -133,6 +133,8 @@ Acceptance tests run against your real, production-like system, including the re
 
 To keep test suites fast, we run tests in parallel. Isolation prevents tests from interfering with each other during parallel execution and ensures repeatable results across multiple runs.
 
+> ⚠️ **Database Isolation**: Acceptance tests must use a dedicated test database, completely separate from development and production databases. This prevents any risk of test cleanup or data manipulation affecting real data. Never run acceptance tests against databases containing actual user or business data.
+
 #### 1. System-Level Isolation
 
 **Be very specific about the boundaries of your system-under-test:**
@@ -158,6 +160,30 @@ To keep test suites fast, we run tests in parallel. Isolation prevents tests fro
   - For a school management app, each test might create a whole new school with all its various business logic entities and rules
   - For e-commerce, each test might create a unique customer and their products
 - After a test run is over, your system will contain accumulated test data. That's okay! Discard the test SUT and start fresh for the next run
+
+**Test Lifecycle:**
+
+```text
+beforeAll/globalSetup
+  └─> Clear database (ONLY cleanup point)
+
+Test 1
+  └─> Creates "User1", "Todo1"  → Data persists
+
+Test 2 (parallel)
+  └─> Creates "User2", "Todo2"  → Data accumulates
+
+Test 3 (parallel)
+  └─> Creates "User3", "Todo3"  → Data accumulates
+
+afterEach  → NO cleanup
+afterAll   → NO cleanup
+
+Next test run
+  └─> Clear database → Fresh start
+```
+
+Data accumulates safely during the run because aliasing prevents collisions. Cleanup only happens at the start of the next run.
 
 #### 3. Temporal Isolation
 
