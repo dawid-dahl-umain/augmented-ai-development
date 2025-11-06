@@ -35,6 +35,7 @@ _Professional Acceptance Testing for AI-Augmented Software Development_
   - [Layer 2: Domain-Specific Language](#layer-2-dsl)
     - [Core DSL Utilities](#core-utilities)
     - [Domain-Specific DSL Classes](#dsl-classes)
+    - [Scenario Seeding](#scenario-seeding)
   - [Layer 3: Protocol Drivers & Stubs](#layer-3-protocol-drivers)
     - [Protocol Driver Interface](#protocol-driver-interface)
     - [Protocol Driver Factory](#protocol-driver-factory)
@@ -952,6 +953,18 @@ export class Dsl {
 ```
 
 Encapsulating DSL domain objects in a class ensures each test receives a fresh `DslContext` and newly wired protocol drivers. This guarantees isolation: tests cannot share state, aliases are scoped per-test, and parallel execution is safe. The first action in each test typically establishes the functional isolation boundary (creating a unique account), with subsequent operations operating within that boundary.
+
+<a id="scenario-seeding"></a>
+
+#### Scenario Seeding
+
+Scenarios often need background data the Gherkin doesn't explicitly mention (default todo categories, predefined tags, standard templates). DSL helpers can seed this context using ubiquitous language. The protocol driver provisions this data through the system's public interfaces with proper aliasing (following the same patterns in Core DSL Utilities) to maintain isolation.
+
+**Conventions:**
+
+- Explicit entity: When Gherkin names it, seed in that Given (e.g., "Given a todo 'Buy milk' exists")
+- Implicit background: Add one seeding Given before the scenario (e.g., "Given the standard todo categories are available")
+- Never hide seeding in later steps; make it visible upfront
 
 <a id="layer-3-protocol-drivers"></a>
 
