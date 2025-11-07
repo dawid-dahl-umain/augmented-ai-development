@@ -1120,9 +1120,13 @@ export class UIDriver implements ProtocolDriver {
 
 > **Full Example**: See complete UIDriver implementation with all operations in the [demo repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo).
 
-**UI Driver Performance Tip:**
+**UI Driver Composition Tip:**
 
-> 💡 Web drivers (Playwright, Selenium) are slower when clicking through forms repeatedly for test setup. Consider a hybrid approach: use API calls for setup operations (`hasAccount`, `hasCompletedTodo`), then UI for actual test actions (When/Then steps). This is a pragmatic exception where the driver internally chooses the fastest protocol for setup while using UI for verification.
+> 💡 When the Web UI can’t create all required state (for example, missing admin setup screens), use a hybrid approach: let the UIDriver internally inject a CLI or API driver and delegate Given steps to it for fast, complete setup.
+>
+> Use the UI only for When and Then steps.
+>
+> This keeps tests isolated, fast, and realistic while preserving a 1:1 Gherkin mapping and clear business language.
 
 <a id="assertion-mechanism"></a>
 
