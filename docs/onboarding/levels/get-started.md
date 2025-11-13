@@ -27,7 +27,7 @@ AAID is a feature development workflow. You need:
 
 > **Note**: AAID doesn't set up your project infrastructure. Use framework generators (`create-vite`, `create-next-app`, etc.) or set up tooling manually before starting AAID.
 >
-> **How is scaffolding verified?** Basic tooling has no custom behavior to test. Verify by running it; if it works, you're done. [Acceptance tests](../../../appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md) catch integration issues. AAID with TDD applies when you implement _custom_ infrastructure with testable behavior (adapters, middleware, etc). See [Appendix D](../../../appendices/appendix-d/handling-technical-implementation-details.md#scaffolding-and-prerequisites).
+> **How is scaffolding verified?** Basic tooling has no custom behavior to test. Verify by running it; if it works, you're done. [Acceptance tests](../../../appendices/appendix-a/docs/aaid-acceptance-testing-workflow.md) will catch integration issues. AAID with TDD applies when you implement _custom_ infrastructure with testable behavior (adapters, middleware, etc). See [Appendix D](../../../appendices/appendix-d/handling-technical-implementation-details.md#scaffolding-and-prerequisites).
 
 ## 🚀 Quick Setup
 
