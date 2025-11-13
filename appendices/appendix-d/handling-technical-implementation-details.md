@@ -106,6 +106,10 @@ Basic project scaffolding—running framework generators, configuring linters an
 
 It is when you start to implement custom infrastructure with testable behavior—database adapters, authentication services, custom middleware—that you follow `AAID` as Non-Observable Technical with TDD.
 
+| 🔍                                                                                                                                                                                                                                                                                                               |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **How to verify scaffolding?** Basic tooling has no custom behavior to test. Verify by running it; if it works, you're done. [Acceptance tests](../appendix-a/docs/aaid-acceptance-testing-workflow.md) will catch integration issues if your project setup breaks. `AAID` applies when you write _custom code_. |
+
 The remainder of this appendix focuses on that latter category: implementing and testing custom infrastructure elements using `AAID`.
 
 ## Examples of Implementation Categories in Practice

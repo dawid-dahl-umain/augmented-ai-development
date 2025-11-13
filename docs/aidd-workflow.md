@@ -208,7 +208,9 @@ This article is not about this product discovery and specification refinement st
 > ✅ **Specifications ready**: User stories with BDD scenarios from Product Discovery<br />
 > ✅ **Working project**: Development environment, test runner, linting and basic tooling configured (new or existing codebase)
 >
-> **Note**: Basic project scaffolding (running framework generators, setting up config files) involves structural setup rather than implementable technical contracts, placing it outside `AAID`'s TDD workflow. Custom infrastructure _implementations_ (adapters, middleware, auth setup, etc) use `AAID` with TDD. See [Appendix D](#appendix-d) for details on technical implementation.
+> **Note**: Basic project scaffolding (running framework generators, setting up config files) involves structural setup rather than implementable technical contracts, placing it outside `AAID`'s TDD workflow.
+>
+> How to verify scaffolding? Run it; if it works, you're done. [Acceptance tests](#appendix-a) will catch integration issues. `AAID` applies when you implement custom infrastructure with testable behavior (adapters, middleware, auth setup, etc). See [Appendix D](#appendix-d) for details.
 
 Setting up `AAID` takes just three steps:
 

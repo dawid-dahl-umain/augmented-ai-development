@@ -1122,7 +1122,7 @@ export class UIDriver implements ProtocolDriver {
 
 **UI Driver Composition Tip:**
 
-> 💡 When the Web UI can’t create all required state (for example, missing admin setup screens), use a hybrid approach: let the UIDriver internally inject a CLI or API driver and delegate Given steps to it for fast, complete setup.
+> 💡 When the Web UI can’t create all required state (for example, not offering admin setup screens), use a hybrid approach: let the UIDriver internally inject a CLI or API driver and delegate Given steps to it for fast, complete setup.
 >
 > Use the UI only for When and Then steps.
 >
