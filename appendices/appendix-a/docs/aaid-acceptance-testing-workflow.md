@@ -246,10 +246,10 @@ Data accumulates safely during the run because aliasing prevents collisions. Cle
 
 **Characteristics:**
 
-- Uses Given-When-Then structure
-- Focuses on single outcomes
-- Never references technical implementation
-- Maps 1:1 to BDD scenarios
+- **Given-When-Then structure**: Standard BDD format
+- **Single outcome focus**: Each test verifies one behavior
+- **No technical details**: Never references implementation
+- **1:1 BDD mapping**: Each scenario maps to exactly one test
 
 #### 🗣️ Layer 2 Responsibilities: Domain-Specific Language (DSL)
 
@@ -258,10 +258,10 @@ Data accumulates safely during the run because aliasing prevents collisions. Cle
 **Key Features:**
 
 - **Natural language methods**: Match BDD scenarios exactly
-- **Parameter handling**: Uses sensible defaults and optional parameters, to make the executable specifications readable and free from unecessary technical details
-- **Isolation infrastructure**: Uses methods like `params.alias()` to implement functional and temporal test isolation, to enable safe parallel test execution
-- **Pure translation layer**: NO assertions, NO failures, NO business or verification logic
-- **Simply calls Protocol Driver**: Transforms business language to driver calls
+- **Parameter handling**: Uses sensible defaults and optional parameters to keep executable specifications readable
+- **Isolation infrastructure**: Uses `params.alias()` to implement functional and temporal test isolation for safe parallel execution
+- **Pure translation layer**: NO assertions, NO failures, NO logic; simply transforms business language to driver calls
+- **Stateless**: DSL holds no business state; the SUT is the single source of truth
 
 #### 🔌 Layer 3 Responsibilities: Protocol Drivers & Stubs
 
@@ -269,22 +269,18 @@ Data accumulates safely during the run because aliasing prevents collisions. Cle
 
 **Protocol Drivers:**
 
-- Translate abstract commands from DSL into concrete interactions with system's interfaces
-- One driver per protocol: each communication channel (UI, API, CLI, message queue) gets its own dedicated driver class
-- Implement a common `ProtocolDriver` interface: enables protocol abstraction and runtime switching
-- Handle specifics of communication protocol (HTTP requests, browser automation, message queues)
-- Contains ALL assertions and failures: This is where pass/fail decisions are made
-- Framework-agnostic failures: throw standard `Error` (not framework-specific methods like `expect.fail()`)
-- DSL depends only on the interface: never imports concrete driver implementations
-- Each operation should be atomic and reliable
-- Hide complex flows: `hasAccount` may involve register + login, establishing the functional isolation boundary for all subsequent operations
+- **Stateless**: Drivers hold no business state; always query the SUT for verification. (Exceptions: could e.g. include tracking last request in web driver.)
+- **All assertions here**: Contains ALL assertions and failures; throw standard `Error` (not framework-specific methods like `expect.fail()`)
+- **Abstract to concrete**: Translate abstract DSL commands into concrete system interactions
+- **One driver per protocol**: Each channel (UI, API, CLI, message queue) gets its own driver class handling protocol specifics (HTTP, browser automation, etc.)
+- **Common interface**: All drivers implement `ProtocolDriver` interface; DSL depends only on interface, never concrete implementations
+- **Atomic operations**: Each operation should be atomic and reliable
+- **Hide complex flows**: `hasAccount` may involve register + login, establishing the functional isolation boundary
 
 **External System Stubs:**
 
-- Isolate the SUT from ONLY external third-party dependencies (payment gateways, third-party APIs)
-- Never stub internal systems you control (your database, cache, message queues)
-- Allow tests to define specific responses
-- Ensure tests are predictable and reliable
+- **Third-party only**: Stub ONLY external dependencies (payment gateways, third-party APIs); never stub your database, cache, or internal services
+- **Configurable and deterministic**: Allow tests to define specific responses for predictable, reliable test execution
 
 #### 🏭 Layer 4 Responsibilities: System Under Test (SUT)
 
@@ -292,10 +288,9 @@ Data accumulates safely during the run because aliasing prevents collisions. Cle
 
 **Configuration:**
 
-- Deploy as in production
-- Include your database, cache, and internal services; everything you are directly responsible for (as opposed to third-party external APIs)
-- Optimize for fast startup
-- Accept concurrent test data
+- **Production-like deployment**: Same architecture and technologies as production
+- **Include internal systems**: Your database, cache, internal services; everything you control (not third-party APIs)
+- **Optimized for testing**: Fast startup, handles concurrent test data
 
 <a id="ai-workflow"></a>
 
@@ -1491,7 +1486,7 @@ async hasAccount(args: AccountParams = {}) {
   const params = new Params(this.context, args);
   const email = params.alias("email");  // Creates unique account: user@test.com1, user@test.com2, etc.
 
-  return this.driver.hasAccount(email);  // Driver stores account in instance variable for this test's operations
+  return this.driver.hasAccount(email);  // Creates account in SUT; driver remains stateless
 }
 
 // Step 2: Operate within that account with temporal isolation
@@ -1499,7 +1494,7 @@ async hasCompletedTodo(args: TodoParams = {}) {
   const params = new Params(this.context, args);
   const name = params.alias("name");  // Unique within account: "Buy milk1", "Buy milk2", etc.
 
-  return this.driver.hasCompletedTodo(name);  // Uses the account this driver instance stored
+  return this.driver.hasCompletedTodo(name);  // Interacts with SUT; state lives in SUT, not driver
 }
 ```
 
