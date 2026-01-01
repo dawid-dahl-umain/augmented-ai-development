@@ -1119,7 +1119,8 @@ export class ApiTodosDriver implements TodoDriver {
 
 - **Composed structure**: Main driver composes domain-specific drivers
 - **Shared utilities**: `core/` folder contains HTTP/browser helpers used by all term drivers
-- Throws standard `Error` with descriptive messages (framework-agnostic)
+- **Success = silent completion**: Methods return `Promise<void>`; just let the method finish without throwing (resolved promise = pass)
+- **Failure = thrown Error**: Throw standard `Error` with descriptive message (rejected promise = fail)
 - Atomic operations: each method fully succeeds or clearly fails
 - Hides complex flows: `hasAccount` may involve register + login internally
 
