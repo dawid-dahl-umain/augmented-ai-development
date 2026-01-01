@@ -1047,11 +1047,12 @@ export const scenario = (name: string, fn: ScenarioFn): void => {
 
 > 💡 `it.concurrent` runs tests in parallel within a file (not just across files). Because our isolation techniques prevent test interference, we can safely run all scenarios concurrently for faster feedback.
 
-Run tests with different protocols:
+Run tests with different protocols by for example setting an environment variable (use a dedicated script like `test:at` to separate from unit/integration tests):
 
-- `ACCEPTANCE_TEST_PROTOCOL=ui npm test` (default)
-- `ACCEPTANCE_TEST_PROTOCOL=api npm test`
-- `ACCEPTANCE_TEST_PROTOCOL=cli npm test`
+```bash
+ACCEPTANCE_TEST_PROTOCOL=api npm run test:at
+ACCEPTANCE_TEST_PROTOCOL=web npm run test:at
+```
 
 <a id="protocol-drivers"></a>
 
