@@ -1157,26 +1157,34 @@ Implement system-level isolation - stub ONLY third-party systems:
 ```typescript
 // protocol-driver/stubs/email-service.stub.ts
 
-export class EmailServiceStub {
-  private sentEmails = new Map<string, any[]>()
+export class EmailServiceStub implements EmailService {
+  private shouldSucceed = true
+  private sentEmails: Array<{ to: string; subject: string }> = []
 
-  async setupSuccessResponse(): Promise<void> {
-    /* ... */
+  // Setup: configure stub behavior before test action
+  onSendApprove(): void {
+    this.shouldSucceed = true
   }
-  async setupFailureResponse(reason: string): Promise<void> {
-    /* ... */
+  onSendReject(): void {
+    this.shouldSucceed = false
   }
-  async sendEmail(to: string, subject: string, body: string): Promise<void> {
-    /* ... */
+
+  // Interface method: called by SUT instead of real service
+  async sendEmail(to: string, subject: string): Promise<boolean> {
+    if (this.shouldSucceed) {
+      this.sentEmails.push({ to, subject })
+    }
+    return this.shouldSucceed
   }
-  async getEmailsSentTo(address: string): Promise<any[]> {
-    /* ... */
-  }
-  async reset(): Promise<void> {
-    /* ... */
+
+  // Verification: called by driver to check what happened
+  wasSentTo(address: string): boolean {
+    return this.sentEmails.some(e => e.to === address)
   }
 }
 ```
+
+The driver holds a reference to the stub and calls setup methods (e.g., `stub.onSendReject()`) before triggering the SUT action. The SUT receives the stub via dependency injection instead of the real service.
 
 > **Note**: We only stub external third-party systems (payment gateways, email services, analytics). Never stub your own database, cache, or internal services - they're part of your system under test.
 
