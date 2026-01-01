@@ -30,8 +30,8 @@ graph TD
     %% PHASE 2 - GREEN-like
     Phase2["🟢 PHASE 2: Implement Protocol Driver & SUT Connection"]
     Phase2 --> P2_Act["Collaborate with AI to:<br/><br/>**Build Protocol Driver Following Stage 2 Roadmap**<br/><br/>(Connection Strategy, Implements Interface, Atomic Operations, External Stubs)"]
-    P2_Act --> P2_Check{"Executable Spec<br/>Passes?"}
-    P2_Check -->|No| P2_Fix["Debug Driver Implementation"]
+    P2_Act --> P2_Check{"Tests Execute<br/>Successfully?"}
+    P2_Check -->|No| P2_Fix["Fix Driver or Connection"]
     P2_Check -->|Yes| P2_Review
     P2_Fix --> P2_Act
     
@@ -58,7 +58,7 @@ graph TD
     NextScenario -->|Yes| NextInstruction["📌 Process Next Scenario<br/><br/><i>Return to Stage 3 with same DSL/Drivers</i>"]
     NextScenario -->|No| Complete
     
-    Complete["✨ Feature Complete<br/><br/>(All BDD Scenarios Passing)"]
+    Complete["✨ Feature Complete<br/><br/>(Testing Infrastructure Ready;<br/>Tests Pass When SUT Satisfies Specs)"]
     
     %% STYLES - Match AAID colors
     style Start fill:#f9f9f9,stroke:#333,stroke-width:3px,color:#000

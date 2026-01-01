@@ -311,7 +311,7 @@ This workflow adapts `AAID` (Augmented AI Development) principles for acceptance
 ### Workflow Diagram
 
 With context, specs, and environment in place, we're ready to start the AI-augmented acceptance testing cycle.  
-This diagram shows the **formal workflow**, with detailed explanations for each step in [Stage 1–3](#ai-workflow).
+[This diagram](../aaid-at-workflow.diagram.mermaid) shows the **formal workflow**, with detailed explanations for each step in Stage 1–3.
 
 ![AAID Acceptance Testing Workflow](../../../assets/at-ai-workflow-diagram.webp)
 
@@ -320,6 +320,27 @@ The diagram distinguishes the three review-driven phases of the workflow, lightl
 - **🔴 RED (Phase 1)**: Generate Executable Specs & DSL
 - **🟢 GREEN (Phase 2)**: Implement Protocol Driver & Connect SUT
 - **🧼 REFACTOR (Phase 3)**: Refactor Layers & Validate Isolation
+
+**Understanding the Parallel:**
+
+The acceptance testing workflow applies TDD to the testing infrastructure itself. Here's how the phases map:
+
+| TDD (Application Code)   | AT (Testing Infrastructure)               |
+| ------------------------ | ----------------------------------------- |
+| RED: Test runs, fails    | Phase 1: Test can't compile (no driver)   |
+| GREEN: Test runs, passes | Phase 2: Test can execute (driver exists) |
+| REFACTOR: Improve code   | Phase 3: Polish layers                    |
+
+In TDD, GREEN means application code makes the test pass. In acceptance testing, GREEN means the testing layers (spec + DSL + driver) are complete and tests can execute. Whether those tests pass or fail against the SUT depends on your development approach.
+
+**Development Order Flexibility:**
+
+AAID does not prescribe whether you build the SUT before or after writing acceptance tests. Both approaches are valid:
+
+- **SUT-first**: Build the implementation first, then write acceptance tests. Tests should pass when the driver connects.
+- **Test-first**: Write acceptance tests first as an executable target. Tests fail until the SUT is built to satisfy them.
+
+Teams choose based on their workflow. The acceptance testing cycle focuses on building robust testing infrastructure; SUT readiness is a separate concern.
 
 | 🔗                                                                                                                                                                             |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -472,9 +493,9 @@ async hasCompletedTodo(args: TodoParams = {}): Promise<void> {
 }
 ```
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                          |
-| ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Phase 1 Review Checklist:**<br>🔴 Natural language DSL methods match BDD scenarios<br>🔴 Proper aliasing for all identifiers<br>🔴 Only Gherkin comments in executable specs<br>🔴 Each BDD line maps to one DSL call |
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                        |
+| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Phase 1 Review Checklist:**<br>🔴 Natural language DSL methods match BDD scenarios<br>🔴 Proper aliasing for all identifiers<br>🔴 Only Gherkin comments in executable specs<br>🔴 Each BDD line maps to one DSL call<br>🔴 No state or SUT-connection logic in DSL |
 
 <a id="phase-2"></a>
 
@@ -526,9 +547,9 @@ export class UIDriver implements ProtocolDriver {
 
 Key driver responsibilities: implements `ProtocolDriver` interface, throws standard `Error` on failures, hides complex flows, establishes/uses account boundaries.
 
-| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                              |
-| --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Phase 2 Review Checklist:**<br>🟢 Tests passing with implemented drivers<br>🟢 Protocol driver successfully connects to SUT<br>🟢 Only external third-party systems stubbed<br>🟢 Driver contains all assertions/failures |
+| ⏸️ **STOP: AWAIT USER REVIEW**                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Phase 2 Review Checklist:**<br>🟢 Driver implements the `ProtocolDriver` interface<br>🟢 SUT connection configured and working<br>🟢 Tests execute without infrastructure errors<br>🟢 Only external third-party systems stubbed<br>🟢 Driver contains all assertions/failures<br>🟢 Driver is stateless (SUT is the source of truth; query it for verification)<br><br>_Note: Test outcomes depend on SUT readiness. If SUT exists, tests should pass. If test-first, tests fail until SUT is built. Both are valid._ |
 
 <a id="phase-3"></a>
 

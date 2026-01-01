@@ -13,10 +13,13 @@ When this mode is active, ignore the default AAID/TDD rules for matching accepta
 
 **Four-Layer Model:**
 
-- Layer 1: Executable Specs (test cases) - WHAT in business language, only calls DSL
-- Layer 2: DSL (Domain-Specific Language) - translates business language to driver calls, NO assertions, depends only on ProtocolDriver interface
-- Layer 3: Protocol Drivers + Stubs - HOW system is accessed, implements ProtocolDriver interface, contains ALL assertions/failures (throws Error)
-- Layer 4: SUT (System Under Test) - your actual deployed system (includes your DB, cache, services)
+- **Layer 1: Executable Specs** - WHAT in business language, only calls DSL
+- **Layer 2: DSL** - pure translation layer, depends only on ProtocolDriver interface
+  - NO assertions, NO business logic, stateless (SUT is source of truth)
+  - Only logic allowed: parameter handling and aliasing for test isolation
+- **Layer 3: Protocol Drivers + Stubs** - HOW system is accessed, implements ProtocolDriver interface
+  - Stateless (query SUT for verification), contains ALL assertions/failures (throws Error)
+- **Layer 4: SUT** - your actual deployed system (includes your DB, cache, services)
 
 **Isolation (enables parallel & repeated test runs):**
 
@@ -52,6 +55,8 @@ await dsl.user.hasCompletedTodo({ name: "Buy milk" })
 Transform BDD scenarios (Given-When-Then format) into executable acceptance tests using the Four-Layer Model.
 
 **Required Input:** BDD scenarios. If not provided, ask user for them before proceeding.
+
+**Development Order:** AAID does not prescribe SUT-first or test-first. Teams choose their approach. Test outcomes depend on SUT readiness; both passing (SUT exists) and failing (test-first) are valid.
 
 ## Mode Recognition
 
@@ -114,13 +119,13 @@ Stop for review after every phase. Remember the current phase between messages.
 - Stub only external third-party systems (see stubbing rules above)
 - All assertions/failures throw standard `Error` (framework-agnostic: works with any test runner)
 - Use factory pattern to create drivers: `createProtocolDriver(protocol)` enables runtime protocol selection
-- Output: specs passing through the driver (or report failures) → stop for review
+- Output: driver implementation complete, tests executable → stop for review (test outcomes depend on SUT readiness)
 
 ### 🧼 Phase 3 · Refine & Validate Isolation
 
 - Verify system, functional, and temporal isolation by running specs in parallel and re-running a scenario to confirm deterministic results
 - Keep DSL natural language, remove duplication, ensure layer separation
-- Output: polished four-layer solution with tests green → stop for final review
+- Output: polished four-layer solution with isolation validated → stop for final review
 
 ## Critical Rules
 
@@ -128,6 +133,8 @@ Stop for review after every phase. Remember the current phase between messages.
 - Use `params.optional()` for non-essential parameters and `params.optionalSequence()`/`params.optionalList()` when defaults must stay deterministic or ordered
 - Each test must create its own domain partition (e.g., unique account) as first step
 - DSL names mirror BDD wording exactly (`hasCompletedTodo`, `archives`, `confirmInArchive`)
+- DSL is pure translation: NO business logic, NO assertions - just parameter handling, aliasing, and driver delegation
+- DSL and drivers are stateless; SUT is the single source of truth - always query SUT for verification
 - DSL depends ONLY on `ProtocolDriver` interface, never concrete driver implementations
 - Driver methods return `Promise<void>`: resolve on success, throw `Error` on failure (no booleans)
 - All Protocol Drivers implement `ProtocolDriver` interface for runtime protocol switching
