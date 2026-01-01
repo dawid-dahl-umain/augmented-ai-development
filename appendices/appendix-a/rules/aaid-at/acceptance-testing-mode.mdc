@@ -108,7 +108,7 @@ Stop for review after every phase. Remember the current phase between messages.
 - Test file imports test runner functions (Vitest/Jest: `describe`, `it`, `beforeEach`) - minimal coupling at test file level only
 - Test file imports factory: `createProtocolDriver(process.env.ACCEPTANCE_TEST_PROTOCOL || "ui")` for runtime protocol selection
 - First action in each test: create account boundary (e.g., `dsl.user.hasAccount({ email: "..." })`)
-- DSL methods: use `params.alias()` for identifiers and `params.optional()`/`params.optionalSequence()`/`params.optionalList()` for defaults
+- DSL methods: apply aliasing per Isolation section above
 - DSL calls driver methods that don't exist yet - compilation failures count as valid RED state per TDD's Three Laws
 - Output: failing spec plus DSL layer skeleton → stop for review
 
@@ -129,15 +129,11 @@ Stop for review after every phase. Remember the current phase between messages.
 
 ## Critical Rules
 
-- Always use `params.alias()` for identifiers (emails, usernames, todo names, order IDs) - enables parallel execution and repeatable runs
-- Use `params.optional()` for non-essential parameters and `params.optionalSequence()`/`params.optionalList()` when defaults must stay deterministic or ordered
 - Each test must create its own domain partition (e.g., unique account) as first step
 - DSL names mirror BDD wording exactly (`hasCompletedTodo`, `archives`, `confirmInArchive`)
 - DSL is pure translation: NO business logic, NO assertions - just parameter handling, aliasing, and driver delegation
 - DSL and drivers are stateless; SUT is the single source of truth - always query SUT for verification
-- DSL depends ONLY on `ProtocolDriver` interface, never concrete driver implementations
 - Driver methods return `Promise<void>`: resolve on success, throw `Error` on failure (no booleans)
-- All Protocol Drivers implement `ProtocolDriver` interface for runtime protocol switching
 - Multi-step flows hidden in driver (e.g., `hasAccount` does register + login internally)
 - Polling with timeouts for async operations; no arbitrary `sleep()` calls
 
