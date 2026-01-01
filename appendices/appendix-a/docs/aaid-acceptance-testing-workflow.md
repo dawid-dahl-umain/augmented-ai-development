@@ -1321,7 +1321,7 @@ After working through the examples and understanding how the four layers interac
 | ---------------------------- | ----------------------------------------------------------------------------------- |
 | Natural language methods     | Method names match BDD scenarios exactly: `hasCompletedTodo`, not `createCompleted` |
 | Business-friendly vocabulary | Use `confirmInArchive`, not `assertInArchive`                                       |
-| Pure translation             | Transform business language to driver calls; no logic, no assertions                |
+| Pure translation             | Transform business language to driver calls; no logic, no assertions, no state      |
 | Object parameters            | Type-safe params for flexibility: `hasAccount({ email: "user@test.com" })`          |
 | Aliasing for isolation       | Use `params.alias()` to make identifiers unique across tests and runs               |
 | Sensible defaults            | Use `params.optional()` for technical details that don't matter in each scenario    |
