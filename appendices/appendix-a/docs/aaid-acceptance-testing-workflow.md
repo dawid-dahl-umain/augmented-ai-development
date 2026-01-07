@@ -208,6 +208,8 @@ Data accumulates safely during the run because aliasing prevents collisions. Cle
 
 <a id="layer-overview"></a>
 
+![AAID AT Four-Layer Model](../../../assets/aaid-at-four-layer-model.webp)
+
 ### Layer Overview
 
 ```
