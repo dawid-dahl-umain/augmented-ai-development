@@ -302,7 +302,7 @@ Data accumulates safely during the run because aliasing prevents collisions. Cle
 With context, specs, and environment in place, we're ready to start the AI-augmented acceptance testing cycle.  
 [This diagram](../aaid-at-workflow.diagram.mermaid) shows the **formal workflow**, with detailed explanations for each step in Stage 1–3.
 
-![AAID Acceptance Testing Workflow](../../../assets/at-ai-workflow-diagram.webp)
+![AAID Acceptance Testing Workflow](../../../assets/aaid-at-ai-workflow-h.webp)
 
 The diagram distinguishes the three review-driven phases of the workflow, lightly mirroring the RED/GREEN/REFACTOR phases of TDD:
 
