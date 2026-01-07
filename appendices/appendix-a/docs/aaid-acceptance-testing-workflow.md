@@ -326,8 +326,8 @@ In TDD, GREEN means application code makes the test pass. In acceptance testing,
 
 AAID does not prescribe whether you build the SUT before or after writing acceptance tests. Both approaches are valid:
 
-- **SUT-first**: Build the implementation first, then write acceptance tests. Tests should pass when the driver connects.
 - **Test-first**: Write acceptance tests first as an executable target. Tests fail until the SUT is built to satisfy them.
+- **SUT-first**: Build the implementation first, then write acceptance tests. Tests should pass when the driver connects.
 
 Teams choose based on their workflow. The acceptance testing cycle focuses on building robust testing infrastructure; SUT readiness is a separate concern.
 
