@@ -718,7 +718,20 @@ describe("User archives completed todos", () => {
 })
 ```
 
-The `scenario()` helper creates a fresh DSL instance for each test, guaranteeing isolation without boilerplate. Each test establishes its own functional isolation boundary by creating a unique user account.
+**Where does `dsl` come from?**
+
+The `scenario()` helper (see [Protocol Driver Factory](#protocol-driver-factory)) creates a fresh `Dsl` instance for each test and **injects it as a callback parameter**. This guarantees isolation without boilerplate:
+
+```typescript
+// The scenario() helper does this internally:
+scenario("should archive a completed todo", async dsl => {
+  // 1. scenario() creates a new Dsl instance with a fresh DslContext
+  // 2. scenario() passes that dsl into your callback
+  // 3. Your test uses dsl.users, dsl.todos, etc.
+})
+```
+
+Each test establishes its own functional isolation boundary by creating a unique user account. The `Dsl` class composes all domain-specific DSLs and wires them to a protocol driver.
 
 **Protocol Selection:**
 
@@ -1022,7 +1035,7 @@ export const createProtocolDriver = (protocol: string): ProtocolDriver => {
 }
 ```
 
-**Usage:** The `scenario()` helper calls this factory internally:
+**Usage:** The `scenario()` helper calls this factory internally and injects the `dsl` into your test callback:
 
 ```typescript
 // executable-specs/utils/scenario.ts
@@ -1043,11 +1056,13 @@ const createDsl = (): Dsl => {
 
 export const scenario = (name: string, fn: ScenarioFn): void => {
   it.concurrent(name, async () => {
-    const dsl = createDsl()
-    await fn(dsl)
+    const dsl = createDsl() // 1. Creates fresh Dsl with new DslContext
+    await fn(dsl) // 2. Injects dsl into your test callback
   })
 }
 ```
+
+This is why your test receives `dsl` as a parameter: `scenario("...", async dsl => { ... })`. Each test gets its own isolated `Dsl` instance.
 
 > 💡 `it.concurrent` runs tests in parallel within a file (not just across files). Because our isolation techniques prevent test interference, we can safely run all scenarios concurrently for faster feedback.
 
