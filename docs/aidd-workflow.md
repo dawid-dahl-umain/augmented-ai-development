@@ -419,7 +419,7 @@ If the roadmap looks good, now is when disciplined development actually starts!
 
 Choose one of these two approaches for implementing your tests when starting work on a new feature:
 
-> **Test Ordering with ZOMBIES**: Whichever approach you choose, order your tests following James Grenning's ZOMBIES heuristic: start with **Z**ero (initial/empty state), then **O**ne (first input), then **M**any (generalize); at each step consider **B**oundaries, **I**nterface design, and **E**xceptions, keeping both **S**cenarios and solutions simple throughout.
+> **Test Ordering with ZOMBIES**: Whichever approach you choose, order your tests following James Grenning's ZOMBIES heuristic. **Z**ero → **O**ne → **M**any is the happy path; after each step, interleave applicable **B**oundaries, **I**nterface, and **E**xceptions before moving to the next. Keep both **S**cenarios and solutions simple throughout.
 
 **Option 1: Test List Approach**
 
@@ -1158,7 +1158,7 @@ Ask user to clarify if unclear which type of work is being done
    - If single test approach: Write a new test for the next scenario
    - Follow test sequence from Roadmap/specs if provided
    - Start with simplest scenario (usually happy path) for new features
-   - Follow ZOMBIES progression for test ordering: Zero (initial state) → One (first input) → Many (generalize), considering Boundaries, Interface, and Exceptions at each step
+   - Follow ZOMBIES progression: Zero → One → Many is the happy path; after each step, interleave applicable Boundaries, Interface, and Exceptions before moving to the next
    - Compilation/import errors are valid failures
 2. Test structure requirements:
 
@@ -1251,7 +1251,7 @@ User chooses approach (ask which they prefer if not clear):
 
 In all cases:
 
-- Order tests following the ZOMBIES progression (James Grenning): Zero → One → Many, considering Boundaries, Interface, and Exceptions throughout. Keep both scenarios and solutions Simple.
+- Order tests following the ZOMBIES progression (James Grenning): Zero → One → Many is the happy path; after each step, interleave applicable Boundaries, Interface, and Exceptions before moving to the next. Keep both scenarios and solutions Simple.
 - Only create test structure in Stage 3 - RED phase implements
 - Each test gets complete RED→GREEN→REFACTOR cycle
 - Never implement multiple tests at once

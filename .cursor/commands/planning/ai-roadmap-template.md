@@ -14,7 +14,7 @@ When generating test sequences, remember:
 - Focus on WHAT the system should do, not HOW
 - Each test should force one small piece of functionality
 - Start with simplest test and build incrementally
-- Follow the ZOMBIES test ordering: Zero → One → Many, considering Boundaries, Interface, and Exceptions at each step
+- Follow ZOMBIES test ordering: Zero → One → Many is the happy path; after each step, interleave applicable Boundaries, Interface, and Exceptions before moving to the next
 - Implementation details emerge through the RED-GREEN-REFACTOR cycle
 
 ## Format
@@ -47,18 +47,18 @@ Otherwise, write "No diagram needed - [brief reason]"]
 ## Test Sequence
 
 <!-- Follow the ZOMBIES test ordering heuristic (James Grenning): -->
-<!-- ZOM progression: Zero (initial/empty state) → One (first input) → Many (generalize) -->
-<!-- At each step, consider: Boundaries, Interface design, Exceptions -->
+<!-- ZOM is the happy path: Zero (initial/empty state) → One (first input) → Many (generalize) -->
+<!-- After each ZOM step, interleave applicable BIE: Boundaries, Interface, Exceptions -->
 <!-- Keep both Scenarios and Solutions Simple throughout -->
 <!-- Test names should describe business behavior, not implementation -->
 
 1. [Zero: initial/empty state post-conditions]
-2. [One: first meaningful input, core happy path]
-3. [One → Zero: boundary transition back if applicable]
-4. [Many: multiple items, generalized behavior]
-5. [Boundary: edge cases at each ZOM transition]
-6. [Exception: error scenarios, invalid inputs, abuse cases]
-<!-- Continue as needed, following ZOM progression -->
+2. [Zero — BIE: boundaries/exceptions for empty state if applicable]
+3. [One: first meaningful input, core happy path]
+4. [One — BIE: boundaries and exceptions at the one-item level]
+5. [Many: multiple items, generalized behavior]
+6. [Many — BIE: boundaries and exceptions at scale]
+<!-- Continue as needed, interleaving BIE within each ZOM step -->
 
 ## Test Strategy
 
@@ -112,13 +112,14 @@ Repo --> DB[(Database)]
 
 ## Test Sequence
 
-1. Archive a completed todo successfully _(Zero → One)_
-2. Verify archived todo appears in archived list _(One)_
-3. Verify archived todo is removed from active list _(One)_
-4. Restore an archived todo to active list _(One → Zero boundary)_
-5. Prevent archiving of incomplete todos _(Boundary)_
-6. Prevent duplicate archiving of same todo _(Boundary)_
-7. Handle archiving non-existent todo _(Exception)_
+1. Todo list starts with no archived todos _(Zero)_
+2. Archive a completed todo successfully _(One)_
+3. Verify archived todo appears in archived list _(One)_
+4. Verify archived todo is removed from active list _(One)_
+5. Prevent archiving of incomplete todos _(One — Boundary)_
+6. Prevent duplicate archiving of same todo _(One — Boundary)_
+7. Handle archiving non-existent todo _(One — Exception)_
+8. Restore an archived todo to active list _(One — Boundary)_
 
 ## Test Strategy
 
@@ -174,16 +175,17 @@ Email --> Queue[Message Queue]
 
 ## Test Sequence
 
-1. Registers user with valid email and password _(Zero → One)_
-2. Passwords must never be stored in plaintext, only as secrets _(One, interface)_
-3. Triggers welcome email on successful registration _(One)_
-4. Sets default user preferences _(One)_
-5. Validates email format _(Boundary)_
-6. Enforces minimum password length _(Boundary)_
-7. Enforces password complexity requirements _(Boundary)_
-8. Prevents registration with existing email _(Boundary)_
-9. Treats email addresses as case-insensitive when checking uniqueness _(Boundary)_
-10. Handles registration when email service unavailable _(Exception)_
+1. User registry starts empty _(Zero)_
+2. Registers user with valid email and password _(One)_
+3. Passwords must never be stored in plaintext, only as secrets _(One — Interface)_
+4. Triggers welcome email on successful registration _(One)_
+5. Sets default user preferences _(One)_
+6. Validates email format _(One — Boundary)_
+7. Enforces minimum password length _(One — Boundary)_
+8. Enforces password complexity requirements _(One — Boundary)_
+9. Handles registration when email service unavailable _(One — Exception)_
+10. Prevents registration with existing email _(Many — Boundary)_
+11. Treats email addresses as case-insensitive when checking uniqueness _(Many — Boundary)_
 
 ## Test Strategy
 
