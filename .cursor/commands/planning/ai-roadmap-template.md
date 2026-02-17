@@ -14,6 +14,7 @@ When generating test sequences, remember:
 - Focus on WHAT the system should do, not HOW
 - Each test should force one small piece of functionality
 - Start with simplest test and build incrementally
+- Follow the ZOMBIES test ordering: Zero → One → Many, considering Boundaries, Interface, and Exceptions at each step
 - Implementation details emerge through the RED-GREEN-REFACTOR cycle
 
 ## Format
@@ -45,16 +46,19 @@ Otherwise, write "No diagram needed - [brief reason]"]
 
 ## Test Sequence
 
-<!-- Order tests from simplest to most complex -->
-<!-- Each test should build on previous ones -->
+<!-- Follow the ZOMBIES test ordering heuristic (James Grenning): -->
+<!-- ZOM progression: Zero (initial/empty state) → One (first input) → Many (generalize) -->
+<!-- At each step, consider: Boundaries, Interface design, Exceptions -->
+<!-- Keep both Scenarios and Solutions Simple throughout -->
 <!-- Test names should describe business behavior, not implementation -->
 
-1. [Simplest case - usually happy path with minimal setup]
-2. [Next layer of complexity - often validation or business rules]
-3. [Edge cases or alternative paths]
-4. [Error scenarios]
-5. [Complex interactions if applicable]
-<!-- Continue as needed -->
+1. [Zero: initial/empty state post-conditions]
+2. [One: first meaningful input, core happy path]
+3. [One → Zero: boundary transition back if applicable]
+4. [Many: multiple items, generalized behavior]
+5. [Boundary: edge cases at each ZOM transition]
+6. [Exception: error scenarios, invalid inputs, abuse cases]
+<!-- Continue as needed, following ZOM progression -->
 
 ## Test Strategy
 
@@ -108,13 +112,13 @@ Repo --> DB[(Database)]
 
 ## Test Sequence
 
-1. Archive a completed todo successfully
-2. Prevent archiving of incomplete todos
-3. Verify archived todo is removed from active list
-4. Verify archived todo appears in archived list
-5. Restore an archived todo to active list
-6. Handle archiving non-existent todo
-7. Prevent duplicate archiving of same todo
+1. Archive a completed todo successfully _(Zero → One)_
+2. Verify archived todo appears in archived list _(One)_
+3. Verify archived todo is removed from active list _(One)_
+4. Restore an archived todo to active list _(One → Zero boundary)_
+5. Prevent archiving of incomplete todos _(Boundary)_
+6. Prevent duplicate archiving of same todo _(Boundary)_
+7. Handle archiving non-existent todo _(Exception)_
 
 ## Test Strategy
 
@@ -170,16 +174,16 @@ Email --> Queue[Message Queue]
 
 ## Test Sequence
 
-1. Registers user with valid email and password
-2. Validates email format
-3. Enforces minimum password length
-4. Enforces password complexity requirements
-5. Prevents registration with existing email
-6. Treats email addresses as case-insensitive when checking uniqueness
-7. Passwords must never be stored in plaintext, only as secrets
-8. Triggers welcome email on successful registration
-9. Sets default user preferences
-10. Handles registration when email service unavailable
+1. Registers user with valid email and password _(Zero → One)_
+2. Passwords must never be stored in plaintext, only as secrets _(One, interface)_
+3. Triggers welcome email on successful registration _(One)_
+4. Sets default user preferences _(One)_
+5. Validates email format _(Boundary)_
+6. Enforces minimum password length _(Boundary)_
+7. Enforces password complexity requirements _(Boundary)_
+8. Prevents registration with existing email _(Boundary)_
+9. Treats email addresses as case-insensitive when checking uniqueness _(Boundary)_
+10. Handles registration when email service unavailable _(Exception)_
 
 ## Test Strategy
 

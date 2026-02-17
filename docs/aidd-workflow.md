@@ -419,6 +419,8 @@ If the roadmap looks good, now is when disciplined development actually starts!
 
 Choose one of these two approaches for implementing your tests when starting work on a new feature:
 
+> **Test Ordering with ZOMBIES**: Whichever approach you choose, order your tests following James Grenning's ZOMBIES heuristic: start with **Z**ero (initial/empty state), then **O**ne (first input), then **M**any (generalize); at each step consider **B**oundaries, **I**nterface design, and **E**xceptions, keeping both **S**cenarios and solutions simple throughout.
+
 **Option 1: Test List Approach**
 
 Collaborate with the AI to create a list of (unimplemented) tests derived from the specs; breaking down each behavior into granular, testable steps.
@@ -1156,6 +1158,7 @@ Ask user to clarify if unclear which type of work is being done
    - If single test approach: Write a new test for the next scenario
    - Follow test sequence from Roadmap/specs if provided
    - Start with simplest scenario (usually happy path) for new features
+   - Follow ZOMBIES progression for test ordering: Zero (initial state) → One (first input) → Many (generalize), considering Boundaries, Interface, and Exceptions at each step
    - Compilation/import errors are valid failures
 2. Test structure requirements:
 
@@ -1248,6 +1251,7 @@ User chooses approach (ask which they prefer if not clear):
 
 In all cases:
 
+- Order tests following the ZOMBIES progression (James Grenning): Zero → One → Many, considering Boundaries, Interface, and Exceptions throughout. Keep both scenarios and solutions Simple.
 - Only create test structure in Stage 3 - RED phase implements
 - Each test gets complete RED→GREEN→REFACTOR cycle
 - Never implement multiple tests at once

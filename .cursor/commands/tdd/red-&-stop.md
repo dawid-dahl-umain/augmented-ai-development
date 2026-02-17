@@ -14,6 +14,7 @@ Enter RED phase as defined in the AAID rules file:
    - If single test approach: Write a new test for the next scenario
    - Follow test sequence from roadmap/specs if provided
    - Start with simplest scenario (usually happy path) for new features
+   - Follow ZOMBIES progression for test ordering: Zero (initial state) → One (first input) → Many (generalize), considering Boundaries, Interface, and Exceptions at each step
    - Compilation/import errors are valid failures
 2. Test structure requirements:
 

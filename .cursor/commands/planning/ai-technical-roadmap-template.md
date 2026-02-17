@@ -14,6 +14,7 @@ When generating test sequences, remember:
 - The domain already has comprehensive unit tests: trust them
 - Focus on what THIS element does: parsing, formatting, error translation, etc.
 - Don't re-test business rules through the adapter
+- Follow the ZOMBIES test ordering: Zero → One → Many, considering Boundaries, Interface, and Exceptions at each step
 
 ## Format
 
@@ -78,11 +79,13 @@ Otherwise, write "No diagram needed - [brief reason]"]
 <!-- Output Adapters: formatting, serialization, connection handling -->
 <!-- Infrastructure: persistence operations, caching behavior, queue management -->
 
-1. [Simplest case - usually happy path with minimal setup]
-2. [Error handling specific to this element]
-3. [Edge cases for this element's responsibilities]
-4. [Integration scenarios if applicable]
-<!-- Continue as needed, focused on this single element -->
+1. [Zero: element created/initialized, verify default state]
+2. [One: first successful operation through the element]
+3. [One → Zero: boundary transition back if applicable]
+4. [Many: multiple operations, concurrent usage if relevant]
+5. [Boundary: edge cases at each ZOM transition for this element]
+6. [Exception: connection failures, malformed input, timeout scenarios]
+<!-- Continue as needed, following ZOM progression -->
 
 <!-- ANTI-PATTERNS to avoid: -->
 <!-- ❌ Re-testing domain rules through the adapter -->
@@ -156,13 +159,13 @@ No diagram needed - simple request/response flow with single domain service depe
 
 ## Test Sequence
 
-1. Archives todo successfully and returns 200 with archived todo
-2. Returns 404 when todo doesn't exist
-3. Returns 400 when todo is already archived
-4. Returns 401 for unauthenticated requests
-5. Returns 422 for invalid request format
-6. Returns appropriate error for malformed JSON
-7. Returns 429 when rate limit exceeded
+1. Archives todo successfully and returns 200 with archived todo _(Zero → One)_
+2. Returns 404 when todo doesn't exist _(Boundary)_
+3. Returns 400 when todo is already archived _(Boundary)_
+4. Returns 422 for invalid request format _(Boundary)_
+5. Returns appropriate error for malformed JSON _(Boundary)_
+6. Returns 401 for unauthenticated requests _(Exception)_
+7. Returns 429 when rate limit exceeded _(Exception)_
 
 ## Test Strategy
 
@@ -228,14 +231,14 @@ EmailSender->>Logger: Log result
 
 ## Test Sequence
 
-1. Sends email with correct recipient and subject
-2. Populates template with todo details
-3. Handles SendGrid API errors gracefully
-4. Retries on temporary failures (rate limits, network issues)
-5. Logs permanent failures without throwing
-6. Respects email preferences (opt-out flag)
-7. Includes proper tracking parameters
-8. Handles missing or invalid email addresses
+1. Sends email with correct recipient and subject _(Zero → One)_
+2. Populates template with todo details _(One)_
+3. Includes proper tracking parameters _(One, interface)_
+4. Respects email preferences (opt-out flag) _(Boundary)_
+5. Handles missing or invalid email addresses _(Boundary)_
+6. Handles SendGrid API errors gracefully _(Exception)_
+7. Retries on temporary failures (rate limits, network issues) _(Exception)_
+8. Logs permanent failures without throwing _(Exception)_
 
 ## Test Strategy
 
