@@ -119,7 +119,7 @@ Write `MAIN.md`. Cover what is being built (or shipped, or delivered), how the p
 
 If the task is large, break it down the way work is usually broken down in normal projects (phases, chunks, sprints, milestones, whatever fits the shape of the task). The goal is that a single IA can finish one piece, mark it done, and a later IA (after a context clear) can read the plan and pick up cleanly from there. Each piece should be coherent enough to land on its own.
 
-**Default ordering, with override.** The main plan is the source; the mental model in Step 5 is a distillation of it, so the main plan goes first by default. Some HUs prefer to sketch the mental model first, common for diagram-shaped work (UI flows, state machines, event protocols), and that is fine. If the HU prefers that order, follow their lead, then reconcile the two so they stay isomorphic.
+**Default ordering, with override.** The main plan is the source; the mental model in Step 5 is a distillation of it, so the main plan goes first by default. Some HUs prefer to sketch the mental model first, common for diagram-shaped work (UI flows, state machines, event protocols), and that is fine. If the HU prefers that order, follow their lead, then reconcile the two so they stay isomorphic. The per-artifact gate applies regardless of order: each artifact is its own review cycle, finished with the HU's go-ahead before the next one begins.
 
 Show the draft, take feedback, iterate. Wait for the HU's explicit go-ahead before moving to the next step.
 
@@ -147,6 +147,8 @@ The mental model is downstream of `MAIN.md`: same system, distilled into a pedag
 When the HU picks the HTML companion, Implan generates two files together: `artifacts/mental-model.html` (dark, primary, for developer-facing surfaces) and `artifacts/mental-model-light.html` (light, companion, for sharing with non-technical stakeholders). The markdown stays canonical; both HTML files are downstream and must stay isomorphic with it.
 
 Before generating the HTML files (or even before asking, if you want to nudge the recommendation more eagerly based on context), read `references/html-companion.md`. That file covers why HTML matters for this artifact, when to lean toward suggesting it more eagerly vs. let the HU choose plainly, what capabilities to consider, the bundled Implan design system at `assets/implan-design-system/` (used by default to give all Implan artifacts a consistent visual identity), composability with a design-quality plugin like `/frontend-design` or any equivalent (used as the creative-execution engine alongside the design system when installed), the override path (HU-specified styles), regeneration discipline, and trade-offs.
+
+Once `MENTAL_MODEL.md` (and the optional HTML companion, if chosen) is in good shape, wait for the HU's explicit go-ahead before moving to the next step.
 
 ### Step 6: Test strategy
 
@@ -176,6 +178,8 @@ The same general goal still holds: produce an objective way to verify the work i
 #### If the work is too vague to verify
 
 Don't fake a target. Surface this to the HU, propose two or three framings, and shape the strategy together until both of you can point at it and say "yes, when these all pass, we're done."
+
+Wait for the HU's explicit go-ahead before moving to the next step.
 
 ### Step 7: Handoff
 
