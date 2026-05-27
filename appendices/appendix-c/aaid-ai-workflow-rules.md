@@ -25,6 +25,9 @@ _This is the official `AAID` workflow rules. But feel free to customise it._
 **For Claude Code:**
 Place in `CLAUDE.md` file in your project root (or `~/.claude/CLAUDE.md` for global use)
 
+> [!TIP]
+> **Or install as a plugin (recommended for Claude Code)**: the `aaid-tdd` and `aaid-bdd` plugins package these rules as skills that only load when TDD/BDD work is actually triggered, so AAID stays out of the way on unrelated work. See [Claude Code Plugins](../../README.md#claude-code-plugins) for install steps.
+
 **For other AI tools:**
 Look for "custom instructions", "custom rules", or "system prompt" settings
 

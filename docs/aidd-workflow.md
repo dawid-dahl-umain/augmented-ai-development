@@ -222,6 +222,9 @@ Save the [`AAID` rules from Appendix C](#appendix-c) to your project:
 - **Claude Code**: `CLAUDE.md` in project root
 - **Gemini CLI**: `GEMINI.md` in project root
 
+> [!TIP]
+> **Claude Code users**: prefer the `aaid-tdd` / `aaid-bdd` plugins over dropping rules into `CLAUDE.md`. Same instructions, only loaded when TDD/BDD work is actually triggered. See [Claude Code Plugins](../README.md#claude-code-plugins) for install steps.
+
 ### **2: Add reusable commands (optional but recommended)**
 
 Copy the [command files from Appendix B](#appendix-b) to your project:

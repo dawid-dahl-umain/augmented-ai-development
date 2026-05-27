@@ -39,6 +39,9 @@ Save the [AAID rules](../../../appendices/appendix-c/aaid-ai-workflow-rules.md) 
 - **Claude Code**: `CLAUDE.md` in project root
 - **Other AI tools**: Check their docs for "custom instructions" location
 
+> [!TIP]
+> **Claude Code users**: prefer the `aaid-tdd` / `aaid-bdd` plugins over dropping rules into `CLAUDE.md`. Same instructions, only loaded when TDD/BDD work is actually triggered. See [Claude Code Plugins](../../../README.md#claude-code-plugins) for install steps.
+
 ### Step 2: Add Commands (Optional but Recommended)
 
 Copy [reusable prompts](../../../appendices/appendix-b/reusable-prompts.md) for shortcuts like `/red-&-stop`:

@@ -92,26 +92,25 @@ Pre-written AI commands organized by purpose:
 
 ## Claude Code Plugins
 
-If you use [Claude Code](https://claude.com/claude-code), you can install the AAID workflows as plugins. They bundle the rules, commands, and skills needed to run AAID inside Claude Code with the right triggers and guardrails.
-
-| Plugin | What it enforces |
-|--------|------------------|
-| `aaid-tdd` | Disciplined RED/GREEN/REFACTOR cycles, with the developer reviewing every step |
-| `aaid-bdd` | BDD/ATDD with the Three-Layer Model for acceptance testing |
-
-### Install
-
-```
-/plugin marketplace add dawid-dahl-umain/augmented-ai-development
-/plugin install aaid-tdd@aaid
-/plugin install aaid-bdd@aaid
-```
-
-Restart Claude Code after installing.
-
-### Source
-
-The plugins live in [`plugins/`](plugins/). Each plugin's skills, commands, and references map directly to the methodology described in this repo.
+> [!TIP]
+> **Recommended for [Claude Code](https://claude.com/claude-code) users: install AAID as a plugin.**
+>
+> AAID is available as two Claude Code plugins; same workflow, same discipline:
+>
+> | Plugin | What it enforces |
+> |--------|------------------|
+> | `aaid-tdd` | Disciplined RED/GREEN/REFACTOR cycles, with the developer reviewing every step |
+> | `aaid-bdd` | BDD/ATDD with the Three-Layer Model for acceptance testing |
+>
+> Packaged as skills, the rules only load into context when you actually start a TDD or BDD task, so AAID stays out of the way on unrelated work (and you don't bloat `CLAUDE.md`).
+>
+> ```
+> /plugin marketplace add dawid-dahl-umain/augmented-ai-development
+> /plugin install aaid-tdd@aaid
+> /plugin install aaid-bdd@aaid
+> ```
+>
+> Restart Claude Code after installing. Source: [`plugins/`](plugins/).
 
 ## Getting Started
 
