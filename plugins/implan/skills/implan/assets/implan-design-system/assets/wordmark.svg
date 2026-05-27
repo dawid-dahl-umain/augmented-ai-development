@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 48" fill="none">
+  
+  <g fill="currentColor">
+    <rect x="8" y="11" width="32" height="3" rx="1.5"></rect>
+    <rect x="14" y="20" width="22" height="3" rx="1.5" opacity="0.7"></rect>
+    <rect x="20" y="29" width="14" height="3" rx="1.5" opacity="0.45"></rect>
+    <rect x="8" y="38" width="26" height="3" rx="1.5"></rect>
+  </g>
+  <text x="56" y="33" font-family="Geist, ui-sans-serif, system-ui, sans-serif" font-weight="500" font-size="22" letter-spacing="-0.44" fill="currentColor">implan</text>
+</svg>

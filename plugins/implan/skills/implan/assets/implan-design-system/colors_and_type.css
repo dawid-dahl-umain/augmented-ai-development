@@ -1,0 +1,346 @@
+/* ============================================================
+   Implan — Design Tokens
+   Light + dark mode. Drop this file into any <head>.
+   ============================================================ */
+
+/* Webfonts — loaded from Google Fonts.
+   If self-hosting, drop the .woff2 files into /fonts and swap the @import
+   for @font-face declarations. */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&family=Cutive+Mono&display=swap');
+
+/* ============================================================
+   1. NEUTRAL SCALE (12 steps)
+   Indexed by role, identical structure across modes.
+   ============================================================ */
+
+:root,
+[data-theme="light"] {
+  /* Cool-leaning grays. OKLCH-tuned for perceptual evenness. */
+  --gray-1:  #ffffff;   /* app background */
+  --gray-2:  #fafafa;   /* elevated background */
+  --gray-3:  #f4f4f5;   /* hover surface */
+  --gray-4:  #ededee;   /* pressed surface */
+  --gray-5:  #e4e4e7;   /* hairline border */
+  --gray-6:  #d4d4d8;   /* emphasized border */
+  --gray-7:  #a1a1aa;   /* non-interactive icons */
+  --gray-8:  #71717a;   /* low-emphasis text */
+  --gray-9:  #52525b;   /* secondary text */
+  --gray-10: #3f3f46;   /* primary text (subdued) */
+  --gray-11: #27272a;   /* primary text */
+  --gray-12: #09090b;   /* high contrast / inverse surface */
+
+  --bg-app:        var(--gray-1);
+  --bg-elevated:   var(--gray-2);
+  --bg-hover:      var(--gray-3);
+  --bg-pressed:    var(--gray-4);
+  --bg-inverse:    var(--gray-12);
+
+  --border-hairline:    var(--gray-5);
+  --border-emphasized:  var(--gray-6);
+  --border-strong:      var(--gray-8);
+
+  --fg-default:    var(--gray-11);
+  --fg-muted:      var(--gray-9);
+  --fg-subtle:     var(--gray-8);
+  --fg-disabled:   var(--gray-7);
+  --fg-inverse:    var(--gray-1);
+  --fg-on-accent:  #ffffff;
+
+  /* Accent — electric ultramarine */
+  --accent-1:  #f0f3ff;   /* accent tinted bg */
+  --accent-2:  #dbe1ff;
+  --accent-9:  #3d5afe;   /* canonical accent */
+  --accent-10: #2640ed;   /* hover */
+  --accent-11: #1d30c4;   /* pressed */
+  --accent-12: #0a164a;   /* on-light text */
+
+  /* Semantic */
+  --success-9:  #1aa364;
+  --success-1:  #ecf9f1;
+  --warning-9:  #d97706;
+  --warning-1:  #fdf3e3;
+  --danger-9:   #e5484d;
+  --danger-1:   #ffeded;
+
+  /* Shadows — used sparingly */
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.02);
+  --shadow-2: 0 1px 0 rgba(0, 0, 0, 0.02), 0 6px 24px rgba(0, 0, 0, 0.08);
+  --shadow-3: 0 2px 0 rgba(0, 0, 0, 0.03), 0 12px 48px rgba(0, 0, 0, 0.12);
+
+  /* Focus ring */
+  --ring: 0 0 0 2px var(--bg-app), 0 0 0 4px var(--accent-9);
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  /* Numbers invert; roles stay the same. */
+  --gray-1:  #0a0a0a;   /* app background — near black */
+  --gray-2:  #111113;   /* elevated background */
+  --gray-3:  #18181b;   /* hover surface */
+  --gray-4:  #1f1f23;   /* pressed surface */
+  --gray-5:  #27272a;   /* hairline border */
+  --gray-6:  #3f3f46;   /* emphasized border */
+  --gray-7:  #52525b;   /* non-interactive icons */
+  --gray-8:  #71717a;   /* low-emphasis text */
+  --gray-9:  #a1a1aa;   /* secondary text */
+  --gray-10: #d4d4d8;   /* primary text (subdued) */
+  --gray-11: #e4e4e7;   /* primary text */
+  --gray-12: #fafafa;   /* high contrast / inverse surface */
+
+  --bg-app:        var(--gray-1);
+  --bg-elevated:   var(--gray-2);
+  --bg-hover:      var(--gray-3);
+  --bg-pressed:    var(--gray-4);
+  --bg-inverse:    var(--gray-12);
+
+  --border-hairline:    var(--gray-5);
+  --border-emphasized:  var(--gray-6);
+  --border-strong:      var(--gray-8);
+
+  --fg-default:    var(--gray-11);
+  --fg-muted:      var(--gray-9);
+  --fg-subtle:     var(--gray-8);
+  --fg-disabled:   var(--gray-7);
+  --fg-inverse:    var(--gray-12);
+  --fg-on-accent:  #ffffff;
+
+  --accent-1:  #11163a;
+  --accent-2:  #1d2670;
+  --accent-9:  #5471ff;   /* slightly lifted for dark contrast */
+  --accent-10: #7388ff;
+  --accent-11: #94a5ff;
+  --accent-12: #dbe1ff;
+
+  --success-9:  #2cc77c;
+  --success-1:  #0e2418;
+  --warning-9:  #f59e0b;
+  --warning-1:  #2a1d09;
+  --danger-9:   #ff6369;
+  --danger-1:   #2a0f10;
+
+  --shadow-1: 0 1px 0 rgba(0, 0, 0, 0.4);
+  --shadow-2: 0 1px 0 rgba(0, 0, 0, 0.4), 0 6px 24px rgba(0, 0, 0, 0.5);
+  --shadow-3: 0 2px 0 rgba(0, 0, 0, 0.5), 0 12px 48px rgba(0, 0, 0, 0.7);
+
+  --ring: 0 0 0 2px var(--bg-app), 0 0 0 4px var(--accent-9);
+
+  color-scheme: dark;
+}
+
+/* ============================================================
+   2. TYPE TOKENS
+   ============================================================ */
+
+:root {
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SF Mono', 'Menlo', 'Consolas', monospace;
+  --font-serif: 'Instrument Serif', 'Times New Roman', serif;
+  /* Eyebrow / small tracked-uppercase labels. Rounded slab influence at small
+     sizes — distinct from --font-mono so labels feel editorial, not technical. */
+  --font-label: 'Cutive Mono', 'Geist Mono', ui-monospace, monospace;
+
+  /* Size scale — modular, 1.20 ratio at the top end */
+  --text-xs:   11px;
+  --text-sm:   12px;
+  --text-base: 14px;
+  --text-md:   15px;
+  --text-lg:   17px;
+  --text-xl:   20px;
+  --text-2xl:  24px;
+  --text-3xl:  32px;
+  --text-4xl:  44px;
+  --text-5xl:  60px;
+  --text-6xl:  80px;
+  --text-7xl:  112px;
+
+  /* Line heights */
+  --leading-tight:  1.1;
+  --leading-snug:   1.3;
+  --leading-normal: 1.5;
+  --leading-ui:     1.4;
+
+  /* Tracking */
+  --tracking-display: -0.02em;
+  --tracking-tight:   -0.01em;
+  --tracking-normal:  0;
+  --tracking-eyebrow: 0.08em;
+
+  /* Weights */
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semibold: 600;
+  --weight-bold:    700;
+}
+
+/* ============================================================
+   3. SEMANTIC TYPE
+   Use as classes or as a mixin reference.
+   ============================================================ */
+
+.t-display-xl,
+.t-display-lg,
+.t-display-md,
+.t-display-sm {
+  font-family: var(--font-serif);
+  font-weight: 400;
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-default);
+}
+.t-display-xl  { font-size: var(--text-7xl); }
+.t-display-lg  { font-size: var(--text-6xl); }
+.t-display-md  { font-size: var(--text-5xl); }
+.t-display-sm  { font-size: var(--text-4xl); }
+
+.t-editorial {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--text-5xl);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-default);
+}
+
+.t-h1, .t-h2, .t-h3, .t-h4 {
+  font-family: var(--font-sans);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
+  color: var(--fg-default);
+}
+.t-h1 { font-size: var(--text-3xl); }
+.t-h2 { font-size: var(--text-2xl); }
+.t-h3 { font-size: var(--text-xl); }
+.t-h4 { font-size: var(--text-lg); }
+
+.t-body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  color: var(--fg-default);
+}
+
+.t-body-lg {
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+  color: var(--fg-default);
+}
+
+.t-ui {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-ui);
+  font-weight: var(--weight-medium);
+  color: var(--fg-default);
+}
+
+.t-caption {
+  font-family: var(--font-sans);
+  font-size: var(--text-sm);
+  line-height: var(--leading-ui);
+  font-weight: var(--weight-regular);
+  color: var(--fg-muted);
+}
+
+.t-eyebrow {
+  font-family: var(--font-label);
+  font-size: var(--text-xs);
+  line-height: 1;
+  font-weight: var(--weight-regular);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.t-code {
+  font-family: var(--font-mono);
+  font-size: 0.92em;
+  line-height: var(--leading-normal);
+  font-weight: var(--weight-regular);
+}
+
+.t-mono-num {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+}
+
+/* ============================================================
+   4. SPACING + RADII
+   ============================================================ */
+
+:root {
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --radius-0:    0px;
+  --radius-1:    4px;   /* inputs, small buttons */
+  --radius-2:    6px;   /* default */
+  --radius-3:    8px;   /* small cards */
+  --radius-4:   12px;   /* large cards, modals */
+  --radius-full: 999px;
+}
+
+/* ============================================================
+   5. MOTION
+   ============================================================ */
+
+:root {
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in:     cubic-bezier(0.4,  0, 1,   1);
+  --ease-in-out: cubic-bezier(0.4,  0, 0.2, 1);
+
+  --dur-fast:   120ms;
+  --dur-base:   200ms;
+  --dur-slow:   320ms;
+  --dur-entry:  560ms;
+}
+
+/* ============================================================
+   6. GLOBAL RESET + BASE
+   Optional — drop the [data-implan] selector if you want this
+   applied everywhere.
+   ============================================================ */
+
+[data-implan] *,
+[data-implan] *::before,
+[data-implan] *::after {
+  box-sizing: border-box;
+}
+
+[data-implan] {
+  background: var(--bg-app);
+  color: var(--fg-default);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+[data-implan] ::selection {
+  background: var(--accent-9);
+  color: var(--fg-on-accent);
+}
+
+[data-implan] :focus-visible {
+  outline: none;
+  box-shadow: var(--ring);
+  border-radius: var(--radius-1);
+}
