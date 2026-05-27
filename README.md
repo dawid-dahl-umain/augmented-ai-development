@@ -90,6 +90,16 @@ Pre-written AI commands organized by purpose:
 - **Workflow Rules**: Ready-to-use rules for Cursor (and easily adaptable for Claude Code or other AI IDEs/CLIs)
 - **Phase Management**: Custom slash commands that enforce TDD discipline, if AI fails to follow rules/instructions properly
 
+## Getting Started
+
+1. **🚀 New to AAID?**: Start with the [Onboarding Guide](docs/onboarding/guide.md) (~60 minutes) for a gentle introduction
+2. **Read the Complete Guide**: [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the full methodology and reference material
+3. **Have BDD Specs Available**: `AAID` is a spec-driven methodology. No specs, no `AAID`.
+4. **Set up a project/Select a project**: To build new features in a new or existing project, set up or select one with which to work
+5. **Add AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
+   - (Optional) Add Custom Slash Commands [.cursor/commands](.cursor/commands) into Cursor's `.cursor/commands/` or your tool's equivalent.
+6. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development. Use [diagram](aaid-workflow-diagram.mermaid) as a visual guide
+
 ## Claude Code Plugins
 
 > [!TIP]
@@ -111,16 +121,6 @@ Pre-written AI commands organized by purpose:
 > ```
 >
 > Restart Claude Code after installing. Source: [`plugins/`](plugins/).
-
-## Getting Started
-
-1. **🚀 New to AAID?**: Start with the [Onboarding Guide](docs/onboarding/guide.md) (~60 minutes) for a gentle introduction
-2. **Read the Complete Guide**: [`docs/aidd-workflow.md`](docs/aidd-workflow.md) for the full methodology and reference material
-3. **Have BDD Specs Available**: `AAID` is a spec-driven methodology. No specs, no `AAID`.
-4. **Set up a project/Select a project**: To build new features in a new or existing project, set up or select one with which to work
-5. **Add AI Rules**: Copy [`rules/aaid/aaid-development-rules.mdc`](rules/aaid/aaid-development-rules.mdc) into Cursor's `.cursor/rules/` or your tool's equivalent (e.g., `CLAUDE.md`)
-   - (Optional) Add Custom Slash Commands [.cursor/commands](.cursor/commands) into Cursor's `.cursor/commands/` or your tool's equivalent.
-6. **Follow the Workflow**: Apply the 4-stage `AAID` process to your development. Use [diagram](aaid-workflow-diagram.mermaid) as a visual guide
 
 ## The AAID Workflow
 
