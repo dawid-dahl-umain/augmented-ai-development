@@ -1,0 +1,36 @@
+{
+  "name": "aaid",
+  "owner": {
+    "name": "Dawid Dahl"
+  },
+  "metadata": {
+    "description": "AAID (Augmented AI Development): Claude Code plugins for disciplined TDD and BDD/ATDD workflows",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "aaid-tdd",
+      "source": "./plugins/aaid-tdd",
+      "description": "AAID (Augmented AI Development) - TDD workflow enforcing disciplined RED/GREEN/REFACTOR cycles with developer-maintained architectural control",
+      "version": "1.1.2",
+      "author": {
+        "name": "Dawid Dahl"
+      },
+      "repository": "https://github.com/dawid-dahl-umain/augmented-ai-development",
+      "license": "MIT",
+      "keywords": ["aaid", "tdd", "testing", "workflow", "red-green-refactor"]
+    },
+    {
+      "name": "aaid-bdd",
+      "source": "./plugins/aaid-bdd",
+      "description": "AAID (Augmented AI Development) - BDD/ATDD workflow using the Three-Layer Model for acceptance testing with developer-maintained architectural control",
+      "version": "1.0.7",
+      "author": {
+        "name": "Dawid Dahl"
+      },
+      "repository": "https://github.com/dawid-dahl-umain/augmented-ai-development",
+      "license": "MIT",
+      "keywords": ["aaid", "bdd", "atdd", "acceptance-testing", "three-layer-model", "gherkin", "workflow"]
+    }
+  ]
+}

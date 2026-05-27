@@ -1,0 +1,12 @@
+{
+  "name": "aaid-bdd",
+  "description": "AAID (Augmented AI Development) - BDD/ATDD workflow using the Three-Layer Model for acceptance testing with developer-maintained architectural control",
+  "version": "1.0.7",
+  "author": {
+    "name": "Dawid Dahl"
+  },
+  "repository": "https://github.com/dawid-dahl-umain/augmented-ai-development",
+  "license": "MIT",
+  "keywords": ["aaid", "bdd", "atdd", "acceptance-testing", "three-layer-model", "gherkin", "workflow"],
+  "skills": "./skills/"
+}

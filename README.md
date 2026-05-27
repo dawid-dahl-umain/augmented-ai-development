@@ -34,6 +34,7 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
   - **[Acceptance Testing Workflow Diagram](appendices/appendix-a/aaid-at-workflow.diagram.mermaid)** - Visual representation of the `AAID` Acceptance Testing process
 - **[Demo Repository](https://github.com/dawid-dahl-umain/augmented-ai-development-demo)** - TicTacToe CLI developed using the `AAID` workflow, demonstrating the Four-Layer Model, test isolation patterns, and hexagonal architecture
 - **[Workflow Diagram](aaid-workflow-diagram.mermaid)** - Visual representation of the `AAID` process
+- **[Claude Code Plugins](#claude-code-plugins)** - Install `aaid-tdd` and `aaid-bdd` as Claude Code plugins that enforce the workflow
 
 ## Repository Structure
 
@@ -47,7 +48,8 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 │   ├── tdd/
 │   ├── investigation/
 │   └── misc/
-└── rules/                # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
+├── rules/                # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
+└── plugins/              # Claude Code plugins (aaid-tdd, aaid-bdd)
 ```
 
 ## Core Components
@@ -87,6 +89,29 @@ Pre-written AI commands organized by purpose:
 
 - **Workflow Rules**: Ready-to-use rules for Cursor (and easily adaptable for Claude Code or other AI IDEs/CLIs)
 - **Phase Management**: Custom slash commands that enforce TDD discipline, if AI fails to follow rules/instructions properly
+
+## Claude Code Plugins
+
+If you use [Claude Code](https://claude.com/claude-code), you can install the AAID workflows as plugins. They bundle the rules, commands, and skills needed to run AAID inside Claude Code with the right triggers and guardrails.
+
+| Plugin | What it enforces |
+|--------|------------------|
+| `aaid-tdd` | Disciplined RED/GREEN/REFACTOR cycles, with the developer reviewing every step |
+| `aaid-bdd` | BDD/ATDD with the Three-Layer Model for acceptance testing |
+
+### Install
+
+```
+/plugin marketplace add dawid-dahl-umain/augmented-ai-development
+/plugin install aaid-tdd@aaid
+/plugin install aaid-bdd@aaid
+```
+
+Restart Claude Code after installing.
+
+### Source
+
+The plugins live in [`plugins/`](plugins/). Each plugin's skills, commands, and references map directly to the methodology described in this repo.
 
 ## Getting Started
 

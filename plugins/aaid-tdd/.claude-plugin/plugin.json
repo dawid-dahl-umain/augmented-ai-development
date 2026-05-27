@@ -1,0 +1,12 @@
+{
+  "name": "aaid-tdd",
+  "description": "AAID (Augmented AI Development) - TDD workflow enforcing disciplined RED/GREEN/REFACTOR cycles with developer-maintained architectural control",
+  "version": "1.1.2",
+  "author": {
+    "name": "Dawid Dahl"
+  },
+  "repository": "https://github.com/dawid-dahl-umain/augmented-ai-development",
+  "license": "MIT",
+  "keywords": ["aaid", "tdd", "testing", "workflow", "red-green-refactor"],
+  "skills": "./skills/"
+}
