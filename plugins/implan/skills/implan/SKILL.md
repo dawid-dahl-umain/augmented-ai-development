@@ -61,7 +61,7 @@ These apply throughout, not just at any single step. Each exists for a reason; t
 
 **Lean and clean.** The plan must not bloat. Modern IAs research well on their own, so prefer pointers (file paths, doc links, function names, URLs, references) over copying context inline. Include full context only when an IA would otherwise waste time rediscovering it. Every paragraph should earn its place. No more complex than necessary, AI-readable does not mean verbose.
 
-**Self-contained.** A fresh HU or a fresh agent (a new IA, or a new PA picking up planning later) should be able to walk in cold, read the PD, and understand what is being built and why. Write for that reader.
+**Self-contained, at every moment.** A fresh HU or a fresh agent (a new IA, or a new PA picking up planning later) should be able to walk in cold at any point during planning, not just at handoff, read the PD, and pick up the work. Treat every edit as if handoff could happen right after it. Two disciplines follow: when a decision changes or new information supersedes old, rewrite the stale text wherever it appears instead of leaving it or appending a correction; and never write anything that only reads correctly to someone who was in the planning conversation (names without roles, "as discussed", references to the chat). Before presenting an artifact for approval, read it once as a cold reader would.
 
 **Plain folders and files.** Do not use Claude Code's built-in Plan Mode. Work entirely with regular files in `ai-plans/<plan-name>/`.
 
@@ -183,7 +183,7 @@ Wait for the HU's explicit go-ahead before moving to the next step.
 
 ### Step 7: Handoff
 
-Re-read every artifact. Confirm everything is in sync, lean, and self-contained. Tidy `NOTES.md`; remove anything no longer relevant and capture anything still loose. Surface any unresolved questions the HU still owes an answer on, and name the first concrete piece of work the IA should pick up.
+Re-read every artifact as a cold reader would. The PD should already be handoff-ready, since self-containment is maintained throughout, so this pass catches what slipped through rather than doing deferred cleanup. Confirm everything is in sync, lean, and self-contained. Tidy `NOTES.md`; remove anything no longer relevant and capture anything still loose. Surface any unresolved questions the HU still owes an answer on, and name the first concrete piece of work the IA should pick up.
 
 Tell the HU planning is done. The IA, whether a fresh agent session or the HU themselves, should read the PD cold starting from `MAIN.md` and work through the breakdown (if any) until every item in `TEST_STRATEGY.md` passes. For a fresh agent session, recommend starting a new session so it reads the plan with no prior context.
 
