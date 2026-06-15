@@ -49,7 +49,7 @@ Both files have the same content; only the token block and the Mermaid theme dif
 
 Self-contained means: one file each, openable directly in a browser, no build step, no external dependencies that won't resolve offline. Inline the CSS and JavaScript, or use standard CDN links the HU can trust.
 
-**Faithfulness rule.** The HTML must say what the markdown says. Pedagogical-first, accurate, no invented content. If a section appears in the HTML without a counterpart in `MENTAL_MODEL.md`, either add it to the markdown first (and confirm with the HU) or remove it from the HTML. The markdown is the source.
+**Faithfulness rule.** The HTML must say what the markdown says, and no more: same claims, same decisions, same diagrams. Pedagogical-first, accurate, no invented content. Faithful to *content*, not to *order* — the HTML is free to re-present that content in whatever spatial or interactive structure fits best (regroup linear sections into tabs, set two compared options side by side, turn a sequence into a stepper, dock prose beside a diagram). What it may not do is introduce a claim, section, or conclusion with no counterpart in `MENTAL_MODEL.md`; if one appears, either add it to the markdown first (and confirm with the HU) or remove it from the HTML. The markdown is the source of truth for *what is said*; the HTML decides *how it is shown*.
 
 Capabilities worth considering depending on the content:
 
@@ -61,7 +61,28 @@ Capabilities worth considering depending on the content:
 - **SVG illustrations.** Spatial relationships, state diagrams, flowcharts where Mermaid is insufficient.
 - **Copy-as-prompt buttons.** A button that emits a paste-ready string for a future agent session. Especially useful for the IA handoff: a "copy this section as IA prompt" affordance lets the HU bundle a portion of the plan into a clean prompt for the implementing session.
 
-Don't include every capability; pick the ones the content actually needs. A diagram-heavy mental model gets diagrams. A comparison-heavy mental model gets side-by-side cards. An empty checklist with no visual structure doesn't need HTML at all.
+Don't include every capability; pick only the ones the content actually needs. A diagram-heavy mental model gets diagrams; a comparison-heavy one gets side-by-side cards; a short, simple plan gets a short, simple page. A Mermaid diagram earns its place only when it shows structure, flow, or state more clearly than prose can — don't diagram a single relationship or a plain list for the look of it, and don't add tabs or toggles unless the content genuinely has layers or branches. Match the machinery to the content, never inflate the content to justify the machinery. An empty checklist with no visual structure doesn't need HTML at all.
+
+## Fit the structure to the content
+
+This is the step most responsible for HTML companions that all look alike. The failure mode is reaching straight for markup and landing, by default, on a single scrolling column of stacked sections — every time, regardless of what the plan actually is. Avoid it deliberately: before writing any markup, name the *shape* of this plan's content, then choose a page structure that matches that shape.
+
+Fit cuts both ways. The opposite failure mode is over-building: forcing a diagram, tabs, or an elaborate layout onto content that a few short paragraphs would carry better. Reach up for richer structure when the content has shape; stay plain when it doesn't. A short, simple page is the right answer for a short, simple plan, not a missed opportunity. The goal is the structure that fits, whether that is rich or minimal.
+
+Most plans have one dominant shape. Find it, let it drive the top-level structure, and let secondary shapes live inside it (a comparison section inside an otherwise-linear plan still gets side-by-side panes locally). A rough map, not a menu to exhaust:
+
+- **Comparison, alternatives, trade-offs** → side-by-side panes or a synced matrix. The comparison *is* the layout; don't narrate it in prose stacked vertically.
+- **Process, pipeline, sequence, phased rollout** → a stepper or numbered spine, horizontal or vertical, that makes the progression spatial.
+- **State machine, lifecycle, event flow** → an interactive diagram as the centrepiece, with prose docked alongside or revealed on node click, not a diagram buried mid-scroll.
+- **Decision, branching, "if X then Y"** → tabs, toggles, or a decision matrix the reader drives.
+- **Layered explanation (overview then detail)** → progressive disclosure: accordions or expandable nodes, with the overview always visible and depth on demand.
+- **Reference, catalogue, many parallel items** → an indexed layout with a sticky contents rail or jump nav. This is the one case where a long column is right, but give it navigation.
+- **Architecture, spatial system** → a diagram-led layout that places components spatially, not a bulleted list of parts.
+- **Mostly linear narrative with a few diagrams** → a reading column is genuinely correct here. Choosing it on purpose for linear content is fine; *defaulting* to it for everything is the failure mode.
+
+The interactive capabilities listed above (tabs, accordions, clickable nodes, copy-as-prompt, side-by-side panes) are the tools that serve the chosen archetype. Pick the ones the structure needs; they are structure, not decoration sprinkled onto a column.
+
+State the archetype you picked before you build, a one-line note to the HU or an HTML comment at the top of the file, so the choice is deliberate and reviewable rather than the path of least resistance.
 
 ## Design system
 

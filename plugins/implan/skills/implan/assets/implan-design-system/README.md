@@ -142,9 +142,9 @@ When in doubt: don't force it.
 
 ## Layout & spacing
 
-A 4px base. The scale is `4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 96, 128`. No half-steps.
+A 4px base. The scale is `4, 8, 12, 16, 20, 24, 32, 40, 48, 64, 96, 128`. No half-steps. This is a hard constraint.
 
-Prose lives in a measured column: **max-width 720px**. Anything wider is hostile to re-entry. The header and footer can go full-width; the readable body does not.
+**Constrain the measure, not the page.** Any block of *running prose* stays within **~720px** max-width; longer lines are hostile to re-entry. But that governs the reading *measure*, not the shape of the page. The page itself is free: full-bleed diagram canvases, side-by-side panes, tabbed or stepped structures, a contents rail beside the body, a wide comparison matrix — all on-brand. Choose the structure that fits the content rather than defaulting to one tall column (the calling HTML guidance covers how to pick the right shape). The only rule here is that wherever running prose sits, it stays within a comfortable measure.
 
 ---
 
