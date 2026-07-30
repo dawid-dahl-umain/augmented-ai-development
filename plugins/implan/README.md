@@ -6,9 +6,9 @@ Structured planning workflow for anything substantial: a software feature, a pro
 
 | Skill | Purpose |
 |-------|---------|
-| `implan` | The main planning workflow. Produces a Plan Directory containing `MAIN.md` (the authoritative plan), `MENTAL_MODEL.md` (a pedagogical, diagram-first distillation), `TEST_STRATEGY.md` (the Definition of Done), and `NOTES.md` (a living scratchpad). |
+| `implan` | The main planning workflow. Produces a Plan Directory containing `MAIN.md` (the authoritative plan), `MENTAL_MODEL.md` (a pedagogical, diagram-first distillation), `TEST_STRATEGY.md` (the Definition of Done), and `NOTES.md` (a living scratchpad). A `RETRO.md` joins them after execution. |
 | `implan-spike` | Optional pre-execution step. Run a throwaway exploratory implementation to prove whether key technical assumptions hold before real execution begins. Works against an existing Implan or standalone. |
-| `retro` | Optional post-execution step. Write a sprint retro to capture what worked, what didn't, learnings, and risks for the next session. |
+| `retro` | Optional post-execution step. Capture what worked, what didn't, learnings, and risks, appended as a dated section to `RETRO.md` in the Plan Directory so the next session reads it alongside the plan. |
 
 Together these cover the loop: plan → (optional) spike → execute → retro.
 
