@@ -16,7 +16,7 @@ This skill is designed to compose with the Implan skill but does not depend on i
 | HU | Human User |
 | SA | Spike Agent (you, while running this skill) |
 | IA | Implementing Agent (the real implementation that comes later, in a separate session) |
-| Implan | An Implan plan directory under `ai-plans/`, typically containing `main-plan.md`, `mental-model.md`, `test-strategy.md`, and `notes.md` |
+| Implan | An Implan plan directory under `ai-plans/`, typically containing `MAIN.md`, `MENTAL_MODEL.md`, `TEST_STRATEGY.md`, and `NOTES.md` |
 | SF | Spike Folder (the workspace this skill owns and writes inside) |
 
 ## Scope
@@ -57,6 +57,8 @@ For spikes small enough that the full workflow would feel like ceremony (a 20-mi
 
 The SA inspects the Implan and the project freely, but only writes inside the Spike Folder. If the spike's findings imply changes to the Implan, surface them in the report and let the HU update the Implan themselves.
 
+One exception, and only on first-time setup: in a project that has never used Implan, the SA creates `ai-plans/` and adds it to `.gitignore` so the Spike Folder has somewhere to live (see Step 2). Nothing else outside the Spike Folder is ever written.
+
 ## Do / Don't
 
 **Do:**
@@ -66,14 +68,14 @@ The SA inspects the Implan and the project freely, but only writes inside the Sp
 - Take shortcuts that make the spike faster without invalidating the result: hardcoded values, fake data, `any` types in TypeScript, mocked external services, hand-wavy error handling, copy-pasted snippets. The spike is a sketch, not a building.
 - Mark every file you create with the WARNING header (see below).
 - Write the report iteratively as you learn things, not in one big dump at the end. Findings rot in memory.
-- Read the Implan in full if one exists, especially `main-plan.md` and `test-strategy.md`, to know what the IA will care about.
+- Read the Implan in full if one exists, especially `MAIN.md` and `TEST_STRATEGY.md`, to know what the IA will care about.
 
 **Don't:**
 
 - Write production-quality code. Polish is the IA's job, not yours.
 - Fight with the linter, formatter, or type checker beyond what the spike needs to run. (Unless the spike is specifically about types, build configuration, or lint setup.)
 - Write more tests than necessary. A spike test list is much smaller than the Implan's test strategy by design.
-- Edit anything outside the Spike Folder. Not the Implan, not the codebase, not the README, nothing.
+- Edit anything outside the Spike Folder. Not the Implan, not the codebase, not the README, nothing. The single exception is the first-time `ai-plans/` and `.gitignore` setup above.
 - Quietly carry compromises into the report. If you used a hack, name it.
 - Pretend the spike succeeded when it didn't. A negative result is just as valuable; the report should say so plainly.
 
@@ -104,7 +106,7 @@ Briefly introduce implan-spike in a friendly, non-verbose way so the HU knows wh
 
 Keep it to a short paragraph. Then ask the HU what they want to spike on, or what's on their mind.
 
-Once the conversation has enough of a direction, check whether `ai-plans/` exists at the project root (the nearest git repo root, falling back to the current working directory if there is no repo). If it does, list the Implan folders inside (conventionally named `implan-<topic>/`, though older or differently-named folders containing a `main-plan.md` also count) and ask the HU which one this spike belongs to. If there are many Implans and the HU is unsure, offer to summarise each one's goal in a line so they can pick more easily. Once one is selected, read every file in that Implan PD (`main-plan.md`, `mental-model.md`, `test-strategy.md`, `notes.md`) so the spike has full context to draw from.
+Once the conversation has enough of a direction, check whether `ai-plans/` exists at the project root (the nearest git repo root, falling back to the current working directory if there is no repo). If it does, list the Implan folders inside (conventionally named `implan-<topic>/`, though older or differently-named folders containing a `MAIN.md` also count) and ask the HU which one this spike belongs to. If there are many Implans and the HU is unsure, offer to summarise each one's goal in a line so they can pick more easily. Once one is selected, read every file in that Implan PD (`MAIN.md`, `MENTAL_MODEL.md`, `TEST_STRATEGY.md`, `NOTES.md`) so the spike has full context to draw from.
 
 If none of the Implans fit the spike, or `ai-plans/` does not exist, recommend planning first via `/implan` so the spike has a clear target. If the HU declines, proceed standalone using the steps below.
 
@@ -125,13 +127,13 @@ Choose a kebab-case spike name based on the goal (for example `realtime-streamin
 
 If a Spike Folder with the chosen name already exists, ask the HU whether to resume that spike or pick a different name. To resume, read everything in the existing Spike Folder, summarise where it stands, and continue from the appropriate step below.
 
-If the `ai-plans/` directory or its `.gitignore` entry are not yet in place (because the project never used Implan), set them up: create `ai-plans/` at the project root and add `ai-plans/` to `.gitignore` if not already listed, creating `.gitignore` if needed. Spikes are working artifacts; they belong locally, not in version control.
+If the `ai-plans/` directory or its `.gitignore` entry are not yet in place (because the project never used Implan), set them up: create `ai-plans/` at the project root and add `ai-plans/` to `.gitignore` if not already listed, creating `.gitignore` if needed. Spikes are working artifacts; they belong locally, not in version control. If the project root is not a git repository, skip the gitignore step; there is nothing to ignore against.
 
-Create an empty `spike-report.md` at the root of the Spike Folder and write the spike goal at the top.
+Create `spike-report.md` at the root of the Spike Folder with the spike goal at the top.
 
 ### Step 3: Pick the minimum viable test list
 
-If a `test-strategy.md` exists in the Implan, read it and pick the smallest subset that, if it passes, would prove the spike question. If there is no Implan or no test strategy, define the same kind of small list yourself, oriented around the spike's question.
+If a `TEST_STRATEGY.md` exists in the Implan, read it and pick the smallest subset that, if it passes, would prove the spike question. If there is no Implan or no test strategy, define the same kind of small list yourself, oriented around the spike's question.
 
 In a programming context, orient the spike's tests toward the top of the pyramid: end-to-end or integration-level checks that exercise the real thing with the fewest mocks. High-fidelity certainty is what matters here, not coverage. One slow real-world test that hits the actual infrastructure beats ten fast mocked unit tests, because the whole point of the spike is to find out whether the assumption holds in reality. Drop down to unit-level checks only if the test strategy explicitly asks for them, or if the assumption being spiked is itself at that level (a tricky algorithm, a subtle parser).
 
@@ -170,7 +172,7 @@ Once the report is approved, walk through the cleanup options with the HU. Typic
 - Keep the Spike Folder as-is for future reference.
 - Delete the code but keep `spike-report.md`.
 - Have the HU copy the report into the Implan PD so the next IA reads it alongside the plan.
-- Have the HU update `main-plan.md`, `notes.md`, or `test-strategy.md` based on the spike's findings (the SA cannot do this itself; it has no write access to the Implan).
+- Have the HU update `MAIN.md`, `NOTES.md`, or `TEST_STRATEGY.md` based on the spike's findings (the SA cannot do this itself; it has no write access to the Implan).
 - Hand the report straight to a fresh IA when starting implementation.
 
 Use `AskUserQuestion` for the choice if it helps, or just talk through it. The HU picks; the SA carries out anything that falls inside the Spike Folder.
