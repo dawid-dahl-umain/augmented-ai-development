@@ -66,7 +66,7 @@ One exception, and only on first-time setup: in a project that has never used Im
 - Stay focused on the question the spike is trying to answer. Every line of code should pull weight against it.
 - Pick a small handful of tests (or other verifiable criteria) that, if they pass, demonstrate the assumption holds. Write them so they fail first, then make them pass.
 - Take shortcuts that make the spike faster without invalidating the result: hardcoded values, fake data, `any` types in TypeScript, mocked external services, hand-wavy error handling, copy-pasted snippets. The spike is a sketch, not a building.
-- Mark every file you create with the WARNING header (see below).
+- Mark every spike file you create with the WARNING header (see below). The report is the exception; it is the durable output, not throwaway.
 - Write the report iteratively as you learn things, not in one big dump at the end. Findings rot in memory.
 - Read the Implan in full if one exists, especially `MAIN.md` and `TEST_STRATEGY.md`, to know what the IA will care about.
 
@@ -81,7 +81,7 @@ One exception, and only on first-time setup: in a project that has never used Im
 
 ## The WARNING header
 
-Every file the SA creates inside the Spike Folder starts with a comment block that makes its status unmissable to anyone who opens the file (HU or future agent). Adapt the comment syntax to the file's language. The content:
+Every spike file the SA creates inside the Spike Folder starts with a comment block that makes its status unmissable to anyone who opens the file (HU or future agent). Adapt the comment syntax to the file's language. The content:
 
 ```
 WARNING: SPIKE CODE, NOT PRODUCTION
@@ -91,6 +91,8 @@ This file is throwaway exploration. Do not copy into production without rewritin
 ```
 
 Omit the `Implan:` line if the spike is standalone. The date helps callers tell whether the spike is recent. The Implan name (when present) anchors the file to the planning context it came from.
+
+`spike-report.md` does not get this header. The report is meant to outlive the spike code and be read by the IA, so labelling it throwaway would tell the next reader to discount the one artifact that survives. Instead, carry the date and the Implan name in the report itself, and name the hacks in its own section.
 
 ## Workflow
 
@@ -106,7 +108,7 @@ Briefly introduce implan-spike in a friendly, non-verbose way so the HU knows wh
 
 Keep it to a short paragraph. Then ask the HU what they want to spike on, or what's on their mind.
 
-Once the conversation has enough of a direction, check whether `ai-plans/` exists at the project root (the nearest git repo root, falling back to the current working directory if there is no repo). If it does, list the Implan folders inside (conventionally named `implan-<topic>/`, though older or differently-named folders containing a `MAIN.md` also count) and ask the HU which one this spike belongs to. If there are many Implans and the HU is unsure, offer to summarise each one's goal in a line so they can pick more easily. Once one is selected, read every file in that Implan PD (`MAIN.md`, `MENTAL_MODEL.md`, `TEST_STRATEGY.md`, `NOTES.md`) so the spike has full context to draw from.
+Once the conversation has enough of a direction, check whether `ai-plans/` exists at the project root (the nearest git repo root, falling back to the current working directory if there is no repo). If it does, list the Implan folders inside (conventionally named `implan-<topic>/`, though older or differently-named folders containing a `MAIN.md` also count) and ask the HU which one this spike belongs to. If there are many Implans and the HU is unsure, offer to summarise each one's goal in a line so they can pick more easily. Once one is selected, read every file in that Implan PD so the spike has full context to draw from. Usually that means `MAIN.md`, `MENTAL_MODEL.md`, `TEST_STRATEGY.md`, and `NOTES.md`, but a PD belongs to the HU and may be missing some of those or hold extra files; read what is actually there rather than expecting a fixed set.
 
 If none of the Implans fit the spike, or `ai-plans/` does not exist, recommend planning first via `/implan` so the spike has a clear target. If the HU declines, proceed standalone using the steps below.
 

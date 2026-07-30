@@ -36,7 +36,7 @@
       "name": "implan",
       "source": "./plugins/implan",
       "description": "Implan: structured planning workflow with companion skills for exploratory spikes and post-execution retros. Produces self-contained plan directories a fresh agent can pick up cold.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "author": {
         "name": "Dawid Dahl"
       },
