@@ -53,4 +53,4 @@ Output as a single markdown table. Use `<br>` for multiple bullets within a cell
 
 Always include all four categories. If a category has nothing substantive, write "Nothing notable". Do not pad with filler. Keep each bullet to 1-3 sentences. Be specific and factual; avoid vague summaries. Focus on information that would help a future session pick up work with full context.
 
-If the user asks for a different format (bullet list, YAML block, plain text) or a different location (a section appended to `MAIN.md`, a separate retro per piece of work), use that instead.
+If the user asks for a different format (bullet list, YAML block, plain text) or a different location (a section appended to `MAIN.md`, a separate retro per piece of work), use that instead. If they redirect after the default file was already written, move the content to the new location rather than leaving a copy in both; two retros for one piece of work is the outcome the single-file default exists to avoid.
