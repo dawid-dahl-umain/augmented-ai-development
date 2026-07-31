@@ -1,6 +1,7 @@
 ---
 name: implan
-description: Implan is an opt-in structured planning workflow. Trigger ONLY when the user explicitly invokes it ("/implan", "create an implan", "make an implan", "start an implan", "use Implan for X", "set up an Implan for Y") or is actively working inside an existing `ai-plans/` directory. Do NOT trigger for general planning conversations, however substantial, or for phrases like "plan a feature", "plan a project", "plan a launch", "plan a campaign", "set up a plan"; those alone are not enough, and unwanted activation creates files, folders, and friction. Do NOT trigger for Claude Code's built-in Plan Mode or other planning methodologies. When invoked, Implan produces a self-contained Plan Directory under `ai-plans/` holding a main plan, a mental model with diagrams, a test strategy (the Definition of Done the work iterates towards), and a notes scratchpad, so a fresh agent or the user themselves can pick the work up cold and execute it well. Suits anything substantial, code or otherwise (software features, product launches, campaigns, research projects, workshops). PLANNING ONLY; execution happens in a separate session afterwards.
+description: Manually invoked structured planning workflow for anything substantial, code or otherwise. Produces a self-contained Plan Directory under `ai-plans/` holding a main plan, a mental model with diagrams, a test strategy (the Definition of Done the work iterates towards), and a notes scratchpad, so a fresh agent or the user themselves can pick the work up cold and execute it well. An `ai-plans/` folder in a project means Implan is in use there; read this skill to work inside one. PLANNING ONLY; execution happens in a separate session afterwards.
+disable-model-invocation: true
 ---
 
 # Implan

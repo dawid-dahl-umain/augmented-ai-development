@@ -23,7 +23,7 @@ Restart Claude Code after installing.
 
 ## Trigger phrases
 
-- `implan`: explicit invocation only. Say `/implan`, "create an implan", "start an implan", "use Implan for X", or work inside an existing `ai-plans/` directory. The skill deliberately does NOT activate on generic phrases like "plan a feature" or "plan a project"; planning conversations don't need Implan.
+- `implan`: run `/implan`. The skill sets `disable-model-invocation: true`, so Claude can never start it on your behalf, not from a phrase like "plan a feature" and not because you happen to be editing files under `ai-plans/`. Resuming an existing plan after a context clear works the same way: run `/implan`, or just point Claude at the plan directory and it can read the skill itself.
 - `implan-spike`: say `/implan-spike`, "spike this", "create a spike", "do a spike on X", "prove this assumption", or "proof of concept".
 - `retro`: say "retro", "write a retro", "sprint retro", or "fill in retro". Does not activate for general retrospective discussions.
 
