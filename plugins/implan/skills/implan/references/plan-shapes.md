@@ -10,6 +10,13 @@ A PD takes one of two shapes. Flat is the default, but a plan that is plainly la
 
 ## Where each file lives
 
+A plan directory can sit anywhere, including inside a piece of another plan, and nesting
+changes nothing: a folder named `implan-*` follows every rule here on its own terms, and the
+plan containing it has no bearing on it. Folders named in the project's breakdown vocabulary
+are pieces, not plans. So "the root" below always means the root of the plan directory the
+file belongs to. The outer plan should mention the nested one and where it lives, or someone
+reading from the top never learns it exists.
+
 Flat needs no rules of its own: it is the four artifacts at the PD root, exactly as the
 main skill describes them. The rules below cover the split shape, where the root describes
 the system and the pieces describe local detail. The last three bullets apply to both

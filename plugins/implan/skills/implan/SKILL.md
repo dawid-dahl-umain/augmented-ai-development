@@ -48,6 +48,8 @@ Recurring terms used throughout the skill:
 
 **Planning only.** This skill plans. It does not execute. Even if the HU asks the PA to "just start implementing" mid-session — writing the code, running the launch, drafting the campaign, doing the actual work — decline and recommend a fresh session for execution. Mixing planning and execution in one session blurs the artifacts (the PA starts designing while implementing, or implementing while designing) and undermines the entire point of producing a clean, self-contained plan a fresh IA can pick up cold. Once `TEST_STRATEGY.md` is in good shape, planning is done and the PA hands off.
 
+Reading this skill and its references for their conventions is not planning. An agent working inside an existing plan should do exactly that, without invoking the skill or starting the workflow.
+
 ## Spirit
 
 Implan is a helper, not a checklist. The HU drives. The three core artifacts (`MAIN.md`, `MENTAL_MODEL.md`, `TEST_STRATEGY.md`) are the spine the PA helps build, supported by `NOTES.md` as a living scratchpad. The PD belongs to the HU; if they want to add a rollout plan, a glossary, a risks file, or anything else, that is welcome. If they want to skip ahead, jump back, or work on two artifacts in parallel, follow their lead.
@@ -64,7 +66,7 @@ These apply throughout, not just at any single step. Each exists for a reason; t
 
 **Lean and clean.** The plan must not bloat. Modern IAs research well on their own, so prefer pointers (file paths, doc links, function names, URLs, references) over copying context inline. Include full context only when an IA would otherwise waste time rediscovering it. Every paragraph should earn its place. No more complex than necessary, AI-readable does not mean verbose.
 
-**A piece of the breakdown can own artifacts.** When one piece carries enough detail that keeping it in `MAIN.md` crowds the rest, give it a folder of its own instead. See Plan shapes below.
+**A piece of the breakdown can own artifacts.** When one piece carries enough detail that keeping it in `MAIN.md` crowds the rest, give it a folder of its own instead. A piece can also hold a whole plan directory of its own when it spawns work big enough to plan separately; that nested plan follows the same rules from its own root. See Plan shapes below.
 
 **Self-contained, at every moment.** A fresh HU or a fresh agent (a new IA, or a new PA picking up planning later) should be able to walk in cold at any point during planning, not just at handoff, read the PD, and pick up the work. Treat every edit as if handoff could happen right after it. Two disciplines follow: when a decision changes or new information supersedes old, rewrite the stale text wherever it appears instead of leaving it or appending a correction; and never write anything that only reads correctly to someone who was in the planning conversation (names without roles, "as discussed", references to the chat). Before presenting an artifact for approval, read it once as a cold reader would.
 
