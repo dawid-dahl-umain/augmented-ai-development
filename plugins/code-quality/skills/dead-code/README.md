@@ -2,6 +2,9 @@
 
 Find unused code and report it. Never edits, deletes, or commits anything.
 
+Agents produce dead code at a rate humans don't: abandoned helpers, superseded
+implementations, exports orphaned by a refactor that was only half finished.
+
 ## The contract
 
 The harness enforces the read-only promise rather than trusting Claude to remember it: the

@@ -2,10 +2,8 @@
 
 Code-quality skills for Claude Code.
 
-Agents produce dead code at a rate humans don't: abandoned helpers, superseded
-implementations, exports orphaned by a refactor that was only half finished. Keeping a
-codebase honest is more work in AI-augmented development than in the traditional kind,
-and it is work an agent can do.
+Keeping a codebase honest is more work in AI-augmented development than in the traditional
+kind, and it is work an agent can do.
 
 ## What's in this plugin
 
