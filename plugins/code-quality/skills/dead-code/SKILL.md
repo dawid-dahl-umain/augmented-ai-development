@@ -79,7 +79,10 @@ A candidate is **not dead** if it is:
 - **Reached by string or reflection.** `obj[name]`, `import()`, `getattr`,
   `Class.forName`, DI container bindings, serialization by field name.
 - **Reached by convention.** File-based routing, annotations and decorators, lifecycle
-  hooks, generated route tables, test-runner autodiscovery.
+  hooks, generated route tables, test-runner autodiscovery. Also anything the toolchain
+  pulls in by glob or config rather than by import: ambient declarations, test setup files,
+  build scripts, polyfills. These have no importers by design, so importer counts say
+  nothing about them, and what settles one is whether the thing it attaches to still exists.
 - **Named in non-code.** Configs, templates, SQL, CSS selectors, migrations, CI workflows,
   IaC. Search the whole repo, not just source.
 - **Consumed outside this repo.** Monorepo siblings, a published package, another service.
