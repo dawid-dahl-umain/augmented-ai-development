@@ -88,10 +88,11 @@ A candidate is **not dead** if it is:
   is a product decision.
 - **A member of a declared set.** Some code exists to complete a vocabulary rather than to
   be called: a contract with no implementation yet, one case of an enumeration, a variant
-  nobody has needed. Deleting a member damages the set, and being internal these are not
-  covered by the public API case above. Ask whether the thing is still true rather than
-  whether it is used. A contract nothing implements yet is true; a declaration asserting a
-  rule the system no longer follows is false, and that one really is dead.
+  nobody has needed. The signal is co-location, so when a candidate sits among siblings of
+  the same shape and only some of them are used, the set is the unit and not the member.
+  Being internal, these are not covered by the public API case above. Ask whether the thing
+  is still true rather than whether it is used: a contract nothing implements yet is, and a
+  declaration asserting a rule the system no longer follows is not.
 
 Check when each candidate last changed. Unreferenced and untouched for two years is a
 different claim from unreferenced and written last month.
