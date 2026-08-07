@@ -56,7 +56,9 @@ still true. A port awaiting its adapter is; an error class asserting a rule the 
 reverses is not, and that one really is dead.
 
 Each surviving candidate carries one line of evidence: what flagged it, what was ruled out,
-and how.
+and how. The confirming check has to be able to fail differently from whatever produced the
+candidate, because a search returning nothing is not evidence when a wrong pattern returns
+nothing too. That mistake takes out a whole directory at a time rather than one file.
 
 ## The report
 

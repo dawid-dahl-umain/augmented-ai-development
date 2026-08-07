@@ -98,6 +98,11 @@ different claim from unreferenced and written last month.
 Every surviving candidate carries one line of evidence: what flagged it, which of the
 above you ruled out, and how you checked.
 
+A search that returns nothing is not evidence, because a wrong pattern returns nothing
+too. Confirm with a method that could fail differently from the one that found the
+candidate, and re-check a whole category the same way; a single bad pattern takes out the
+entire directory it was aimed at, not one file.
+
 ## 4. Report
 
 Findings, not narration. No preamble, no methodology section, no summary of what you did.

@@ -49,7 +49,7 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 │   ├── investigation/
 │   └── misc/
 ├── rules/                # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
-└── plugins/              # Claude Code plugins (aaid-tdd, aaid-bdd, implan, testing, code-quality)
+└── plugins/              # Claude Code plugins
 ```
 
 ## Core Components
@@ -120,7 +120,7 @@ Pre-written AI commands organized by purpose:
 > /plugin install aaid-bdd@aaid
 > ```
 >
-> Three further plugins in the same marketplace are independent of the TDD/BDD workflow and can be installed on their own:
+> The other plugins in this marketplace are independent of the TDD/BDD workflow and can be installed on their own:
 >
 > | Plugin | Purpose |
 > |--------|---------|
