@@ -90,9 +90,8 @@ A candidate is **not dead** if it is:
   be called: a contract with no implementation yet, one case of an enumeration, a variant
   nobody has needed. The signal is co-location, so when a candidate sits among siblings of
   the same shape and only some of them are used, the set is the unit and not the member.
-  Being internal, these are not covered by the public API case above. Ask whether the thing
-  is still true rather than whether it is used: a contract nothing implements yet is, and a
-  declaration asserting a rule the system no longer follows is not.
+  Ask whether the thing is still true rather than whether it is used: a contract nothing
+  implements yet is, and a declaration asserting a rule the system no longer follows is not.
 
 Check when each candidate last changed. Unreferenced and untouched for two years is a
 different claim from unreferenced and written last month.
@@ -131,9 +130,9 @@ say what you cut.
 `REJECTED` matters more than its size suggests: it stops the next sweep re-deriving the
 same false positives.
 
-You cannot prove any of this by reading, and that limit belongs in the report rather than
-under it. Only deleting and running the typechecker or build settles a candidate, so name
-that command once and let the reader see exactly what would turn a finding into a fact.
+You cannot prove any of this by reading; only deleting and running the typechecker or build
+settles it. Say so, and name that command, so the reader knows what would turn a finding
+into a fact.
 
 Print the report, save the same text to the scratchpad, and give the path as the last
 line. Stop there.
