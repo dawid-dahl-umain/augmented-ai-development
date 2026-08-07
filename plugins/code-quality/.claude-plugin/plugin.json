@@ -1,0 +1,12 @@
+{
+  "name": "code-quality",
+  "description": "Code-quality skills for Claude Code. Currently a read-only dead code sweep: run the project's own static analyzer, triage what it flags against the ways code stays reachable without a visible caller, and report what is genuinely safe to remove.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Dawid Dahl"
+  },
+  "repository": "https://github.com/dawid-dahl-umain/augmented-ai-development",
+  "license": "MIT",
+  "keywords": ["code-quality", "dead-code", "unused-code", "static-analysis", "technical-debt", "cleanup"],
+  "skills": "./skills/"
+}

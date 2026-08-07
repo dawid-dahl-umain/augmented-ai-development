@@ -49,7 +49,7 @@ Built on proven foundations from Kent Beck's TDD, Dave Farley's Continuous Deliv
 │   ├── investigation/
 │   └── misc/
 ├── rules/                # AI workflow rules (drop into .cursor/rules/ or CLAUDE.md)
-└── plugins/              # Claude Code plugins (aaid-tdd, aaid-bdd, implan, testing)
+└── plugins/              # Claude Code plugins (aaid-tdd, aaid-bdd, implan, testing, code-quality)
 ```
 
 ## Core Components
@@ -125,7 +125,8 @@ Pre-written AI commands organized by purpose:
 > | Plugin | Purpose |
 > |--------|---------|
 > | `implan` | Structured planning that produces a self-contained Plan Directory a fresh agent can execute from, plus companion skills for exploratory spikes and post-execution retros. See [`plugins/implan/`](plugins/implan/). |
-> | `testing` | AI-driven mutation testing: Claude acts as the mutation engine to find weak tests, with no external library required. See [`plugins/testing/`](plugins/testing/). |
+> | `testing` | Mutation testing, where Claude acts as the mutation engine to find tests that would not notice if the code broke, and agentic testing, where Claude drives the running app in a real browser and judges whether it is fit to release. See [`plugins/testing/`](plugins/testing/). |
+> | `code-quality` | A read-only dead code sweep: run the project's own static analyzer, triage what it flags against the ways code stays reachable without a visible caller, and report what is genuinely safe to remove. See [`plugins/code-quality/`](plugins/code-quality/). |
 >
 > Restart Claude Code after installing. Source: [`plugins/`](plugins/).
 
