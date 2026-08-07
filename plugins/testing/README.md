@@ -24,4 +24,4 @@ Restart Claude Code after installing.
 ## Trigger phrases
 
 - `mutation-testing`: say "mutate", "mutation testing", "test my tests", "check test quality", "find weak tests", "are my tests good enough", or `/mutate`. Does not activate for general testing questions, writing new tests, code coverage, or TDD workflows.
-- `agentic-testing`: say "browser test", "test in the browser", "check it in Chrome", or ask for a thorough pass before you review by hand. Fires on its own once a UI slice goes green. Takes an optional focus, either a target or a lens: `/agentic-testing accessibility`, `/agentic-testing the run picker on mobile`. Does not activate for writing unit, integration, or acceptance tests.
+- `agentic-testing`: say "browser test", "test in the browser", "check it in Chrome", or ask for a thorough pass before you review by hand. Fires on its own once a UI slice goes green. Takes an optional focus, either a target or a lens: `/agentic-testing accessibility`, `/agentic-testing the checkout flow on mobile`. Does not activate for writing unit, integration, or acceptance tests.

@@ -1,7 +1,7 @@
 {
   "name": "testing",
   "description": "Test-quality skills for Claude Code. AI-driven mutation testing, where Claude acts as the mutation engine to find weak tests, and agentic testing, where Claude drives the running app in a real browser to judge whether it is fit to release.",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "author": {
     "name": "Dawid Dahl"
   },

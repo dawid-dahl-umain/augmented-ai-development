@@ -46,14 +46,15 @@ is reported as needing a check.
 Every candidate gets checked against the ways code stays alive without a visible caller:
 public API, reflection and string lookup, convention (file routing, decorators, autodiscovery),
 mentions in non-code files, consumers outside the repo, feature flags, code used only by
-tests, and deliberate vocabulary.
+tests, and membership of a declared set.
 
 Two of those are worth calling out. Code used only by tests is not dead code, it is a dead
-feature, which is a product decision rather than a cleanup. And deliberate vocabulary
-covers the port with no implementer yet or the sibling type in a shared error set: unused
-today, but the contract the next adapter satisfies. The test is whether the unused thing is
-still true. A port awaiting its adapter is; an error class asserting a rule the spec now
-reverses is not, and that one really is dead.
+feature, which is a product decision rather than a cleanup. And a member of a declared set
+is code that exists to complete a vocabulary rather than to be called: a contract with no
+implementation yet, one case of an enumeration, a variant nobody has needed. Deleting a
+member damages the set. Ask whether the thing is still true rather than whether it is used.
+A contract nothing implements yet is true; a declaration asserting a rule the system no
+longer follows is false, and that one really is dead.
 
 Each surviving candidate carries one line of evidence: what flagged it, what was ruled out,
 and how. The confirming check has to be able to fail differently from whatever produced the

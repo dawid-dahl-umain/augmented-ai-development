@@ -9,7 +9,7 @@ description: >
   wants a thorough pass before they review by hand.
   Use PROACTIVELY after a UI slice goes green.
   Do NOT activate for writing unit, integration, or acceptance tests.
-argument-hint: "[optional: what to focus on, e.g. 'the run picker on mobile']"
+argument-hint: "[optional: what to focus on, e.g. 'the checkout flow on mobile']"
 ---
 
 # Agentic testing

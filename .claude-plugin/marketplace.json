@@ -48,7 +48,7 @@
       "name": "testing",
       "source": "./plugins/testing",
       "description": "Test-quality skills for Claude Code. AI-driven mutation testing, where Claude acts as the mutation engine to find weak tests, and agentic testing, where Claude drives the running app in a real browser to judge whether it is fit to release.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "author": {
         "name": "Dawid Dahl"
       },
@@ -60,7 +60,7 @@
       "name": "code-quality",
       "source": "./plugins/code-quality",
       "description": "Code-quality skills for Claude Code. Currently a read-only dead code sweep: run the project's own static analyzer, triage what it flags against the ways code stays reachable without a visible caller, and report what is genuinely safe to remove.",
-      "version": "1.1.1",
+      "version": "1.1.2",
       "author": {
         "name": "Dawid Dahl"
       },

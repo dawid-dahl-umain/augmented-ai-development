@@ -86,11 +86,12 @@ A candidate is **not dead** if it is:
 - **Behind a flag,** or built and not yet launched.
 - **Used only by tests.** The code is not dead, the feature is. Separate category; the fix
   is a product decision.
-- **Deliberate vocabulary.** A port with no implementer yet, a sibling type in a shared
-  error set, an interface completing a menu of contracts. These are internal, so the public
-  API case above does not cover them. The test is whether the unused thing is still true: a
-  port awaiting its adapter is, and an error class asserting a rule the spec now reverses
-  is not.
+- **A member of a declared set.** Some code exists to complete a vocabulary rather than to
+  be called: a contract with no implementation yet, one case of an enumeration, a variant
+  nobody has needed. Deleting a member damages the set, and being internal these are not
+  covered by the public API case above. Ask whether the thing is still true rather than
+  whether it is used. A contract nothing implements yet is true; a declaration asserting a
+  rule the system no longer follows is false, and that one really is dead.
 
 Check when each candidate last changed. Unreferenced and untouched for two years is a
 different claim from unreferenced and written last month.

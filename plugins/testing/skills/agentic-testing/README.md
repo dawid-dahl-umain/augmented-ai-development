@@ -41,7 +41,7 @@ where to stop.
 ```
 /agentic-testing
 /agentic-testing accessibility
-/agentic-testing the run picker on mobile
+/agentic-testing the checkout flow on mobile
 ```
 
 Without one, Claude takes the latest work and weighs every lens that applies.
