@@ -62,6 +62,11 @@ files as unused. Do not launder that list into the report as findings. Propose t
 as a code block instead, and say the numbers are provisional until it exists. On a first
 run, that config is the more valuable output.
 
+**If no analyzer runs at all, there is no `CONFIDENT` tier.** Searching by hand fails in
+both directions and the failures are indistinguishable from findings: a pattern that
+quietly swallows the real consumers, and whole categories never seen at all. Everything
+found that way is `CHECK`, and the header names the analyzer that was missing.
+
 ## 3. Triage
 
 For each candidate, look for a reason it is alive. These are the common ones, not the
@@ -81,6 +86,11 @@ A candidate is **not dead** if it is:
 - **Behind a flag,** or built and not yet launched.
 - **Used only by tests.** The code is not dead, the feature is. Separate category; the fix
   is a product decision.
+- **Deliberate vocabulary.** A port with no implementer yet, a sibling type in a shared
+  error set, an interface completing a menu of contracts. These are internal, so the public
+  API case above does not cover them. The test is whether the unused thing is still true: a
+  port awaiting its adapter is, and an error class asserting a rule the spec now reverses
+  is not.
 
 Check when each candidate last changed. Unreferenced and untouched for two years is a
 different claim from unreferenced and written last month.
@@ -94,7 +104,7 @@ Findings, not narration. No preamble, no methodology section, no summary of what
 
 ```
 Dead code: <repo> on <branch>            [tree dirty: N files]
-Analyzer: <tool>  |  Confidence: <High|Medium|Low|Very low>  |  Config: <present|MISSING>
+Analyzer: <tool|NONE>  |  Confidence: <High|Medium|Low|Very low>  |  Config: <present|MISSING>
 
 CONFIDENT  (n)
   path:line  symbol            why it is dead                    lines
@@ -113,6 +123,10 @@ say what you cut.
 
 `REJECTED` matters more than its size suggests: it stops the next sweep re-deriving the
 same false positives.
+
+You cannot prove any of this by reading, and that limit belongs in the report rather than
+under it. Only deleting and running the typechecker or build settles a candidate, so name
+that command once and let the reader see exactly what would turn a finding into a fact.
 
 Print the report, save the same text to the scratchpad, and give the path as the last
 line. Stop there.

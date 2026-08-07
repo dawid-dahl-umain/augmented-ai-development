@@ -120,7 +120,7 @@ Pre-written AI commands organized by purpose:
 > /plugin install aaid-bdd@aaid
 > ```
 >
-> Two further plugins in the same marketplace are independent of the TDD/BDD workflow and can be installed on their own:
+> Three further plugins in the same marketplace are independent of the TDD/BDD workflow and can be installed on their own:
 >
 > | Plugin | Purpose |
 > |--------|---------|

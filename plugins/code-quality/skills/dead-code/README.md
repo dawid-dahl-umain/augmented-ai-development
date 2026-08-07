@@ -37,12 +37,23 @@ generated code, and convention-loaded files as unused. Rather than launder that 
 findings, the skill proposes the config and marks the numbers provisional. On a first run,
 that config is usually the more valuable output.
 
+If no analyzer can be run at all, there is no confident tier. Searching by hand fails in
+both directions and the failures look exactly like findings, so everything found that way
+is reported as needing a check.
+
 ## Triage
 
 Every candidate gets checked against the ways code stays alive without a visible caller:
 public API, reflection and string lookup, convention (file routing, decorators, autodiscovery),
-mentions in non-code files, consumers outside the repo, feature flags, and code used only by
-tests. That last one is its own category, since the code is not dead, the feature is.
+mentions in non-code files, consumers outside the repo, feature flags, code used only by
+tests, and deliberate vocabulary.
+
+Two of those are worth calling out. Code used only by tests is not dead code, it is a dead
+feature, which is a product decision rather than a cleanup. And deliberate vocabulary
+covers the port with no implementer yet or the sibling type in a shared error set: unused
+today, but the contract the next adapter satisfies. The test is whether the unused thing is
+still true. A port awaiting its adapter is; an error class asserting a rule the spec now
+reverses is not, and that one really is dead.
 
 Each surviving candidate carries one line of evidence: what flagged it, what was ruled out,
 and how.
