@@ -47,8 +47,8 @@
     {
       "name": "testing",
       "source": "./plugins/testing",
-      "description": "Test-quality skills for Claude Code. Currently includes AI-driven mutation testing where Claude acts as the mutation engine, identifying weak tests by mutating source code and tracking which mutants survive.",
-      "version": "1.0.0",
+      "description": "Test-quality skills for Claude Code. AI-driven mutation testing, where Claude acts as the mutation engine to find weak tests, and agentic testing, where Claude drives the running app in a real browser to judge whether it is fit to release.",
+      "version": "1.1.0",
       "author": {
         "name": "Dawid Dahl"
       },
