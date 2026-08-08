@@ -62,6 +62,11 @@ files as unused. Do not launder that list into the report as findings. Propose t
 as a code block instead, and say the numbers are provisional until it exists. On a first
 run, that config is the more valuable output.
 
+**A config tuned until the report is quiet is no more trustworthy, and far harder to
+notice.** Before trusting a clean run against a config that already exists, check what its
+entry and ignore patterns rule out: a glob covering a directory means nothing in it can
+ever be flagged again. Say in the report which parts of the tree were never eligible.
+
 **If no analyzer runs at all, there is no `CONFIDENT` tier.** Searching by hand fails in
 both directions and the failures are indistinguishable from findings: a pattern that
 quietly swallows the real consumers, and whole categories never seen at all. Everything
