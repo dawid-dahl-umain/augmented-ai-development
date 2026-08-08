@@ -85,7 +85,9 @@ A candidate is **not dead** if it is:
   nothing about them, and what settles one is whether the thing it attaches to still exists.
 - **Named in non-code.** Configs, templates, SQL, CSS selectors, migrations, CI workflows,
   IaC. Search the whole repo, not just source.
-- **Consumed outside this repo.** Monorepo siblings, a published package, another service.
+- **Consumed outside what you can see.** Monorepo siblings, a published package, another
+  service, or a branch waiting to merge that has just started importing it. The analyzer
+  sees one tree, and whoever merges second gets the broken build.
 - **Behind a flag,** or built and not yet launched.
 - **Used only by tests.** The code is not dead, the feature is. Separate category; the fix
   is a product decision.
