@@ -46,5 +46,7 @@ nothing is no evidence when a wrong pattern returns nothing too.
 
 Findings only, one screen, grouped as `CONFIDENT`, `CHECK`, `TEST-ONLY`, and `REJECTED`.
 
-`REJECTED` matters more than its size suggests. Writing down what looked dead but is not
-stops the next sweep re-deriving the same false positives.
+`REJECTED` matters more than its size suggests, but only if it outlives the report. Each
+rejection comes with a proposed change to the analyzer's config, because a judgement kept
+in prose gets re-argued by every later sweep, while one recorded where the analyzer reads
+it is decided once.

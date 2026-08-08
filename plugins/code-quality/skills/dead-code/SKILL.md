@@ -132,8 +132,11 @@ Would remove ~N lines and M dependencies.
 Short enough to read in one screen. If there is more than that, rank by lines saved and
 say what you cut.
 
-`REJECTED` matters more than its size suggests: it stops the next sweep re-deriving the
-same false positives.
+`REJECTED` matters more than its size suggests, but prose does not survive the session, so
+every later sweep re-derives it. Propose each rejection as a change to the analyzer's
+config, the same way you propose a config that does not exist yet, and prefer whatever
+mechanism sits on the declaration over a list in a config file far from it. Recorded there,
+a rejection is decided once instead of argued every time.
 
 You cannot prove any of this by reading; only deleting and running the typechecker or build
 settles it. Say so, and name that command, so the reader knows what would turn a finding
